@@ -1,0 +1,42 @@
+.Azul-Board {
+  background-image: url("./../../assets/dark-wood-background.jpg");
+  background-position: top left;
+  background-repeat: repeat;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+header,
+main,
+footer {
+  margin: 20px;
+  padding: 20px;
+  overflow: hidden;
+
+  // background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 12px;
+  border: 1px solid rgba(209, 213, 219, 0.3);
+  backdrop-filter: blur(2px);
+  box-shadow: inset 0 0 0 900px rgba(255, 255, 255, 0.2);
+}
+
+main {
+  min-height: 500px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+}
+
+section.player-board {
+  margin: 20px;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+}
+
+section.main-board {
+}
