@@ -1,5 +1,5 @@
 import { Client } from 'boardgame.io/react';
-import { AzulGameBoard } from './Board';
+import { GameBoard } from '../../components/azul/GameBoard';
 import { AzulGame } from './Game';
 import { Local } from 'boardgame.io/multiplayer'
 
@@ -8,13 +8,13 @@ export const Azul = Client({
   game: AzulGame,
 
   // The number of players.
-  numPlayers: 2,  
+  numPlayers: 2,
 
   // Your React component representing the game board.
   // The props that this component receives are listed below.
   // When using TypeScript, type the component's properties as
   // extending BoardProps.
-  board: AzulGameBoard,
+  board: GameBoard,
 
   // Optional: React component to display while the client
   // is in the "loading" state prior to the initial sync

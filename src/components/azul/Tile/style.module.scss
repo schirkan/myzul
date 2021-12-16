@@ -1,0 +1,28 @@
+.container {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 2px;
+
+  &[data-color="red"] {
+    background: red;
+    border-color: #333;
+  }
+  &[data-color="green"] {
+    background: green;
+    border-color: #333;
+  }
+  &[data-color="blue"] {
+    background: blue;
+    border-color: #333;
+  }
+  &[data-color="yellow"] {
+    background: yellow;
+    border-color: #333;
+  }
+  &[data-color="black"] {
+    background: black;
+    border-color: #333;
+  }
+}

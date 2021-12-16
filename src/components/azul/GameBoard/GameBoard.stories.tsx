@@ -1,0 +1,12 @@
+import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { GameBoard } from './';
+
+export default {
+  title: 'Azul/GameBoard',
+  component: GameBoard,
+} as ComponentMeta<typeof GameBoard>;
+
+const Template: ComponentStory<typeof GameBoard> = (args) => <GameBoard {...args} />;
+
+export const c1 = Template.bind({});
+c1.storyName = "default"
