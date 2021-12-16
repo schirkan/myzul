@@ -2,7 +2,7 @@
 to: <%= absPath %>/<%= component_name %>.tsx
 ---
 import React from 'react';
-import styles from './style.module.css';
+import styles from './style.module.scss';
 
 type Props = {};
 

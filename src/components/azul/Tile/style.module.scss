@@ -1,5 +1,7 @@
 .container {
+  display: inline-block;
   width: 40px;
+  min-width: 40px;
   height: 40px;
   border-radius: 4px;
   border-style: solid;
@@ -24,5 +26,14 @@
   &[data-color="black"] {
     background: black;
     border-color: #333;
+  }
+
+  &[data-selectable="true"] {
+    cursor: pointer;
+    transition: transform 0.2s; /* Animation */
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 }

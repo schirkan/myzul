@@ -4,11 +4,9 @@ import styles from './style.module.scss';
 
 type Props = {};
 
-export const Factory: React.FC<Props> = (props) => {
+export const TileStorage: React.FC<Props> = (props) => {
   return <div className={styles.container}>
-    <TilePlaceholder />
-    <TilePlaceholder />
-    <TilePlaceholder />
-    <TilePlaceholder />
+    <TilePlaceholder id='storage-new' />
+    <TilePlaceholder id='storage-used' />
   </div>;
 };

@@ -1,1 +1,12 @@
-.container {}
+.container {
+  > div {
+    display: grid;
+    gap: 5px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    width: fit-content;
+
+    & + div {
+      margin-top: 5px;
+    }
+  }
+}

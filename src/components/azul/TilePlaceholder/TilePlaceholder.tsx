@@ -1,13 +1,17 @@
 import React from 'react';
+import { TilePlaceholderConfig } from '../../../games/azul/azulConfig';
 import styles from './style.module.scss';
 
-type Props = {
-  multiplier: number,
-  color: 'red' | 'green' | 'blue' | 'yellow' | 'black' | 'none'
+type Props = Partial<TilePlaceholderConfig> & {
+  id?: string
 };
 
 export const TilePlaceholder: React.FC<Props> = (props) => {
-  return <div className={styles.container} data-color={props.color}>
-    {props.multiplier > 1 ? props.multiplier + 'x' : ''}
+  if (props.id) {
+    console.log(props.id);
+  }
+
+  return <div className={styles.container} data-color={props.color || 'none'}>
+    {props.multiplier && props.multiplier > 1 ? props.multiplier + 'x' : ''}
   </div>;
 };
