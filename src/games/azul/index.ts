@@ -3,12 +3,12 @@ import { GameBoard } from '../../components/azul/GameBoard';
 import { AzulGame } from './Game';
 import { Local } from 'boardgame.io/multiplayer'
 
-export const Azul = Client({
+export const createAzulClient = (numPlayers: number) => Client({
   // A game object.
   game: AzulGame,
 
   // The number of players.
-  numPlayers: 2,
+  numPlayers: numPlayers,
 
   // Your React component representing the game board.
   // The props that this component receives are listed below.

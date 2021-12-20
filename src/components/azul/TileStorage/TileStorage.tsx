@@ -6,7 +6,7 @@ type Props = {};
 
 export const TileStorage: React.FC<Props> = (props) => {
   return <div className={styles.container}>
-    <TilePlaceholder id='storage-new' />
-    <TilePlaceholder id='storage-used' />
+    <TilePlaceholder location={{ boardType: 'TileBag' }} />
+    <TilePlaceholder location={{ boardType: 'TileStorage' }} />
   </div>;
 };

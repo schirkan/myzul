@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { FloorLine } from './';
-import { floorLineSetups } from './../../../games/azul/azulConfig';
+import { floorSetups } from './../../../games/azul/azulConfig';
 
 export default {
   title: 'Azul/FloorLine',
@@ -13,5 +13,5 @@ export const c1 = Template.bind({});
 c1.storyName = "empty"
 
 export const c2 = Template.bind({});
-c2.args = { config: floorLineSetups[0] };
+c2.args = { config: floorSetups[0] };
 c2.storyName = "default"

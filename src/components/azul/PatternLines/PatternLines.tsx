@@ -2,7 +2,9 @@ import React from 'react';
 import { TilePlaceholder } from '../TilePlaceholder';
 import styles from './style.module.scss';
 
-type Props = { player: number };
+type Props = {
+  player: number
+};
 
 export const PatternLines: React.FC<Props> = (props) => {
   return <div className={styles.container}>
@@ -11,35 +13,35 @@ export const PatternLines: React.FC<Props> = (props) => {
       <p></p>
       <p></p>
       <p></p>
-      <TilePlaceholder id={"pl|" + props.player + '|' + 1 + '|' + 1} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 1, y: 1 }} />
     </div>
     <div>
       <p></p>
       <p></p>
       <p></p>
-      <TilePlaceholder id={"pl|" + props.player + '|' + 2 + '|' + 2} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 2 + '|' + 1} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 2, y: 2 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 1, y: 2 }} />
     </div>
     <div>
       <p></p>
       <p></p>
-      <TilePlaceholder id={"pl|" + props.player + '|' + 3 + '|' + 3} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 3 + '|' + 2} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 3 + '|' + 1} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 3, y: 3 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 2, y: 3 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 1, y: 3 }} />
     </div>
     <div>
       <p></p>
-      <TilePlaceholder id={"pl|" + props.player + '|' + 4 + '|' + 4} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 4 + '|' + 3} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 4 + '|' + 2} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 4 + '|' + 1} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 4, y: 4 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 3, y: 4 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 2, y: 4 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 1, y: 4 }} />
     </div>
     <div>
-      <TilePlaceholder id={"pl|" + props.player + '|' + 5 + '|' + 5} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 5 + '|' + 4} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 5 + '|' + 3} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 5 + '|' + 2} />
-      <TilePlaceholder id={"pl|" + props.player + '|' + 5 + '|' + 1} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 5, y: 5 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 4, y: 5 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 3, y: 5 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 2, y: 5 }} />
+      <TilePlaceholder location={{ boardType: 'PatternLine', boardId: props.player, x: 1, y: 5 }} />
     </div>
   </div>;
 };

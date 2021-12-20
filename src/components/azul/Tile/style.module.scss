@@ -7,6 +7,9 @@
   border-style: solid;
   border-width: 2px;
 
+  position: absolute;
+  transition: top, left 0.5s; /* Animation */
+
   &[data-color="red"] {
     background: red;
     border-color: #333;

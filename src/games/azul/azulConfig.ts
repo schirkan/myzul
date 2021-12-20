@@ -56,12 +56,12 @@ export const wallSetups: WallSetup[] = [
   }
 ];
 
-export type FloorLineSetup = {
+export type FloorSetup = {
   name: string,
   values: number[]
 };
 
-export const floorLineSetups: FloorLineSetup[] = [
+export const floorSetups: FloorSetup[] = [
   {
     name: 'Default',
     values: [-1, -1, -2, -2, -2, -3, -3]
@@ -69,27 +69,26 @@ export const floorLineSetups: FloorLineSetup[] = [
 ];
 
 export type GameSetup = {
-  numberOfPlayers: number,
   wallSetup: WallSetup,
-  floorLineSetup: FloorLineSetup,
-  tiles: {
-    red: number,
-    green: number,
-    blue: number,
-    yellow: number,
-    black: number,
-  }
+  floorLineSetup: FloorSetup,
 };
 
-export const defaultGameSetup: GameSetup = {
-  numberOfPlayers: 2,
-  wallSetup: wallSetups[0],
-  floorLineSetup: floorLineSetups[0],
-  tiles: {
-    red: 20,
-    green: 20,
-    blue: 20,
-    yellow: 20,
-    black: 20,
-  }
+export const createGameSetup = (wallSetup?: string, floorLineSetup?: string): GameSetup => ({
+  wallSetup: wallSetups.find(x => x.name === wallSetup) || wallSetups[0],
+  floorLineSetup: floorSetups.find(x => x.name === floorLineSetup) || floorSetups[0],
+})
+
+export const defaultGameSetup = createGameSetup('Default', 'Default')
+
+export type BoardType = 'Factory' | 'Wall' | 'PatternLine' | 'FloorLine' | 'TileBag' | 'TileStorage'
+
+export type TileLocation = {
+  boardType: BoardType,
+  boardId?: number,
+  x?: number,
+  y?: number
+}
+
+export const GetTileLocationId = (location: TileLocation) => {
+  return location.boardType + '|' + location.boardId + '|' + location.x + '|' + location.y
 }

@@ -5,7 +5,10 @@ import { PatternLines } from '../PatternLines';
 import { Wall } from '../Wall';
 import styles from './style.module.scss';
 
-type Props = { config: GameSetup, player: number };
+type Props = {
+  config: GameSetup,
+  player: number
+};
 
 export const PlayerBoard: React.FC<Props> = (props) => {
   return <div className={styles.container}>
@@ -16,10 +19,10 @@ export const PlayerBoard: React.FC<Props> = (props) => {
       <PatternLines player={props.player} />
     </div>
     <div className={styles.right}>
-      <Wall config={props.config.wallSetup} />
+      <Wall player={props.player} config={props.config.wallSetup} />
     </div>
     <div className={styles.bottom}>
-      <FloorLine config={props.config.floorLineSetup} />
+      <FloorLine player={props.player} config={props.config.floorLineSetup} />
     </div>
   </div>;
 };

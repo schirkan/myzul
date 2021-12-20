@@ -49,6 +49,7 @@
     "@storybook/addon-actions": "^6.4.9",
     "@storybook/addon-essentials": "^6.4.9",
     "@storybook/addon-links": "^6.4.9",
+    "@storybook/preset-create-react-app": "^4.0.0",
     "@storybook/react": "^6.4.9",
     "boardgame.io": "^0.49.6",
     "sass": "^1.45.0",

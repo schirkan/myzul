@@ -1,52 +1,45 @@
 import React from 'react';
-import { GameSetup, TileColor } from '../../../games/azul/azulConfig';
+import type { BoardProps } from 'boardgame.io/react';
 import { Factory } from '../Factory';
 import { PlayerBoard } from '../PlayerBoard';
 import { Tile } from '../Tile';
 import { TileStorage } from '../TileStorage';
 import styles from './style.module.scss';
+import { AzulGameState } from './../../../games/azul/Game';
+import { TileLocationContext, defaultLocation } from '../TileLocationContext';
 
-type Props = { config: GameSetup };
-
-const game = {
-  tiles: [
-    { id: 1, selectable: false, color: 'red' },
-    { id: 2, selectable: false, color: 'green' },
-    { id: 3, selectable: false, color: 'blue' },
-    { id: 4, selectable: false, color: 'yellow' },
-    { id: 5, selectable: false, color: 'black' },
-  ]
-}
-
-
-export const GameBoard: React.FC<Props> = (props) => {
+export const GameBoard: React.FC<BoardProps<AzulGameState>> = (props) => {
   return <div className={styles.container}>
-    <header>header</header>
-    <section className={styles.factories}>
-      {[...Array(props.config.numberOfPlayers * 2 + 1)].map((x, i) =>
-        <Factory />
+    <TileLocationContext.Provider value={defaultLocation}>
+      <header>header</header>
+      <section className={styles.factories}>
+        {[...Array(props.G.factories)].map((_, index) =>
+          <Factory factoryId={index} key={index} />
+        )}
+      </section>
+      <section>
+        <PlayerBoard config={props.G.config} player={1} />
+      </section>
+      <section>
+        <PlayerBoard config={props.G.config} player={2} />
+      </section>
+      {props.ctx.numPlayers > 2 && (
+        <section>
+          <PlayerBoard config={props.G.config} player={3} />
+        </section>
       )}
-    </section>
-    <section>
-      <PlayerBoard config={props.config} player={1} />
-    </section>
-    <section>
-      <PlayerBoard config={props.config} player={2} />
-    </section>
-    {props.config.numberOfPlayers > 2 && (
+      {props.ctx.numPlayers > 3 && (
+        <section>
+          <PlayerBoard config={props.G.config} player={4} />
+        </section>
+      )}
       <section>
-        <PlayerBoard config={props.config} player={3} />
+        <TileStorage />
       </section>
-    )}
-    {props.config.numberOfPlayers > 3 && (
-      <section>
-        <PlayerBoard config={props.config} player={4} />
-      </section>
-    )}
-    <section>
-      <TileStorage />
-    </section>
-    <footer>footer</footer>
-    {game.tiles.map(tile => <Tile color={tile.color as TileColor} selectable={tile.selectable} />)}
+      <footer>footer</footer>
+      {props.G.tiles.map((tile, index) =>
+        <Tile key={index} color={tile.color} selectable={tile.selectable} location={tile.location} />
+      )}
+    </TileLocationContext.Provider>
   </div>;
 };

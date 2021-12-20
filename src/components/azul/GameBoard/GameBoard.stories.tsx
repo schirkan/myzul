@@ -11,4 +11,4 @@ const Template: ComponentStory<typeof GameBoard> = (args) => <GameBoard {...args
 
 export const c1 = Template.bind({});
 c1.storyName = "default"
-c1.args = { config: defaultGameSetup }
+c1.args = {}
