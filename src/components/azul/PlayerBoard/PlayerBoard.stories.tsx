@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { PlayerBoard } from './';
-import { defaultGameSetup, floorSetups, wallSetups } from './../../../games/azul/azulConfig';
+import { defaultGameSetup } from './../../../games/azul/azulConfig';
 
 export default {
   title: 'Azul/PlayerBoard',
@@ -13,5 +13,5 @@ export const c1 = Template.bind({});
 c1.storyName = "default"
 c1.args = {
   config: defaultGameSetup,
-  player: 1
+  playerId: "0"
 }

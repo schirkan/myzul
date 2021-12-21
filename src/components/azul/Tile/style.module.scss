@@ -31,6 +31,13 @@
     border-color: #333;
   }
 
+  &[data-selected="true"] {
+    // cursor: pointer;
+    transition: transform 0.2s; /* Animation */
+    transform: scale(1.1);
+    // border-color: #ffa;
+  }
+
   &[data-selectable="true"] {
     cursor: pointer;
     transition: transform 0.2s; /* Animation */

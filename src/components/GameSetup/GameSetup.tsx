@@ -6,7 +6,7 @@ type Props = {
   onStartClick: (game: string, numPlayers: number, setupData: any) => void
 };
 
-export const GameSetup: React.FC<Props> = (props) => {
+export const GameSetup: React.FC<Props> = React.memo((props) => {
   const games = ['AZUL'];
   const [game, setGame] = useState('AZUL');
   const [numPlayers, setNumPlayers] = useState(2);
@@ -37,4 +37,4 @@ export const GameSetup: React.FC<Props> = (props) => {
     </div>
     <button onClick={() => props.onStartClick(game, numPlayers, { wallSetup, floorSetup })}>Start</button>
   </div>;
-};
+});

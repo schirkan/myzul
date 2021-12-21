@@ -1,6 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { GameBoard } from './';
-import { defaultGameSetup } from './../../../games/azul/azulConfig';
 
 export default {
   title: 'Azul/GameBoard',

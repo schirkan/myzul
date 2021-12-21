@@ -7,22 +7,22 @@ import styles from './style.module.scss';
 
 type Props = {
   config: GameSetup,
-  player: number
+  playerId: string
 };
 
-export const PlayerBoard: React.FC<Props> = (props) => {
+export const PlayerBoard: React.FC<Props> = React.memo((props) => {
   return <div className={styles.container}>
     <div className={styles.top}>
-      Player #{props.player}
+      Player #{props.playerId}
     </div>
     <div className={styles.left}>
-      <PatternLines player={props.player} />
+      <PatternLines playerId={props.playerId} />
     </div>
     <div className={styles.right}>
-      <Wall player={props.player} config={props.config.wallSetup} />
+      <Wall playerId={props.playerId} config={props.config.wallSetup} />
     </div>
     <div className={styles.bottom}>
-      <FloorLine player={props.player} config={props.config.floorLineSetup} />
+      <FloorLine playerId={props.playerId} config={props.config.floorSetup} />
     </div>
   </div>;
-};
+});

@@ -1,10 +1,10 @@
-// Game.ts
 import type { Ctx, Game, Move } from "boardgame.io";
 import { defaultGameSetup, GameSetup, TileColor, TileLocation } from "./azulConfig";
 
-interface AzulTileState {
+export interface AzulTileState {
   color: TileColor,
   location: TileLocation,
+  selected: boolean,
   selectable: boolean
 }
 
@@ -12,10 +12,75 @@ interface AzulTileState {
 export interface AzulGameState {
   config: GameSetup
   factories: number,
-  tiles: AzulTileState[],
+  tiles: AzulTileState[]
 }
 
-const move: Move<AzulGameState> = (G, ctx) => { };
+const INVALID_MOVE = "INVALID_MOVE";
+
+const selectSourceTile: Move<AzulGameState> = (G, ctx, tile: AzulTileState) => {
+  if (!tile.selectable) return INVALID_MOVE;
+
+  // reset selection
+  G.tiles.forEach(x => x.selected = false);
+
+  // select all tiles of same color on same board
+  G.tiles.filter(x =>
+    x.location.boardType === tile.location.boardType &&
+    x.location.boardId === tile.location.boardId &&
+    x.color === tile.color
+  ).forEach(x => x.selected = true);
+
+  // Placeholder selectable machen?
+
+};
+
+const selectTargetLocation: Move<AzulGameState> = (G, ctx, target: TileLocation) => {
+  // move all selected tiles to new board
+  var tiles = G.tiles.filter(x => x.selected);
+
+  if (!tiles.length) return INVALID_MOVE;
+  if (target.boardId !== ctx.currentPlayer) return INVALID_MOVE;
+
+  if (target.boardType === 'FloorLine') {
+    // get tiles on floor line
+    const floorLineTiles = G.tiles.filter(x =>
+      x.location.boardType === target.boardType &&
+      x.location.boardId === target.boardId
+    );
+
+    console.log('tiles', tiles);
+    console.log('floorLineTiles', floorLineTiles);
+
+    // move tiles to floor
+    let counter = floorLineTiles.length;
+    tiles.forEach(x => {
+      if (counter <= 6) {
+        console.log('move to floor', counter);
+        x.location = {
+          boardType: 'FloorLine',
+          boardId: ctx.currentPlayer,
+          x: counter++
+        }
+      } else {
+        console.log('move to storage', counter);
+        x.location = {
+          boardType: 'TileStorage'
+        }
+      }
+    });
+  }
+
+  // move remaining tiles from factory to board
+
+
+  // var tile = G.tiles.find(x => GetTileLocationId(x.location) === G.selectedTileId);
+  // if (tile) {
+  //   tile.location = location;
+  // }
+
+  // reset selection
+  G.tiles.forEach(x => x.selected = false);
+};
 
 export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   // The name of the game.
@@ -28,13 +93,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   setup: (ctx, setupData): AzulGameState => {
     if (!setupData) setupData = defaultGameSetup;
 
-    const tiles = {
-      red: 20,
-      green: 20,
-      blue: 20,
-      yellow: 20,
-      black: 20,
-    };
+    const tilesPerColor = 20;
 
     const initialState: AzulGameState = {
       factories: ctx.numPlayers * 2 + 1,
@@ -42,24 +101,12 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       config: setupData,
     };
 
-    for (let i = 0; i < tiles.red; i++) {
-      initialState.tiles.push({ color: 'red', selectable: false, location: { boardType: 'TileBag' } })
-    }
-
-    for (let i = 0; i < tiles.green; i++) {
-      initialState.tiles.push({ color: 'green', selectable: false, location: { boardType: 'TileBag' } })
-    }
-
-    for (let i = 0; i < tiles.black; i++) {
-      initialState.tiles.push({ color: 'black', selectable: false, location: { boardType: 'TileBag' } })
-    }
-
-    for (let i = 0; i < tiles.blue; i++) {
-      initialState.tiles.push({ color: 'blue', selectable: false, location: { boardType: 'TileBag' } })
-    }
-
-    for (let i = 0; i < tiles.yellow; i++) {
-      initialState.tiles.push({ color: 'yellow', selectable: false, location: { boardType: 'TileBag' } })
+    for (let i = 0; i < tilesPerColor; i++) {
+      initialState.tiles.push({ color: 'red', selectable: false, location: { boardType: 'TileBag' }, selected: false })
+      initialState.tiles.push({ color: 'green', selectable: false, location: { boardType: 'TileBag' }, selected: false })
+      initialState.tiles.push({ color: 'black', selectable: false, location: { boardType: 'TileBag' }, selected: false })
+      initialState.tiles.push({ color: 'blue', selectable: false, location: { boardType: 'TileBag' }, selected: false })
+      initialState.tiles.push({ color: 'yellow', selectable: false, location: { boardType: 'TileBag' }, selected: false })
     }
 
     // shuffle tiles
@@ -67,11 +114,15 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
 
     // place tiles on factories
     for (let i = 0; i < initialState.factories; i++) {
-      initialState.tiles[i * 4 + 0].location = { boardType: 'Factory', boardId: i, x: 0, y: 0 }
-      initialState.tiles[i * 4 + 1].location = { boardType: 'Factory', boardId: i, x: 0, y: 1 }
-      initialState.tiles[i * 4 + 2].location = { boardType: 'Factory', boardId: i, x: 1, y: 0 }
-      initialState.tiles[i * 4 + 3].location = { boardType: 'Factory', boardId: i, x: 1, y: 1 }
+      initialState.tiles[i * 4 + 0].location = { boardType: 'Factory', boardId: i.toString(), x: 0, y: 0 }
+      initialState.tiles[i * 4 + 1].location = { boardType: 'Factory', boardId: i.toString(), x: 0, y: 1 }
+      initialState.tiles[i * 4 + 2].location = { boardType: 'Factory', boardId: i.toString(), x: 1, y: 0 }
+      initialState.tiles[i * 4 + 3].location = { boardType: 'Factory', boardId: i.toString(), x: 1, y: 1 }
     }
+
+    initialState.tiles
+      .filter(x => x.location.boardType === 'Factory')
+      .forEach(x => x.selectable = true);
 
     return initialState;
   },
@@ -87,25 +138,76 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   minPlayers: 2,
   maxPlayers: 4,
 
-  moves: {
-    // short-form move.
-    A: (G, ctx, ...args) => { },
+  /*
+    moves: {
+      // short-form move.
+      A: (G, ctx, ...args) => { },
+  
+      // long-form move.
+      B: {
+        // The move function.
+        move: (G, ctx, ...args) => { },
+        // Prevents undoing the move.
+        undoable: false,
+        // Prevents the move arguments from showing up in the log.
+        redact: true,
+        // Prevents the move from running on the client.
+        client: false,
+        // Prevents the move counting towards a player’s number of moves.
+        noLimit: true,
+        // Processes the move even if it was dispatched from an out-of-date client.
+        // This can be risky; check the validity of the state update in your move.
+        ignoreStaleStateID: true,
+      },
+    },
+  */
 
-    // long-form move.
-    B: {
-      // The move function.
-      move: (G, ctx, ...args) => { },
-      // Prevents undoing the move.
-      undoable: false,
-      // Prevents the move arguments from showing up in the log.
-      redact: true,
-      // Prevents the move from running on the client.
-      client: false,
-      // Prevents the move counting towards a player’s number of moves.
-      noLimit: true,
-      // Processes the move even if it was dispatched from an out-of-date client.
-      // This can be risky; check the validity of the state update in your move.
-      ignoreStaleStateID: true,
+  moves: { selectSourceTile, selectTargetLocation },
+
+  turn: {
+    // The turn order.
+    //order: {} //TurnOrder.DEFAULT,
+
+    // Called at the beginning of a turn.
+    onBegin: (G, ctx) => G,
+
+    // Called at the end of a turn.
+    onEnd: (G, ctx) => G,
+
+    // Ends the turn if this returns true.
+    //endIf: (G, ctx) => true,
+
+    // Called at the end of each move.
+    onMove: (G, ctx) => {
+      // set selectable Tiles
+      G.tiles.forEach(x => x.selectable = false);
+      G.tiles.filter(x => x.location.boardType === 'Factory').forEach(x => x.selectable = true);
+
+      return G;
+    },
+
+    // Prevents ending the turn before a minimum number of moves.
+    //minMoves: 1,
+
+    // Ends the turn automatically after a number of moves.
+    //maxMoves: 1,
+
+    // Calls setActivePlayers with this as argument at the
+    // beginning of the turn.
+    //activePlayers: { ... },
+
+    stages: {
+      A: {
+        // Players in this stage are restricted to moves defined here.
+        moves: { selectSourceTile },
+
+        // Players in this stage will be moved to the stage specified
+        // here when the endStage event is called.
+        next: 'B'
+      },
+      B: {
+        moves: { selectSourceTile, selectTargetLocation },
+      },
     },
   },
 
@@ -117,45 +219,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     // The seed used by the pseudo-random number generator.
     seed: 'random-string',
   
-    turn: {
-      // The turn order.
-      order: TurnOrder.DEFAULT,
-  
-      // Called at the beginning of a turn.
-      onBegin: (G, ctx) => G,
-  
-      // Called at the end of a turn.
-      onEnd: (G, ctx) => G,
-  
-      // Ends the turn if this returns true.
-      endIf: (G, ctx) => true,
-  
-      // Called at the end of each move.
-      onMove: (G, ctx) => G,
-  
-      // Prevents ending the turn before a minimum number of moves.
-      minMoves: 1,
-  
-      // Ends the turn automatically after a number of moves.
-      maxMoves: 1,
-  
-      // Calls setActivePlayers with this as argument at the
-      // beginning of the turn.
-      activePlayers: { ... },
-  
-      stages: {
-        A: {
-          // Players in this stage are restricted to moves defined here.
-          moves: { ... },
-  
-          // Players in this stage will be moved to the stage specified
-          // here when the endStage event is called.
-          next: 'B'
-        },
-  
-        ...
-      },
-    },
   
     phases: {
       A: {
