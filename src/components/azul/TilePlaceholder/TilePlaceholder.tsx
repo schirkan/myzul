@@ -15,7 +15,12 @@ export const TilePlaceholder: React.FC<Props> = React.memo((props) => {
   let id = '';
   if (props.location) {
     id = GetTileLocationId(props.location);
-    console.log(id);
+    // console.log(id);
+  }
+
+  const onClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    context.onPlaceholderClick(props.location);
   }
 
   useEffect(() => {
@@ -31,7 +36,7 @@ export const TilePlaceholder: React.FC<Props> = React.memo((props) => {
     className={styles.container}
     data-color={props.color || 'none'}
     data-id={id}
-    onClick={() => context.onPlaceholderClick(props.location)}
+    onClick={onClick}
     ref={el}>
     {props.multiplier && props.multiplier > 1 ? props.multiplier + 'x' : ''}
   </div>;

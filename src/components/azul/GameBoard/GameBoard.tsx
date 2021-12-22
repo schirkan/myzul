@@ -25,7 +25,7 @@ const Boards: React.FC<Props> = React.memo((props) => {
       )}
     </section>
     <section className={styles.centerOfTable}>
-      {[...Array(props.factories * 4)].map((_, index) =>
+      {[...Array(props.factories * 3 + 1)].map((_, index) =>
         <TilePlaceholder key={index} location={{ boardType: 'CenterOfTable', x: index }} />
       )}
     </section>
