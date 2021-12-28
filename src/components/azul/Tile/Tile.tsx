@@ -3,11 +3,13 @@ import { GetTileLocationId } from '../../../games/azul/azulConfig';
 import { AzulTileState } from "../../../games/azul/models";
 import { TileContext } from '../TileLocationContext';
 import styles from './Tile.module.scss';
+import { useWindowWidth } from '@react-hook/window-size/throttled'
 
 export const Tile: React.FC<AzulTileState> = React.memo((props) => {
   const context = useContext(TileContext);
   const el = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ transform: '' });
+  const width = useWindowWidth();
 
   useEffect(() => {
     const id = GetTileLocationId(props.location);
@@ -18,7 +20,7 @@ export const Tile: React.FC<AzulTileState> = React.memo((props) => {
       const x = rect.left + window.scrollX;
       setPosition({ transform: 'translateX(' + x + 'px) translateY(' + y + 'px)' });
     }
-  }, [props.location]);
+  }, [props.location, width]);
 
   return <div
     className={styles.container}

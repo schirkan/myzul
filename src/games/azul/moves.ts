@@ -1,10 +1,10 @@
-import { Move } from "boardgame.io";
+import { MoveFn } from "boardgame.io";
 import { GetTileLocationId } from "./azulConfig";
 import { AzulGameState, AzulTileState, BoardType, TileLocation } from "./models";
 
 export const INVALID_MOVE = "INVALID_MOVE";
 
-export const selectSourceTile: Move<AzulGameState> = (G, ctx, tile: AzulTileState) => {
+export const selectSourceTile: MoveFn<AzulGameState> = (G, ctx, tile: AzulTileState) => {
   if (!tile.selectable) return INVALID_MOVE;
 
   // reset selection
@@ -23,7 +23,7 @@ export const selectSourceTile: Move<AzulGameState> = (G, ctx, tile: AzulTileStat
 };
 
 // move all selected tiles to new board
-export const selectTargetLocation: Move<AzulGameState> = (G, ctx, target: TileLocation) => {
+export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TileLocation) => {
   var selectedTiles = G.tiles.filter(x => x.selected);
 
   if (!selectedTiles.length) return INVALID_MOVE;

@@ -83,7 +83,25 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     },
   */
 
-  moves: { selectSourceTile, selectTargetLocation },
+  moves: {
+    selectSourceTile: {
+      noLimit: true,
+      move: selectSourceTile
+    },
+    selectTargetLocation: {
+      move: selectTargetLocation
+    }
+  },
+
+  // Ends the game if this returns anything.
+  // The return value is available in `ctx.gameover`.
+  endIf: (G, ctx) => {
+    return undefined;
+  },
+
+  // Called at the end of the game.
+  // `ctx.gameover` is available at this point.
+  // onEnd: (G, ctx) => G,
 
   turn: {
     // The turn order.
@@ -96,7 +114,9 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     onEnd: (G, ctx) => G,
 
     // Ends the turn if this returns true.
-    //endIf: (G, ctx) => true,
+    endIf: (G, ctx) => {
+      return false;
+    },
 
     // Called at the end of each move.
     onMove: (G, ctx) => {
@@ -109,28 +129,28 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     },
 
     // Prevents ending the turn before a minimum number of moves.
-    //minMoves: 1,
+    minMoves: 1,
 
     // Ends the turn automatically after a number of moves.
-    //maxMoves: 1,
+    maxMoves: 1,
 
     // Calls setActivePlayers with this as argument at the
     // beginning of the turn.
     //activePlayers: { ... },
 
-    stages: {
-      A: {
-        // Players in this stage are restricted to moves defined here.
-        moves: { selectSourceTile },
+    // stages: {
+    //   A: {
+    //     // Players in this stage are restricted to moves defined here.
+    //     moves: { selectSourceTile },
 
-        // Players in this stage will be moved to the stage specified
-        // here when the endStage event is called.
-        next: 'B'
-      },
-      B: {
-        moves: { selectSourceTile, selectTargetLocation },
-      },
-    },
+    //     // Players in this stage will be moved to the stage specified
+    //     // here when the endStage event is called.
+    //     next: 'B'
+    //   },
+    //   B: {
+    //     moves: { selectSourceTile, selectTargetLocation },
+    //   },
+    // },
   },
 
   // Everything below is OPTIONAL.
@@ -170,13 +190,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       ...
     },
     
-    // Ends the game if this returns anything.
-    // The return value is available in `ctx.gameover`.
-    endIf: (G, ctx) => obj,
-  
-    // Called at the end of the game.
-    // `ctx.gameover` is available at this point.
-    onEnd: (G, ctx) => G,
   
     // Disable undo feature for all the moves in the game
     disableUndo: true,

@@ -4,10 +4,10 @@ import { Factory } from '../Factory';
 import { PlayerBoard } from '../PlayerBoard';
 import { Tile } from '../Tile';
 import { TileStorage } from '../TileStorage';
-import styles from './GameBoard.module.scss';
 import { AzulGameState, GameSetup } from "../../../games/azul/models";
 import { TileContext, TileContextType, createTileContext } from '../TileLocationContext';
 import { TilePlaceholder } from '../TilePlaceholder';
+import styles from './GameBoard.module.scss';
 
 type Props = GameSetup & {
   numPlayers: number,
