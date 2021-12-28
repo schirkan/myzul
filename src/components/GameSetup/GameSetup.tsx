@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { floorSetups, wallSetups } from '../../games/azul/azulConfig';
-import styles from './style.module.scss';
+import styles from './GameSetup.module.scss';
 
 type Props = {
   onStartClick: (game: string, numPlayers: number, setupData: any) => void

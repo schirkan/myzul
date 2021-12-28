@@ -4,10 +4,9 @@ import { Factory } from '../Factory';
 import { PlayerBoard } from '../PlayerBoard';
 import { Tile } from '../Tile';
 import { TileStorage } from '../TileStorage';
-import styles from './style.module.scss';
-import { AzulGameState } from './../../../games/azul/Game';
+import styles from './GameBoard.module.scss';
+import { AzulGameState, GameSetup } from "../../../games/azul/models";
 import { TileContext, TileContextType, createTileContext } from '../TileLocationContext';
-import { GameSetup } from '../../../games/azul/azulConfig';
 import { TilePlaceholder } from '../TilePlaceholder';
 
 type Props = GameSetup & {
@@ -29,19 +28,19 @@ const Boards: React.FC<Props> = React.memo((props) => {
         <TilePlaceholder key={index} location={{ boardType: 'CenterOfTable', x: index }} />
       )}
     </section>
-    <section>
+    <section className={styles.playerBoard}>
       <PlayerBoard config={props} playerId={props.players[0]} />
     </section>
-    <section>
+    <section className={styles.playerBoard}>
       <PlayerBoard config={props} playerId={props.players[1]} />
     </section>
     {props.numPlayers > 2 && (
-      <section>
+      <section className={styles.playerBoard}>
         <PlayerBoard config={props} playerId={props.players[2]} />
       </section>
     )}
     {props.numPlayers > 3 && (
-      <section>
+      <section className={styles.playerBoard}>
         <PlayerBoard config={props} playerId={props.players[3]} />
       </section>
     )}

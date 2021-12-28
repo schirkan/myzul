@@ -1,7 +1,6 @@
 import { BoardProps } from 'boardgame.io/react';
 import React from 'react';
-import { TileLocation } from '../../games/azul/azulConfig';
-import { AzulGameState, AzulTileState } from '../../games/azul/Game';
+import { AzulGameState, AzulTileState, TileLocation } from "../../games/azul/models";
 
 export type TileContextType = {
   setBoardProps: (newProps: BoardProps<AzulGameState>) => void,

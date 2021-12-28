@@ -1,17 +1,4 @@
-import { GameSetup } from './../../components/GameSetup/GameSetup';
-
-export type TileColor = 'red' | 'green' | 'blue' | 'yellow' | 'black'
-export type TilePlaceholderColor = TileColor | 'none'
-
-export type TilePlaceholderConfig = {
-  color: TilePlaceholderColor,
-  multiplier: number
-}
-
-export type WallSetup = {
-  name: string,
-  rows: Array<Array<TilePlaceholderConfig>>
-}
+import { FloorSetup, GameSetup, TileLocation, TilePlaceholderConfig, WallSetup } from './models';
 
 const red1: TilePlaceholderConfig = { color: "red", multiplier: 1 }
 const green1: TilePlaceholderConfig = { color: "green", multiplier: 1 }
@@ -58,22 +45,12 @@ export const wallSetups: WallSetup[] = [
   }
 ];
 
-export type FloorSetup = {
-  name: string,
-  values: number[]
-};
-
 export const floorSetups: FloorSetup[] = [
   {
     name: 'Default',
     values: [-1, -1, -2, -2, -2, -3, -3]
   }
 ];
-
-export type GameSetup = {
-  wallSetup: string,
-  floorSetup: string,
-};
 
 export const defaultGameSetup: GameSetup = {
   wallSetup: 'Default',
@@ -83,14 +60,6 @@ export const defaultGameSetup: GameSetup = {
 export const getWallSetup = (name?: string): WallSetup => wallSetups.find(x => x.name === name) || wallSetups[0];
 export const getFloorSetup = (name?: string): FloorSetup => floorSetups.find(x => x.name === name) || floorSetups[0];
 
-export type BoardType = 'Factory' | 'Wall' | 'PatternLine' | 'FloorLine' | 'TileBag' | 'TileStorage' | 'CenterOfTable'
-
-export type TileLocation = {
-  boardType: BoardType,
-  boardId?: string,
-  x?: number,
-  y?: number
-}
 
 export const GetTileLocationId = (location: TileLocation) => {
   return location.boardType + '|' + location.boardId + '|' + location.x + '|' + location.y

@@ -1,5 +1,5 @@
 ---
-to: <%= absPath %>/style.module.scss
+to: <%= absPath %>/<%= component_name %>.module.scss
 ---
 .container {
   

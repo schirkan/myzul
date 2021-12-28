@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { TilePlaceholder } from '../TilePlaceholder';
 import { TileContext } from '../TileLocationContext';
-import styles from './style.module.scss';
+import styles from './PatternLines.module.scss';
 
 type Props = {
   playerId: string

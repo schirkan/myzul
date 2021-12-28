@@ -8,7 +8,6 @@
 
   header,
   section,
-  main,
   footer {
     margin: 10px;
     padding: 10px;
@@ -31,4 +30,9 @@
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
+}
+
+.playerBoard {
+  display: inline-block;
+  margin: 0 0 0 10px !important;
 }

@@ -1,9 +1,9 @@
 import React from 'react';
-import { GameSetup } from '../../../games/azul/azulConfig';
+import { GameSetup } from '../../../games/azul/models';
 import { FloorLine } from '../FloorLine';
 import { PatternLines } from '../PatternLines';
 import { Wall } from '../Wall';
-import styles from './style.module.scss';
+import styles from './PlayerBoard.module.scss';
 
 type Props = {
   config: GameSetup,

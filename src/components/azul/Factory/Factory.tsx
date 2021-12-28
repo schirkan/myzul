@@ -1,6 +1,6 @@
 import React from 'react';
 import { TilePlaceholder } from '../TilePlaceholder';
-import styles from './style.module.scss';
+import styles from './Factory.module.scss';
 
 type Props = {
   factoryId: string

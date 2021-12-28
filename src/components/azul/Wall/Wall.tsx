@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { getWallSetup, WallSetup } from '../../../games/azul/azulConfig';
+import { getWallSetup } from '../../../games/azul/azulConfig';
 import { TilePlaceholder } from '../TilePlaceholder';
-import styles from './style.module.scss';
+import styles from './Wall.module.scss';
 
 type Props = {
   config: string,

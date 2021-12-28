@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { TileLocation, TilePlaceholderConfig } from '../../../games/azul/azulConfig';
-import styles from './style.module.scss';
+import styles from './TilePlaceholder.module.scss';
 import { GetTileLocationId } from './../../../games/azul/azulConfig';
 import { TileContext } from '../TileLocationContext';
+import { TilePlaceholderConfig, TileLocation } from '../../../games/azul/models';
 
 type Props = Partial<TilePlaceholderConfig> & {
   location: TileLocation

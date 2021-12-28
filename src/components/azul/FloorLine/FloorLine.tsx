@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { getFloorSetup } from '../../../games/azul/azulConfig';
 import { TilePlaceholder } from '../TilePlaceholder';
-import styles from './style.module.scss';
+import styles from './FloorLine.module.scss';
 
 type Props = {
   config: string,
