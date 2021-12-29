@@ -4,11 +4,11 @@ import { GetTileLocationId } from './../../../games/azul/azulConfig';
 import { TileContext } from '../TileLocationContext';
 import { TilePlaceholderConfig, TileLocation } from '../../../games/azul/models';
 
-type Props = Partial<TilePlaceholderConfig> & {
+export type TilePlaceholderProps = Partial<TilePlaceholderConfig> & {
   location: TileLocation
 };
 
-export const TilePlaceholder: React.FC<Props> = React.memo((props) => {
+export const TilePlaceholder: React.FC<TilePlaceholderProps> = React.memo((props) => {
   const context = useContext(TileContext);
   const el = useRef<HTMLDivElement>(null);
 
@@ -20,7 +20,7 @@ export const TilePlaceholder: React.FC<Props> = React.memo((props) => {
 
   const onClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    context.onPlaceholderClick(props.location);
+    context.onPlaceholderClick(props);
   }
 
   useEffect(() => {

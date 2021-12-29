@@ -1,0 +1,32 @@
+{
+  "configurations": [
+    {
+      "command": "npm start",
+      "name": "Run npm start",
+      "request": "launch",
+      "type": "node-terminal",
+    },
+    {
+      "name": "Launch Microsoft Edge and open the Edge DevTools",
+      "request": "launch",
+      "type": "vscode-edge-devtools.debug",
+      "url": "http://localhost:3000",
+    },
+    {
+      "type": "pwa-msedge",
+      "request": "launch",
+      "name": "Launch Edge against localhost",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+    },
+  ],
+  "compounds": [
+    {
+      "name": "Start and Debug",
+      "configurations": [
+        "Run npm start",
+        "Launch Edge against localhost"
+      ]
+    }
+  ]
+}

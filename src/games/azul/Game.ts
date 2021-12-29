@@ -1,7 +1,8 @@
 import type { Ctx, Game, Move } from "boardgame.io";
-import { defaultGameSetup } from "./azulConfig";
+import { defaultGameSetup, wallSetups } from "./azulConfig";
 import { AzulGameState, GameSetup } from "./models";
-import { selectSourceTile, selectTargetLocation } from "./moves";
+import { moveTile, selectSourceTile, selectTargetLocation } from "./moves";
+import { ActivePlayers, Stage, TurnOrder } from 'boardgame.io/core';
 
 export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   // The name of the game.
@@ -20,8 +21,15 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       factories: ctx.numPlayers * 2 + 1,
       tiles: [],
       config: setupData,
-      score: {}
+      score: {},
+      initialized: false,
+      calculationDelay: 500,
     };
+
+    // init score
+    ctx.playOrder.forEach(playerId => {
+      initialState.score[playerId] = 0;
+    });
 
     // create tiles
     for (let i = 0; i < tilesPerColor; i++) {
@@ -32,23 +40,13 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       initialState.tiles.push({ color: 'yellow', selectable: false, location: { boardType: 'TileBag' }, selected: false })
     }
 
+    // create white tile
+    initialState.tiles.push({ color: 'white', selectable: false, location: { boardType: 'TileBag', x: 0 }, selected: false })
+
     // shuffle tiles
     initialState.tiles = initialState.tiles.sort(() => Math.random() - 0.5)
 
-    // create white tile
-    initialState.tiles.push({ color: 'white', selectable: false, location: { boardType: 'CenterOfTable', x: 0 }, selected: false })
-
-    // place tiles on factories
-    for (let i = 0; i < initialState.factories; i++) {
-      initialState.tiles[i * 4 + 0].location = { boardType: 'Factory', boardId: i.toString(), x: 0, y: 0 }
-      initialState.tiles[i * 4 + 1].location = { boardType: 'Factory', boardId: i.toString(), x: 0, y: 1 }
-      initialState.tiles[i * 4 + 2].location = { boardType: 'Factory', boardId: i.toString(), x: 1, y: 0 }
-      initialState.tiles[i * 4 + 3].location = { boardType: 'Factory', boardId: i.toString(), x: 1, y: 1 }
-    }
-
-    initialState.tiles
-      .filter(x => x.location.boardType === 'Factory')
-      .forEach(x => x.selectable = true);
+    console.log('setup completed');
 
     return initialState;
   },
@@ -88,75 +86,175 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     },
   */
 
-  moves: {
-    selectSourceTile: {
-      noLimit: true,
-      move: selectSourceTile
-    },
-    selectTargetLocation: {
-      move: selectTargetLocation
-    }
-  },
-
-  // Ends the game if this returns anything.
-  // The return value is available in `ctx.gameover`.
-  endIf: (G, ctx) => {
-    return undefined;
-  },
 
   // Called at the end of the game.
   // `ctx.gameover` is available at this point.
   // onEnd: (G, ctx) => G,
 
-  turn: {
-    // The turn order.
-    //order: {} //TurnOrder.DEFAULT,
+  phases: {
+    // setup: {
+    //   moves: {
+    //     start: {
+    //       move: (G, ctx) => {
 
-    // Called at the beginning of a turn.
-    onBegin: (G, ctx) => G,
+    //         G.initialized = true;
 
-    // Called at the end of a turn.
-    onEnd: (G, ctx) => G,
-
-    // Ends the turn if this returns true.
-    endIf: (G, ctx) => {
-      return false;
-    },
-
-    // Called at the end of each move.
-    onMove: (G, ctx) => {
-      // set selectable Tiles
-      G.tiles.forEach(x => x.selectable = false);
-      G.tiles.filter(x => x.location.boardType === 'Factory' || x.location.boardType === 'CenterOfTable')
-        .forEach(x => x.selectable = true);
-
-      return G;
-    },
-
-    // Prevents ending the turn before a minimum number of moves.
-    minMoves: 1,
-
-    // Ends the turn automatically after a number of moves.
-    maxMoves: 1,
-
-    // Calls setActivePlayers with this as argument at the
-    // beginning of the turn.
-    //activePlayers: { ... },
-
-    // stages: {
-    //   A: {
-    //     // Players in this stage are restricted to moves defined here.
-    //     moves: { selectSourceTile },
-
-    //     // Players in this stage will be moved to the stage specified
-    //     // here when the endStage event is called.
-    //     next: 'B'
+    //         ctx.events?.endPhase();
+    //       }
+    //     },
     //   },
-    //   B: {
-    //     moves: { selectSourceTile, selectTargetLocation },
+    //   turn: {
+    //     activePlayers: { all: Stage.NULL },
+    //     order: TurnOrder.RESET,
+    //     onBegin: (G) => {
+    //       G.initialized = false;
+    //     }
     //   },
+    //   start: true,
+    //   next: 'placeTiles',
     // },
+
+    placeTiles: {
+      start: true,
+      onBegin: (G, ctx) => {
+        console.log('placeTiles.onBegin');
+
+        const availableTiles = G.tiles.filter(x =>
+          x.location.boardType === "TileBag" &&
+          x.color !== "white");
+
+        // place tiles on factories
+        for (let i = 0; i < G.factories; i++) {
+          moveTile(availableTiles[i * 4 + 0], 'Factory', i, 0, 0);
+          moveTile(availableTiles[i * 4 + 1], 'Factory', i, 0, 1);
+          moveTile(availableTiles[i * 4 + 2], 'Factory', i, 1, 0);
+          moveTile(availableTiles[i * 4 + 3], 'Factory', i, 1, 1);
+        }
+
+        // place white tile on table
+        const whiteTile = G.tiles.find(x => x.color === "white");
+        moveTile(whiteTile!, "CenterOfTable", undefined, 0);
+
+        // make tiles selectable
+        G.tiles
+          .filter(x =>
+            x.location.boardType === 'Factory' ||
+            x.location.boardType === 'CenterOfTable')
+          .forEach(x => x.selectable = true);
+
+        G.initialized = true;
+      },
+      onEnd: (G, ctx) => {
+        console.log('placeTiles.onEnd');
+        G.initialized = false;
+      },
+      endIf: (G, ctx) => {
+        console.log('placeTiles.endIf');
+        // don't end before started
+        if (!G.initialized) return false;
+        // end if no tiles left
+        const factoryTiles = G.tiles.filter(x =>
+          x.location.boardType === "Factory" ||
+          x.location.boardType === "CenterOfTable");
+        return factoryTiles.length === 0;
+      },
+      next: 'calculateScore',
+      moves: {
+        selectSourceTile: {
+          noLimit: true,
+          move: selectSourceTile
+        },
+        selectTargetLocation: {
+          move: selectTargetLocation
+        }
+      },
+      turn: {
+        order: TurnOrder.RESET,
+        minMoves: 1,
+        maxMoves: 1,
+        onMove: (G, ctx) => {
+          // set selectable Tiles
+          G.tiles.forEach(x => x.selectable = false);
+          G.tiles
+            .filter(x =>
+              x.location.boardType === 'Factory' ||
+              x.location.boardType === 'CenterOfTable')
+            .forEach(x => x.selectable = true);
+        },
+      },
+    },
+
+    calculateScore: {
+      onBegin: (G, ctx) => {
+        console.log('calculateScore.onBegin');
+        //calculateScore(G, ctx);
+      },
+      onEnd: (G, ctx) => {
+        console.log('calculateScore.onEnd');
+
+        // calculare floor tiles
+        // TODO: 
+
+        // get player with most points
+        let winnerPlayerId = "";
+        let winnerPlayerScore = 0;
+        for (const playerId of ctx.playOrder) {
+          const s = G.score[playerId];
+          if (s > winnerPlayerScore) {
+            winnerPlayerId = playerId;
+            winnerPlayerScore = s;
+          }
+        }
+
+        // check end condition
+        const wallTiles = G.tiles.filter(x => x.location.boardType === "Wall");
+        for (const playerId of ctx.playOrder) {
+          const playerWallTiles = wallTiles.filter(x => x.location.boardId === playerId);
+          for (let row = 0; row < 5; row++) {
+            const count = playerWallTiles.filter(x => x.location.y === row).length;
+            if (count >= 5) {
+              ctx.events?.endGame({ winnerPlayerId, winnerPlayerScore });
+              return;
+            }
+          }
+        }
+      },
+      endIf: (G, ctx) => {
+        console.log('calculateScore.endIf');
+
+        // loop rows
+        for (let row = 0; row < 5; row++) {
+          const maxTilesInRow = row + 1;
+          // loop players
+          for (const playerId of ctx.playOrder) {
+            // get tiles 
+            const tiles = G.tiles.filter(x =>
+              x.location.boardType === "PatternLine" &&
+              x.location.boardId === playerId &&
+              x.location.y === row
+            );
+
+            if (tiles.length >= maxTilesInRow) {
+              return false;
+            }
+          }
+        }
+        // no scores left
+        return true;
+      },
+      turn: {
+        // order: TurnOrder.ONCE,
+        activePlayers: ActivePlayers.ALL
+      },
+      next: 'placeTiles',
+      moves: {
+        selectTargetLocation: {
+          move: selectTargetLocation
+        }
+      }
+    },
   },
+
 
   // Everything below is OPTIONAL.
   /*
@@ -166,36 +264,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     // The seed used by the pseudo-random number generator.
     seed: 'random-string',
   
-  
-    phases: {
-      A: {
-        // Called at the beginning of a phase.
-        onBegin: (G, ctx) => G,
-  
-        // Called at the end of a phase.
-        onEnd: (G, ctx) => G,
-  
-        // Ends the phase if this returns true.
-        endIf: (G, ctx) => true,
-  
-        // Overrides `moves` for the duration of this phase.
-        moves: { ... },
-  
-        // Overrides `turn` for the duration of this phase.
-        turn: { ... },
-  
-        // Make this phase the first phase of the game.
-        start: true,
-  
-        // Set the phase to enter when this phase ends.
-        // Can also be a function: (G, ctx) => 'nextPhaseName'
-        next: 'nextPhaseName',
-      },
-  
-      ...
-    },
-    
-  
     // Disable undo feature for all the moves in the game
     disableUndo: true,
   
@@ -204,3 +272,56 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     
     */
 };
+
+/*
+const calculateScore = async (G: AzulGameState, ctx: Ctx) => {
+  // delay
+  const sleep = () => {
+    return new Promise(resolve => {
+      window.setTimeout(resolve, G.calculationDelay);
+    });
+  }
+
+  // five pattern rows
+  for (let row = 0; row < 5; row++) {
+    await sleep();
+    calculatePatternRow(G, ctx, row);
+  }
+
+  // floor line
+
+
+  // reset calculation Delay
+  G.calculationDelay = 500;
+
+  ctx.events?.endPhase();
+};
+
+const calculatePatternRow = async (G: AzulGameState, ctx: Ctx, row: number) => {
+  const maxTilesInRow = row + 1;
+  // loop players
+  for (const playerId of ctx.playOrder) {
+    // get tiles 
+    const tiles = G.tiles.filter(x =>
+      x.location.boardType === "PatternLine" &&
+      x.location.boardId === playerId &&
+      x.location.y === row
+    );
+
+    if (tiles.length >= maxTilesInRow) {
+      // score!
+
+      // find target
+      wallSetups[G.config.wallSetup]
+
+
+      // move tiles
+      moveTile(tiles[0], "Wall", playerId, );
+      // move to store
+      for (let i = 1; i < maxTilesInRow; i++) {
+        moveTile(tiles[0], "TileStorage");        
+      }
+    }
+  }
+}
+*/

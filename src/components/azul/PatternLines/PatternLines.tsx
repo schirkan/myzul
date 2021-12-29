@@ -11,7 +11,7 @@ export const PatternLines: React.FC<Props> = React.memo((props) => {
   const context = useContext(TileContext);
 
   const onLineClick = (y: number) => {
-    context.onPlaceholderClick({ boardType: 'PatternLine', boardId: props.playerId, y });
+    // context.onPlaceholderClick({ boardType: 'PatternLine', boardId: props.playerId, y });
   }
 
   return <div className={styles.container}>

@@ -3,6 +3,7 @@
   width: 100%;
   min-height: 100vh;
   padding: 10px;
+  overflow: auto;
 
   user-select: none;
 
@@ -41,5 +42,9 @@
     &:hover {
       background: #0d94d3;
     }
+  }
+
+  hr {
+    border: 1px solid black;
   }
 }

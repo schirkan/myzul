@@ -38,10 +38,12 @@ export interface AzulTileState {
 
 // aka 'G', your game's state
 export interface AzulGameState {
+  initialized: boolean;
   config: GameSetup;
   factories: number;
   tiles: AzulTileState[];
   score: { [key: string]: number };
+  calculationDelay: number;
 }
 
 export const playerColor: { [key: string]: string } = {

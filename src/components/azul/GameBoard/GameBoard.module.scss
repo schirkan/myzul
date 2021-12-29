@@ -1,8 +1,10 @@
 .container {
-  margin: 10px;
+  // position: relative;
   display: grid;
   gap: 10px;
   grid-template-columns: max-content;
+  margin: 10px auto;
+  width: fit-content;
 
   section {
     padding: 10px;
@@ -50,4 +52,24 @@
 }
 
 .scoreBoard {
+}
+
+.initialize,
+.gameover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 99;
+  padding-top: 10%;
+
+  button {
+    box-shadow: #ff5 0 0 5px;
+    &:hover {
+      box-shadow: #ff5 0 0 9px;
+    }
+  }
 }

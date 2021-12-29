@@ -1,4 +1,5 @@
 import { MoveFn } from "boardgame.io";
+import { TilePlaceholderProps } from "../../components/azul/TilePlaceholder";
 import { GetTileLocationId } from "./azulConfig";
 import { AzulGameState, AzulTileState, BoardType, TileLocation } from "./models";
 
@@ -22,25 +23,57 @@ export const selectSourceTile: MoveFn<AzulGameState> = (G, ctx, tile: AzulTileSt
   // Placeholder selectable machen?
 };
 
-// move all selected tiles to new board
-export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TileLocation) => {
-  var selectedTiles = G.tiles.filter(x => x.selected);
+export const selectScoreTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TilePlaceholderProps) => {
+  if (target.location.boardId === undefined || target.location.boardType !== "Wall") return INVALID_MOVE;
+  const maxTilesInRow = target.location.y! + 1;
 
+  // get tiles
+  const tiles = G.tiles.filter(x =>
+    x.location.boardType === "PatternLine" &&
+    x.location.boardId === target.location.boardId &&
+    x.location.y === target.location.y &&
+    x.color === target.color
+  );
+
+  if (tiles.length < maxTilesInRow) return INVALID_MOVE;
+
+  // move tile
+  moveTile(tiles[0], "Wall", target.location.boardId, target.location.x, target.location.y);
+
+  // move rest to store
+  for (let i = 1; i < maxTilesInRow; i++) {
+    moveTile(tiles[i], "TileStorage");
+  }
+
+  // calculare score
+  let points = 1;
+  // TODO:
+
+  G.score[target.location.boardId] += points * target.multiplier!;
+}
+
+// move all selected tiles to new board
+export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TilePlaceholderProps) => {
+  if (target.location.boardId !== ctx.currentPlayer) return INVALID_MOVE;
+  if (ctx.playerID && ctx.playerID !== ctx.currentPlayer) return INVALID_MOVE;
+
+  if (ctx.phase === 'calculateScore') return selectScoreTargetLocation(G, ctx, target);
+
+  var selectedTiles = G.tiles.filter(x => x.selected);
   if (!selectedTiles.length) return INVALID_MOVE;
-  if (target.boardId !== ctx.currentPlayer) return INVALID_MOVE;
 
   // get source factory
   const sourceBoardType = selectedTiles[0].location.boardType
   const sourceBoardId = selectedTiles[0].location.boardId;
 
-  if (target.boardType === 'FloorLine') {
-    moveToFloorLine(G, selectedTiles, target.boardId);
-  } else if (target.boardType === 'PatternLine') {
-    if (!canMoveToPatternLine(G, selectedTiles, target.boardId, target.y!)) {
+  if (target.location.boardType === 'FloorLine') {
+    moveToFloorLine(G, selectedTiles, target.location.boardId);
+  } else if (target.location.boardType === 'PatternLine') {
+    if (!canMoveToPatternLine(G, selectedTiles, target.location.boardId, target.location.y!)) {
       console.log('invalid target');
       return INVALID_MOVE;
     }
-    moveToPatternLine(G, selectedTiles, target.boardId, target.y!);
+    moveToPatternLine(G, selectedTiles, target.location.boardId, target.location.y!);
   } else {
     return INVALID_MOVE;
   }
@@ -60,7 +93,7 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: Tile
   if (sourceBoardType === 'CenterOfTable') {
     const whiteTile = G.tiles.find(x => x.color === 'white');
     if (whiteTile?.location.boardType === 'CenterOfTable') {
-      moveToFloorLine(G, [whiteTile], target.boardId);
+      moveToFloorLine(G, [whiteTile], target.location.boardId);
     }
   }
 
@@ -75,9 +108,9 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: Tile
   G.tiles.forEach(x => x.selected = false);
 };
 
-export const moveTile = (tile: AzulTileState, boardType: BoardType, boardId?: string, x?: number, y?: number) => {
+export const moveTile = (tile: AzulTileState, boardType: BoardType, boardId?: string | number, x?: number, y?: number) => {
   // console.log('move to ' + boardType + ' from', GetTileLocationId(tile.location));
-  tile.location = { boardType, boardId, x, y };
+  tile.location = { boardType, boardId: "" + boardId, x, y };
 };
 
 export const canMoveToPatternLine = (G: AzulGameState, tiles: AzulTileState[], boardId: string, y: number): boolean => {

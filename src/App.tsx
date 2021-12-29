@@ -20,6 +20,7 @@ export const App = () => {
     const Client = createAzulClient(config.numPlayers);
     content = <>
       <Client playerID='0' />
+      <hr />
       <Client playerID='1' />
     </>
   } else {

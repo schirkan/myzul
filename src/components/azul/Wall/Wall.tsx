@@ -12,9 +12,9 @@ export const Wall: React.FC<Props> = React.memo((props) => {
   const setup = useMemo(() => getWallSetup(props.config), [props.config]);
 
   return <div className={styles.container}>
-    {setup.rows.map((row, x) => (
-      <React.Fragment key={x} >
-        {row.map((tile, y) =>
+    {setup.rows.map((row, y) => (
+      <React.Fragment key={y} >
+        {row.map((tile, x) =>
           <TilePlaceholder key={x + '|' + y} {...tile}
             location={{ boardType: 'Wall', boardId: props.playerId, x, y }} />)}
       </React.Fragment>

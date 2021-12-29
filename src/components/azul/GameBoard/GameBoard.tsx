@@ -79,6 +79,13 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = (props) => {
           wallSetup={props.G.config.wallSetup} />
         {props.G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
       </TileContext.Provider>
+      {/* {!props.G.initialized && <div className={styles.initialize}>
+        <button onClick={props.moves.start}>Start</button>
+      </div>} */}
+      {props.ctx.gameover && <div className={styles.gameover}>
+        <ScoreBoard />
+        <button onClick={props.reset}>Neues Spiel</button>
+      </div>}
     </GameContext.Provider>
   </div>;
 };
