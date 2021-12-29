@@ -36,7 +36,10 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: Tile
   if (target.boardType === 'FloorLine') {
     moveToFloorLine(G, selectedTiles, target.boardId);
   } else if (target.boardType === 'PatternLine') {
-    if (!canMoveToPatternLine(G, selectedTiles, target.boardId, target.y!)) return INVALID_MOVE;
+    if (!canMoveToPatternLine(G, selectedTiles, target.boardId, target.y!)) {
+      console.log('invalid target');
+      return INVALID_MOVE;
+    }
     moveToPatternLine(G, selectedTiles, target.boardId, target.y!);
   } else {
     return INVALID_MOVE;
@@ -53,8 +56,18 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: Tile
     factoryTiles.forEach(x => moveTile(x, 'CenterOfTable', undefined, counter++));
   }
 
+  // move white tile to floor line
+  if (sourceBoardType === 'CenterOfTable') {
+    const whiteTile = G.tiles.find(x => x.color === 'white');
+    if (whiteTile?.location.boardType === 'CenterOfTable') {
+      moveToFloorLine(G, [whiteTile], target.boardId);
+    }
+  }
+
   // rearrange + sort center Tiles
-  var centerTiles = G.tiles.filter(x => x.location.boardType === 'CenterOfTable').sort((a, b) => ('' + a.color).localeCompare(b.color));
+  var centerTiles = G.tiles
+    .filter(x => x.location.boardType === 'CenterOfTable')
+    .sort((a, b) => ('' + b.color).localeCompare(a.color));
   let counter = 0;
   centerTiles.forEach(x => moveTile(x, 'CenterOfTable', undefined, counter++));
 
@@ -63,39 +76,46 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: Tile
 };
 
 export const moveTile = (tile: AzulTileState, boardType: BoardType, boardId?: string, x?: number, y?: number) => {
-  console.log('move to FloorLine from', GetTileLocationId(tile.location));
+  // console.log('move to ' + boardType + ' from', GetTileLocationId(tile.location));
   tile.location = { boardType, boardId, x, y };
 };
+
 export const canMoveToPatternLine = (G: AzulGameState, tiles: AzulTileState[], boardId: string, y: number): boolean => {
   const maxTilesOnLine = y + 1;
+
+  // is white?
+  if (tiles[0].color === 'white') return false;
+
   // get tiles on PatternLine
-  const patternLineTiles = G.tiles.filter(x => x.location.boardType === 'PatternLine' &&
+  const patternLineTiles = G.tiles.filter(x =>
+    x.location.boardType === 'PatternLine' &&
     x.location.boardId === boardId &&
     x.location.y === y
   );
-
-  // empty?
-  if (patternLineTiles.length === 0) return true;
 
   // full?
   if (patternLineTiles.length >= maxTilesOnLine) return false;
 
   // wrong color?
-  if (patternLineTiles[0].color === tiles[0].color) return false;
+  if (patternLineTiles.length && patternLineTiles[0].color !== tiles[0].color) return false;
 
   // color already on wall?
-  const wallTiles = G.tiles.filter(x => x.location.boardType === 'Wall' &&
+  const wallTiles = G.tiles.filter(x =>
+    x.location.boardType === 'Wall' &&
     x.location.boardId === boardId &&
     x.location.y === y &&
     x.color === tiles[0].color
   );
   if (wallTiles.length) return false;
 
+  // valid
   return true;
 };
+
 export const moveToPatternLine = (G: AzulGameState, tiles: AzulTileState[], boardId: string, y: number): void => {
   // get tiles on PatternLine
-  const patternLineTiles = G.tiles.filter(x => x.location.boardType === 'PatternLine' &&
+  const patternLineTiles = G.tiles.filter(x =>
+    x.location.boardType === 'PatternLine' &&
     x.location.boardId === boardId &&
     x.location.y === y
   );
@@ -111,10 +131,12 @@ export const moveToPatternLine = (G: AzulGameState, tiles: AzulTileState[], boar
     }
   });
 };
+
 // move tiles to floor
 export const moveToFloorLine = (G: AzulGameState, tiles: AzulTileState[], boardId: string): void => {
   // get tiles on floor line
-  const floorLineTiles = G.tiles.filter(x => x.location.boardType === 'FloorLine' &&
+  const floorLineTiles = G.tiles.filter(x =>
+    x.location.boardType === 'FloorLine' &&
     x.location.boardId === boardId
   );
 

@@ -12,8 +12,8 @@ type Props = {
 
 export const PlayerBoard: React.FC<Props> = React.memo((props) => {
   return <div className={styles.container}>
-    <div className={styles.top}>
-      Player #{props.playerId}
+    <div className={styles.caption}>
+      Spieler {+props.playerId + 1}
     </div>
     <div className={styles.left}>
       <PatternLines playerId={props.playerId} />

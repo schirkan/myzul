@@ -8,6 +8,8 @@ import { AzulGameState, GameSetup } from "../../../games/azul/models";
 import { TileContext, TileContextType, createTileContext } from '../TileLocationContext';
 import { TilePlaceholder } from '../TilePlaceholder';
 import styles from './GameBoard.module.scss';
+import { ScoreBoard } from './../ScoreBoard';
+import { GameContext } from '../GameContext';
 
 type Props = GameSetup & {
   numPlayers: number,
@@ -17,37 +19,45 @@ type Props = GameSetup & {
 
 const Boards: React.FC<Props> = React.memo((props) => {
   return <>
-    <header>header</header>
-    <section className={styles.factories}>
-      {[...Array(props.factories)].map((_, index) =>
-        <Factory factoryId={index.toString()} key={index} />
-      )}
-    </section>
-    <section className={styles.centerOfTable}>
-      {[...Array(props.factories * 3 + 1)].map((_, index) =>
-        <TilePlaceholder key={index} location={{ boardType: 'CenterOfTable', x: index }} />
-      )}
-    </section>
-    <section className={styles.playerBoard}>
-      <PlayerBoard config={props} playerId={props.players[0]} />
-    </section>
-    <section className={styles.playerBoard}>
-      <PlayerBoard config={props} playerId={props.players[1]} />
-    </section>
-    {props.numPlayers > 2 && (
-      <section className={styles.playerBoard}>
-        <PlayerBoard config={props} playerId={props.players[2]} />
+    <header>
+      <section className={styles.factories}>
+        {[...Array(props.factories)].map((_, index) =>
+          <Factory factoryId={index.toString()} key={index} />
+        )}
       </section>
-    )}
-    {props.numPlayers > 3 && (
-      <section className={styles.playerBoard}>
-        <PlayerBoard config={props} playerId={props.players[3]} />
+      <section className={styles.scoreBoard}>
+        <ScoreBoard />
       </section>
-    )}
-    <section>
-      <TileStorage />
-    </section>
-    <footer>footer</footer>
+      <section className={styles.centerOfTable}>
+        {[...Array(props.factories * 3 + 1)].map((_, index) =>
+          <TilePlaceholder key={index} location={{ boardType: 'CenterOfTable', x: index }} />
+        )}
+      </section>
+      <section className={styles.tileStorage}>
+        <TileStorage />
+      </section>
+    </header>
+    <main>
+      <section className={styles.playerBoard}>
+        <PlayerBoard config={props} playerId={props.players[0]} />
+      </section>
+      <section className={styles.playerBoard}>
+        <PlayerBoard config={props} playerId={props.players[1]} />
+      </section>
+      {props.numPlayers > 2 && (
+        <section className={styles.playerBoard}>
+          <PlayerBoard config={props} playerId={props.players[2]} />
+        </section>
+      )}
+      {props.numPlayers > 3 && (
+        <section className={styles.playerBoard}>
+          <PlayerBoard config={props} playerId={props.players[3]} />
+        </section>
+      )}
+    </main>
+    <footer>
+      <section>footer</section>
+    </footer>
   </>
 });
 
@@ -59,14 +69,16 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = (props) => {
   tileContext.setBoardProps(props);
 
   return <div className={styles.container}>
-    <TileContext.Provider value={tileContext}>
-      <Boards
-        players={props.ctx.playOrder}
-        numPlayers={props.ctx.numPlayers}
-        factories={props.G.factories}
-        floorSetup={props.G.config.floorSetup}
-        wallSetup={props.G.config.wallSetup} />
-      {props.G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
-    </TileContext.Provider>
+    <GameContext.Provider value={props}>
+      <TileContext.Provider value={tileContext}>
+        <Boards
+          players={props.ctx.playOrder}
+          numPlayers={props.ctx.numPlayers}
+          factories={props.G.factories}
+          floorSetup={props.G.config.floorSetup}
+          wallSetup={props.G.config.wallSetup} />
+        {props.G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
+      </TileContext.Provider>
+    </GameContext.Provider>
   </div>;
 };

@@ -1,5 +1,5 @@
 export type BoardType = 'Factory' | 'Wall' | 'PatternLine' | 'FloorLine' | 'TileBag' | 'TileStorage' | 'CenterOfTable'
-export type TileColor = 'red' | 'green' | 'blue' | 'yellow' | 'black'
+export type TileColor = 'red' | 'green' | 'blue' | 'yellow' | 'black' | 'white'
 export type TilePlaceholderColor = TileColor | 'none'
 
 export type TilePlaceholderConfig = {
@@ -41,4 +41,12 @@ export interface AzulGameState {
   config: GameSetup;
   factories: number;
   tiles: AzulTileState[];
+  score: { [key: string]: number };
+}
+
+export const playerColor: { [key: string]: string } = {
+  '0': '#48f',
+  '1': '#4b6',
+  '2': 'red',
+  '3': 'yellow'
 }

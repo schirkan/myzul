@@ -20,8 +20,10 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       factories: ctx.numPlayers * 2 + 1,
       tiles: [],
       config: setupData,
+      score: {}
     };
 
+    // create tiles
     for (let i = 0; i < tilesPerColor; i++) {
       initialState.tiles.push({ color: 'red', selectable: false, location: { boardType: 'TileBag' }, selected: false })
       initialState.tiles.push({ color: 'green', selectable: false, location: { boardType: 'TileBag' }, selected: false })
@@ -32,6 +34,9 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
 
     // shuffle tiles
     initialState.tiles = initialState.tiles.sort(() => Math.random() - 0.5)
+
+    // create white tile
+    initialState.tiles.push({ color: 'white', selectable: false, location: { boardType: 'CenterOfTable', x: 0 }, selected: false })
 
     // place tiles on factories
     for (let i = 0; i < initialState.factories; i++) {

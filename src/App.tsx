@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createAzulClient } from './games/azul';
 import { GameSetup } from './components/GameSetup';
-import './App.scss'
+import styles from './App.module.scss';
 
 export const App = () => {
   const [config, setConfig] = useState<{
@@ -14,12 +14,19 @@ export const App = () => {
     setConfig({ game, numPlayers, setupData });
   }
 
+  let content = undefined;
+
   if (config?.game === 'AZUL') {
     const Client = createAzulClient(config.numPlayers);
-    return <div>
+    content = <>
       <Client playerID='0' />
       <Client playerID='1' />
-    </div>
+    </>
+  } else {
+    content = <GameSetup onStartClick={onStartClick} />
   }
-  return <GameSetup onStartClick={onStartClick} />
+
+  return <div className={styles.container}>
+    {content}
+  </div>;
 }

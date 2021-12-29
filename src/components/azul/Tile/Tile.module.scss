@@ -24,23 +24,27 @@
 
   &[data-color="red"]::after {
     background: red;
-    border-color: #333;
+    border-color: #833;
   }
   &[data-color="green"]::after {
     background: green;
-    border-color: #333;
+    border-color: #161;
   }
   &[data-color="blue"]::after {
     background: blue;
-    border-color: #333;
+    border-color: #338;
   }
   &[data-color="yellow"]::after {
     background: yellow;
-    border-color: #333;
+    border-color: #bb3;
   }
   &[data-color="black"]::after {
     background: black;
     border-color: #333;
+  }
+  &[data-color="white"]::after {
+    background: #fff;
+    border-color: #888;
   }
 
   &[data-selected="true"] {

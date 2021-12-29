@@ -1,0 +1,35 @@
+.container {
+  div {
+    display: grid;
+    grid-template-columns: auto min-content;
+    margin-top: 5px;
+  }
+
+  > h1 {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: #000 0px 0px 5px;
+    text-align: center;
+  }
+}
+
+.playerName {
+  text-shadow: #000 0px 0px 5px;
+
+  &[data-active="true"] {
+    // font-weight: bold;
+    text-shadow: rgb(233, 190, 74) 0px 0px 5px;
+    &::after {
+      content: " <<";
+    }
+  }
+
+  &::before {
+    content: " ";
+    background: var(--color);
+    height: 10px;
+    width: 10px;
+    display: inline-block;
+    margin-right: 10px;
+  }
+}

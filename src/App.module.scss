@@ -1,0 +1,45 @@
+.container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 10px;
+
+  user-select: none;
+
+  background-image: url("./assets/tim-mossholder-07uiqD9LS6U-unsplash.jpg");
+  // background-position: top left;
+  // background-repeat: repeat;
+  // background-size: cover;
+
+  color: #fff;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+  input,
+  select {
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: #fff;
+    color: black;
+    padding: 3px;
+    min-width: 100px;
+  }
+
+  input,
+  select,
+  button {
+    cursor: pointer;
+  }
+
+  button,
+  input[type="button"] {
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: #008ccc;
+    padding: 10px;
+    text-align: center;
+
+    &:hover {
+      background: #0d94d3;
+    }
+  }
+}
