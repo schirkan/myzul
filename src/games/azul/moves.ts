@@ -1,7 +1,7 @@
-import { MoveFn } from "boardgame.io";
+import { Ctx, MoveFn } from "boardgame.io";
 import { TilePlaceholderProps } from "../../components/azul/TilePlaceholder";
-import { GetTileLocationId } from "./azulConfig";
-import { AzulGameState, AzulTileState, BoardType, TileLocation } from "./models";
+import { floorSetups, wallSetups } from "./azulConfig";
+import { AzulGameState, AzulTileState, BoardType } from "./models";
 
 export const INVALID_MOVE = "INVALID_MOVE";
 
@@ -37,19 +37,158 @@ export const selectScoreTargetLocation: MoveFn<AzulGameState> = (G, ctx, target:
 
   if (tiles.length < maxTilesInRow) return INVALID_MOVE;
 
+  const [first, ...rest] = tiles;
+
   // move tile
-  moveTile(tiles[0], "Wall", target.location.boardId, target.location.x, target.location.y);
+  moveTile(first, "Wall", target.location.boardId, target.location.x, target.location.y);
 
   // move rest to store
-  for (let i = 1; i < maxTilesInRow; i++) {
-    moveTile(tiles[i], "TileStorage");
-  }
+  moveToTileStorage(rest);
 
   // calculare score
-  let points = 1;
-  // TODO:
+  calculateTileScore(G, ctx, target);
+}
 
-  G.score[target.location.boardId] += points * target.multiplier!;
+export const calculateScore = (G: AzulGameState, ctx: Ctx) => {
+  // loop five pattern rows
+  for (let row = 0; row < 5; row++) {
+    calculatePatternRow(G, ctx, row);
+  }
+
+  // floor line
+  calculateFloorLines(G, ctx);
+};
+
+const calculateFloorLines = async (G: AzulGameState, ctx: Ctx) => {
+  // loop players
+  for (const playerId of ctx.playOrder) {
+    const tiles = G.tiles.filter(x =>
+      x.location.boardType === "FloorLine" &&
+      x.location.boardId === playerId
+    );
+
+    // calculare score
+    tiles.forEach(tile => {
+      if (tile.location.boardId && tile.location.x) {
+        let points = floorSetups[G.config.floorSetup][tile.location.x];
+        G.score[tile.location.boardId] += points;
+      }
+    });
+
+    // move to storage
+    moveToTileStorage(tiles);
+  }
+}
+
+const calculatePatternRow = async (G: AzulGameState, ctx: Ctx, y: number) => {
+  const maxTilesInRow = y + 1;
+  // loop players
+  for (const playerId of ctx.playOrder) {
+    // get tiles 
+    const tiles = G.tiles.filter(x =>
+      x.location.boardType === "PatternLine" &&
+      x.location.boardId === playerId &&
+      x.location.y === y
+    );
+
+    if (tiles.length >= maxTilesInRow) {
+      // find target
+      const rowSetup = wallSetups[G.config.wallSetup][y];
+      const x = rowSetup.findIndex(x => x.color === tiles[0].color);
+      const placeholderConfig = rowSetup.find(x => x.color === tiles[0].color);
+
+      // calculare score
+      calculateTileScore(G, ctx, {
+        location: { boardType: 'Wall', boardId: playerId, x, y },
+        color: placeholderConfig?.color,
+        multiplier: placeholderConfig?.multiplier
+      });
+
+      const [first, ...rest] = tiles;
+
+      // move tiles
+      moveTile(first, "Wall", playerId, x, y);
+
+      // move rest to store
+      moveToTileStorage(rest);
+    }
+  }
+}
+
+const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceholderProps) => {
+  if (!target.location.boardId || target.location.x === undefined || target.location.y === undefined) {
+    throw new Error('calculateTileScore: location incomplete');
+  }
+  let points = 1;
+
+  // find tiles in row
+  const tilesInRow = G.tiles.filter(x =>
+    x.location.boardType === 'Wall' &&
+    x.location.boardId === target.location.boardId &&
+    x.location.y === target.location.y
+  ).map(x => x.location.x);
+
+  // right
+  for (let x = target.location.x + 1; x < 5; x++) {
+    if (tilesInRow.includes(x)) {
+      points++;
+    } else {
+      break;
+    }
+  }
+
+  // left
+  for (let x = target.location.x - 1; x >= 0; x--) {
+    if (tilesInRow.includes(x)) {
+      points++;
+    } else {
+      break;
+    }
+  }
+
+  const tilesInColumn = G.tiles.filter(x =>
+    x.location.boardType === 'Wall' &&
+    x.location.boardId === target.location.boardId &&
+    x.location.x === target.location.x
+  ).map(x => x.location.y);
+
+  // down
+  for (let y = target.location.y + 1; y < 5; y++) {
+    if (tilesInColumn.includes(y)) {
+      points++;
+    } else {
+      break;
+    }
+  }
+
+  // top
+  for (let y = target.location.y - 1; y >= 0; y--) {
+    if (tilesInColumn.includes(y)) {
+      points++;
+    } else {
+      break;
+    }
+  }
+
+  // extra points - row +2
+  if (tilesInRow.length === 4) {
+    points += 2;
+  }
+  // extra points - column +7
+  if (tilesInColumn.length === 4) {
+    points += 7;
+  }
+  // extra points - color +10
+  const tilesOfSameColor = G.tiles.filter(x =>
+    x.location.boardType === 'Wall' &&
+    x.location.boardId === target.location.boardId &&
+    x.color === target.color
+  );
+  if (tilesOfSameColor.length === 4) {
+    points += 10;
+  }
+
+  G.score[target.location.boardId] += points * (target.multiplier || 1);
 }
 
 // move all selected tiles to new board
@@ -180,5 +319,12 @@ export const moveToFloorLine = (G: AzulGameState, tiles: AzulTileState[], boardI
     } else {
       moveTile(x, 'TileStorage');
     }
+  });
+};
+
+// move tiles to storage
+export const moveToTileStorage = (tiles: AzulTileState[]): void => {
+  tiles.forEach(x => {
+    moveTile(x, 'TileStorage');
   });
 };

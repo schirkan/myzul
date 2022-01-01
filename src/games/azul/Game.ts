@@ -1,8 +1,8 @@
-import type { Ctx, Game, Move } from "boardgame.io";
-import { defaultGameSetup, wallSetups } from "./azulConfig";
+import type { Ctx, Game } from "boardgame.io";
+import { defaultGameSetup } from "./azulConfig";
 import { AzulGameState, GameSetup } from "./models";
-import { moveTile, selectSourceTile, selectTargetLocation } from "./moves";
-import { ActivePlayers, Stage, TurnOrder } from 'boardgame.io/core';
+import { calculateScore, moveTile, selectSourceTile, selectTargetLocation } from "./moves";
+import { ActivePlayers, TurnOrder } from 'boardgame.io/core';
 
 export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   // The name of the game.
@@ -147,6 +147,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       onEnd: (G, ctx) => {
         console.log('placeTiles.onEnd');
         G.initialized = false;
+        // get next starting player
+        G.nextStartPlayerId = G.tiles.find(x => x.color === "white")?.location.boardId;
       },
       endIf: (G, ctx) => {
         console.log('placeTiles.endIf');
@@ -169,7 +171,14 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         }
       },
       turn: {
-        order: TurnOrder.RESET,
+        order: {
+          first: (G, ctx) => {
+            // set starting player
+            const startPlayerPos = ctx.playOrder.findIndex(x => x === G.nextStartPlayerId);
+            return Math.max(startPlayerPos, 0);
+          },
+          next: TurnOrder.DEFAULT.next
+        }, //TurnOrder.RESET,
         minMoves: 1,
         maxMoves: 1,
         onMove: (G, ctx) => {
@@ -187,22 +196,21 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     calculateScore: {
       onBegin: (G, ctx) => {
         console.log('calculateScore.onBegin');
-        //calculateScore(G, ctx);
+        calculateScore(G, ctx);
       },
       onEnd: (G, ctx) => {
         console.log('calculateScore.onEnd');
-
-        // calculare floor tiles
-        // TODO: 
-
         // get player with most points
-        let winnerPlayerId = "";
-        let winnerPlayerScore = 0;
-        for (const playerId of ctx.playOrder) {
-          const s = G.score[playerId];
-          if (s > winnerPlayerScore) {
-            winnerPlayerId = playerId;
-            winnerPlayerScore = s;
+        const getWinner = () => {
+          let highscore = 0;
+          for (const playerId of ctx.playOrder) {
+            const s = G.score[playerId];
+            if (s > highscore) {
+              return {
+                winnerPlayerId: playerId,
+                winnerPlayerScore: s
+              }
+            }
           }
         }
 
@@ -213,7 +221,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           for (let row = 0; row < 5; row++) {
             const count = playerWallTiles.filter(x => x.location.y === row).length;
             if (count >= 5) {
-              ctx.events?.endGame({ winnerPlayerId, winnerPlayerScore });
+              ctx.events?.endGame(getWinner());
               return;
             }
           }
@@ -239,7 +247,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
             }
           }
         }
-        // no scores left
+        // no full rows left
         return true;
       },
       turn: {
@@ -272,56 +280,3 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     
     */
 };
-
-/*
-const calculateScore = async (G: AzulGameState, ctx: Ctx) => {
-  // delay
-  const sleep = () => {
-    return new Promise(resolve => {
-      window.setTimeout(resolve, G.calculationDelay);
-    });
-  }
-
-  // five pattern rows
-  for (let row = 0; row < 5; row++) {
-    await sleep();
-    calculatePatternRow(G, ctx, row);
-  }
-
-  // floor line
-
-
-  // reset calculation Delay
-  G.calculationDelay = 500;
-
-  ctx.events?.endPhase();
-};
-
-const calculatePatternRow = async (G: AzulGameState, ctx: Ctx, row: number) => {
-  const maxTilesInRow = row + 1;
-  // loop players
-  for (const playerId of ctx.playOrder) {
-    // get tiles 
-    const tiles = G.tiles.filter(x =>
-      x.location.boardType === "PatternLine" &&
-      x.location.boardId === playerId &&
-      x.location.y === row
-    );
-
-    if (tiles.length >= maxTilesInRow) {
-      // score!
-
-      // find target
-      wallSetups[G.config.wallSetup]
-
-
-      // move tiles
-      moveTile(tiles[0], "Wall", playerId, );
-      // move to store
-      for (let i = 1; i < maxTilesInRow; i++) {
-        moveTile(tiles[0], "TileStorage");        
-      }
-    }
-  }
-}
-*/

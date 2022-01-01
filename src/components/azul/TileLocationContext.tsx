@@ -5,8 +5,11 @@ import { TilePlaceholderProps } from './TilePlaceholder';
 
 export type TileContextType = {
   setBoardProps: (newProps: BoardProps<AzulGameState>) => void,
-  placeholder: {
+  placeholderElements: {
     [index: string]: HTMLDivElement,
+  },
+  placeholderProps: {
+    [index: string]: TilePlaceholderProps,
   },
   onTileClick: (tile: AzulTileState) => void,
   onPlaceholderClick: (placeholder: TilePlaceholderProps) => void
@@ -18,7 +21,8 @@ export const createTileContext = (initialProps?: BoardProps<AzulGameState>): Til
     setBoardProps: (newProps: BoardProps<AzulGameState>) => {
       props = newProps;
     },
-    placeholder: {},
+    placeholderElements: {},
+    placeholderProps: {},
     onTileClick: (tile) => {
       console.log('selectSourceTile', tile);
       props?.moves?.selectSourceTile(tile);

@@ -7,15 +7,9 @@ export type TilePlaceholderConfig = {
   multiplier: number
 }
 
-export type WallSetup = {
-  name: string,
-  rows: Array<Array<TilePlaceholderConfig>>
-}
+export type WallSetup = Array<Array<TilePlaceholderConfig>>;
 
-export type FloorSetup = {
-  name: string,
-  values: number[]
-};
+export type FloorSetup = number[];
 
 export type GameSetup = {
   wallSetup: string,
@@ -44,6 +38,7 @@ export interface AzulGameState {
   tiles: AzulTileState[];
   score: { [key: string]: number };
   calculationDelay: number;
+  nextStartPlayerId?: string;
 }
 
 export const playerColor: { [key: string]: string } = {

@@ -13,7 +13,7 @@ export const Tile: React.FC<AzulTileState> = React.memo((props) => {
 
   useEffect(() => {
     const id = GetTileLocationId(props.location);
-    const placeholder = context.placeholder[id];
+    const placeholder = context.placeholderElements[id];
     if (placeholder && el.current) {
       var rect = placeholder.getBoundingClientRect();
       const y = rect.top + window.scrollY;

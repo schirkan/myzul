@@ -1,9 +1,10 @@
 .container {
-  position: relative;
-  width: 100%;
+  // position: relative;
+  min-width: 100%;
+  width: fit-content;
   min-height: 100vh;
   padding: 10px;
-  overflow: auto;
+  // overflow: auto;
 
   user-select: none;
 
@@ -23,10 +24,12 @@
     color: black;
     padding: 3px;
     min-width: 100px;
+    appearance: auto;
   }
 
-  input,
-  select,
+  input[type="button"],
+  input[type="submit"],
+  // select,
   button {
     cursor: pointer;
   }

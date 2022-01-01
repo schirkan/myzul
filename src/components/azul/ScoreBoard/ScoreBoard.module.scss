@@ -24,6 +24,10 @@
     }
   }
 
+  &[data-current="true"] {
+    text-decoration: underline;
+  }
+
   &::before {
     content: " ";
     background: var(--color);

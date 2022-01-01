@@ -24,11 +24,14 @@ export const TilePlaceholder: React.FC<TilePlaceholderProps> = React.memo((props
   }
 
   useEffect(() => {
+    // console.log('register placeholder', id);
+    context.placeholderProps[id] = props;
     if (id && el.current) {
-      context.placeholder[id] = el.current;
+      context.placeholderElements[id] = el.current;
     }
     return () => {
-      delete (context.placeholder[id]);
+      delete (context.placeholderElements[id]);
+      delete (context.placeholderProps[id]);
     }
   }, [id]);
 

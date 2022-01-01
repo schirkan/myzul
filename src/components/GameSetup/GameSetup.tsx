@@ -28,11 +28,11 @@ export const GameSetup: React.FC<Props> = React.memo((props) => {
         onChange={e => setNumPlayers(parseInt(e.currentTarget.value))} />
       <label>Wall:</label>
       <select value={wallSetup} onChange={e => setWallSetup(e.target.value)}>
-        {wallSetups.map(x => <option value={x.name} key={x.name}>{x.name}</option>)}
+        {Object.keys(wallSetups).map(x => <option value={x} key={x}>{x}</option>)}
       </select>
       <label>Floor:</label>
       <select value={floorSetup} onChange={e => setFloorSetup(e.target.value)}>
-        {floorSetups.map(x => <option value={x.name} key={x.name}>{x.name}</option>)}
+        {Object.keys(floorSetups).map(x => <option value={x} key={x}>{x}</option>)}
       </select>
     </div>
     <button onClick={() => props.onStartClick(game, numPlayers, { wallSetup, floorSetup })}>Start</button>

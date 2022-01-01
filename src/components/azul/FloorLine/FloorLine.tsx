@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { getFloorSetup } from '../../../games/azul/azulConfig';
+import React from 'react';
+import { floorSetups } from '../../../games/azul/azulConfig';
 import { TilePlaceholder } from '../TilePlaceholder';
 import styles from './FloorLine.module.scss';
 
@@ -9,16 +9,16 @@ type Props = {
 };
 
 export const FloorLine: React.FC<Props> = React.memo((props) => {
-  const setup = useMemo(() => getFloorSetup(props.config), [props.config]);
+  const setup = floorSetups[props.config];
 
   return <div className={styles.container}>
-    <span>{setup.values[0]}</span>
-    <span>{setup.values[1]}</span>
-    <span>{setup.values[2]}</span>
-    <span>{setup.values[3]}</span>
-    <span>{setup.values[4]}</span>
-    <span>{setup.values[5]}</span>
-    <span>{setup.values[6]}</span>
+    <span>{setup[0]}</span>
+    <span>{setup[1]}</span>
+    <span>{setup[2]}</span>
+    <span>{setup[3]}</span>
+    <span>{setup[4]}</span>
+    <span>{setup[5]}</span>
+    <span>{setup[6]}</span>
     <TilePlaceholder location={{ boardType: 'FloorLine', boardId: props.playerId, x: 0 }} />
     <TilePlaceholder location={{ boardType: 'FloorLine', boardId: props.playerId, x: 1 }} />
     <TilePlaceholder location={{ boardType: 'FloorLine', boardId: props.playerId, x: 2 }} />
