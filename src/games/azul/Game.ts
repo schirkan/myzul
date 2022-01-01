@@ -119,16 +119,30 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       onBegin: (G, ctx) => {
         console.log('placeTiles.onBegin');
 
-        const availableTiles = G.tiles.filter(x =>
+        if (ctx.gameover) {
+          console.log('stop - gameover');
+          return;
+        }
+
+        let availableTiles = G.tiles.filter(x =>
           x.location.boardType === "TileBag" &&
           x.color !== "white");
 
+        // refill bag
+        if (availableTiles.length < G.factories * G.config.tilesPerFactory) {
+          const storageTiles = G.tiles.filter(x =>
+            x.location.boardType === "TileStorage");
+          storageTiles.forEach(x => moveTile(x, "TileBag"));
+          availableTiles = G.tiles.filter(x =>
+            x.location.boardType === "TileBag" &&
+            x.color !== "white");
+        }
+
         // place tiles on factories
-        for (let i = 0; i < G.factories; i++) {
-          moveTile(availableTiles[i * 4 + 0], 'Factory', i, 0, 0);
-          moveTile(availableTiles[i * 4 + 1], 'Factory', i, 0, 1);
-          moveTile(availableTiles[i * 4 + 2], 'Factory', i, 1, 0);
-          moveTile(availableTiles[i * 4 + 3], 'Factory', i, 1, 1);
+        for (let fi = 0; fi < G.factories; fi++) {
+          for (let ti = 0; ti < G.config.tilesPerFactory; ti++) {
+            moveTile(availableTiles[fi * G.config.tilesPerFactory + ti], 'Factory', fi, ti, 0);
+          }
         }
 
         // place white tile on table
@@ -221,11 +235,17 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           for (let row = 0; row < 5; row++) {
             const count = playerWallTiles.filter(x => x.location.y === row).length;
             if (count >= 5) {
-              ctx.events?.endGame(getWinner());
+              const winner = getWinner();
+              console.log('WINNER', winner);
+              ctx.events?.endGame(winner);
               return;
             }
           }
         }
+
+
+        // TEST
+        ctx.events?.endGame(getWinner());
       },
       endIf: (G, ctx) => {
         console.log('calculateScore.endIf');

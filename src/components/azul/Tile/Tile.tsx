@@ -28,7 +28,7 @@ export const Tile: React.FC<AzulTileState> = React.memo((props) => {
     data-color={props.color}
     data-selectable={props.selectable}
     data-selected={props.selected}
-    data-location={JSON.stringify(props.location)}
+    // data-board-type={props.location.boardType}
     onClick={() => props.selectable && context.onTileClick(props)}
     ref={el}>
   </div>;

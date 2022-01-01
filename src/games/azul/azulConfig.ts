@@ -43,6 +43,7 @@ export const floorSetups: { [name: string]: FloorSetup } = {
 export const defaultGameSetup: GameSetup = {
   wallSetup: 'Default',
   floorSetup: 'Default',
+  tilesPerFactory: 4,
 };
 
 export const GetTileLocationId = (location: TileLocation) => {

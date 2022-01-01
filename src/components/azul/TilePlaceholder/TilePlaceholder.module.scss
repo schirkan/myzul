@@ -31,4 +31,8 @@
   &[data-color="none"] {
     background: transparent;
   }
+
+  &[data-board-type="Factory"] {
+    visibility: hidden;
+  }
 }

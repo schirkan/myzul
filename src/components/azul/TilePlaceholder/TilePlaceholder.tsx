@@ -39,6 +39,7 @@ export const TilePlaceholder: React.FC<TilePlaceholderProps> = React.memo((props
     className={styles.container}
     data-color={props.color || 'none'}
     data-id={id}
+    data-board-type={props.location.boardType}
     onClick={onClick}
     ref={el}>
     {props.multiplier && props.multiplier > 1 ? props.multiplier + 'x' : ''}

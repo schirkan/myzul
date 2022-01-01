@@ -14,6 +14,7 @@ export type FloorSetup = number[];
 export type GameSetup = {
   wallSetup: string,
   floorSetup: string,
+  tilesPerFactory: number,
 };
 
 export type TileLocation = {

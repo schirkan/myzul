@@ -1,15 +1,15 @@
 .container {
   padding: 20px;
   border-radius: 100%;
-  // border: 2px solid lightgoldenrodyellow;
-  // background: lightyellow;
   width: min-content;
   display: grid;
   grid-template-columns: min-content min-content;
   gap: 5px;
 
-  background-image: url("./../../../assets/simon-berger-JH_R66BihvA-unsplash.jpg");
-  background-position: bottom left;
-  // background-repeat: repeat;
-  // background-size: cover;
+  background-image: url("./../../../assets/factory.jpg");
+  background-position: center center;
+  background-size: cover;
+
+  background-size: 113%;
+  background-position: -9px -10px;
 }

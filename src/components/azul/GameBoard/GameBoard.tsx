@@ -14,6 +14,7 @@ import { GameContext } from '../GameContext';
 type Props = GameSetup & {
   numPlayers: number,
   factories: number,
+  tilesPerFactory: number,
   players: string[]
 };
 
@@ -22,7 +23,7 @@ const Boards: React.FC<Props> = React.memo((props) => {
     <header>
       <section className={styles.factories}>
         {[...Array(props.factories)].map((_, index) =>
-          <Factory factoryId={index.toString()} key={index} />
+          <Factory factoryId={index.toString()} tilesPerFactory={props.tilesPerFactory} key={index} />
         )}
       </section>
       <section className={styles.scoreBoard}>
@@ -55,9 +56,6 @@ const Boards: React.FC<Props> = React.memo((props) => {
         </section>
       )}
     </main>
-    <footer>
-      <section>footer</section>
-    </footer>
   </>
 });
 
@@ -68,23 +66,32 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = (props) => {
 
   tileContext.setBoardProps(props);
 
-  return <div className={styles.container}>
+  return <div className={styles.container}
+  // pass&play
+  // style={{ visibility: props.ctx.currentPlayer === props.playerID ? 'unset' : 'hidden' }}
+  >
     <GameContext.Provider value={props}>
       <TileContext.Provider value={tileContext}>
         <Boards
           players={props.ctx.playOrder}
           numPlayers={props.ctx.numPlayers}
           factories={props.G.factories}
+          tilesPerFactory={props.G.config.tilesPerFactory}
           floorSetup={props.G.config.floorSetup}
           wallSetup={props.G.config.wallSetup} />
         {props.G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
+        {/* <footer>
+          <section>
+            <button onClick={props.undo}>Undo</button>
+            <button onClick={props.redo}>Redo</button>
+          </section>
+        </footer> */}
       </TileContext.Provider>
-      {/* {!props.G.initialized && <div className={styles.initialize}>
-        <button onClick={props.moves.start}>Start</button>
-      </div>} */}
       {props.ctx.gameover && <div className={styles.gameover}>
-        <ScoreBoard />
-        <button onClick={props.reset}>Neues Spiel</button>
+        <section>
+          <ScoreBoard />
+          <button onClick={props.reset}>Neues Spiel</button>
+        </section>
       </div>}
     </GameContext.Provider>
   </div>;
