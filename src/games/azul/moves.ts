@@ -239,7 +239,11 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: Tile
   // rearrange + sort center Tiles
   var centerTiles = G.tiles
     .filter(x => x.location.boardType === 'CenterOfTable')
-    .sort((a, b) => ('' + b.color).localeCompare(a.color));
+    .sort((a, b) => {
+      if (a.color === 'white') return -1;
+      if (b.color === 'white') return 1;
+      return ('' + b.color).localeCompare(a.color)
+    });
   let counter = 0;
   centerTiles.forEach(x => moveTile(x, 'CenterOfTable', undefined, counter++));
 
@@ -304,7 +308,6 @@ export const moveToPatternLine = (G: AzulGameState, tiles: AzulTileState[], boar
   });
 };
 
-// move tiles to floor
 export const moveToFloorLine = (G: AzulGameState, tiles: AzulTileState[], boardId: string): void => {
   // get tiles on floor line
   const floorLineTiles = G.tiles.filter(x =>
@@ -322,7 +325,6 @@ export const moveToFloorLine = (G: AzulGameState, tiles: AzulTileState[], boardI
   });
 };
 
-// move tiles to storage
 export const moveToTileStorage = (tiles: AzulTileState[]): void => {
   tiles.forEach(x => {
     moveTile(x, 'TileStorage');

@@ -1,7 +1,8 @@
 import { Client } from 'boardgame.io/react';
 import { GameBoard } from '../../components/azul/GameBoard';
 import { AzulGame } from './Game';
-import { Local } from 'boardgame.io/multiplayer'
+import { Local } from 'boardgame.io/multiplayer';
+import { Debug } from 'boardgame.io/debug';
 
 export const createAzulClient = (numPlayers: number) => Client({
   // A game object.
@@ -49,7 +50,11 @@ export const createAzulClient = (numPlayers: number) => Client({
   multiplayer: Local({ /* ... */ }),
 
   // Set to false to disable the Debug UI.
-  debug: true,
+  debug: {
+    impl: Debug,
+    collapseOnLoad: true,
+    hideToggleButton: false,
+  },
 
   // An optional Redux store enhancer.
   // This is useful for augmenting the Redux store

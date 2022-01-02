@@ -8,10 +8,14 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   // The name of the game.
   name: 'MyZul',
 
+  // The minimum and maximum number of players supported
+  // (This is only enforced when using the Lobby server component.)
+  minPlayers: 2,
+  maxPlayers: 4,
+
   // Function that returns the initial value of G.
   // setupData is an optional custom object that is
   // passed through the Game Creation API.
-
   setup: (ctx, setupData): AzulGameState => {
     if (!setupData) setupData = defaultGameSetup;
 
@@ -50,46 +54,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
 
     return initialState;
   },
-
-  // Optional function to validate the setupData before
-  // matches are created. If this returns a value,
-  // an error will be reported to the user and match
-  // creation is aborted.
-  // validateSetupData: (setupData, numPlayers) => 'setupData is not valid!',
-
-  // The minimum and maximum number of players supported
-  // (This is only enforced when using the Lobby server component.)
-  minPlayers: 2,
-  maxPlayers: 4,
-
-  /*
-    moves: {
-      // short-form move.
-      A: (G, ctx, ...args) => { },
-  
-      // long-form move.
-      B: {
-        // The move function.
-        move: (G, ctx, ...args) => { },
-        // Prevents undoing the move.
-        undoable: false,
-        // Prevents the move arguments from showing up in the log.
-        redact: true,
-        // Prevents the move from running on the client.
-        client: false,
-        // Prevents the move counting towards a player’s number of moves.
-        noLimit: true,
-        // Processes the move even if it was dispatched from an out-of-date client.
-        // This can be risky; check the validity of the state update in your move.
-        ignoreStaleStateID: true,
-      },
-    },
-  */
-
-
-  // Called at the end of the game.
-  // `ctx.gameover` is available at this point.
-  // onEnd: (G, ctx) => G,
 
   phases: {
     // setup: {
@@ -198,11 +162,10 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         onMove: (G, ctx) => {
           // set selectable Tiles
           G.tiles.forEach(x => x.selectable = false);
-          G.tiles
-            .filter(x =>
-              x.location.boardType === 'Factory' ||
-              x.location.boardType === 'CenterOfTable')
-            .forEach(x => x.selectable = true);
+          G.tiles.filter(x =>
+            x.location.boardType === 'Factory' ||
+            x.location.boardType === 'CenterOfTable'
+          ).forEach(x => x.selectable = true);
         },
       },
     },
@@ -263,26 +226,64 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
             );
 
             if (tiles.length >= maxTilesInRow) {
+              console.log('calculateScore.endIf: false - full rows left');
               return false;
             }
           }
         }
-        // no full rows left
+
+        console.log('calculateScore.endIf: true - no full rows left');
         return true;
       },
       turn: {
         // order: TurnOrder.ONCE,
-        activePlayers: ActivePlayers.ALL
+        // activePlayers: ActivePlayers.ALL,
+        activePlayers: { all: 'selectTargetLocation' },
+        stages: {
+          selectTargetLocation: {
+            moves: {
+              selectTargetLocation
+            }
+          }
+        }
       },
       next: 'placeTiles',
-      moves: {
-        selectTargetLocation: {
-          move: selectTargetLocation
-        }
-      }
     },
   },
 
+  // Optional function to validate the setupData before
+  // matches are created. If this returns a value,
+  // an error will be reported to the user and match
+  // creation is aborted.
+  // validateSetupData: (setupData, numPlayers) => 'setupData is not valid!',
+
+  /*
+    moves: {
+      // short-form move.
+      A: (G, ctx, ...args) => { },
+  
+      // long-form move.
+      B: {
+        // The move function.
+        move: (G, ctx, ...args) => { },
+        // Prevents undoing the move.
+        undoable: false,
+        // Prevents the move arguments from showing up in the log.
+        redact: true,
+        // Prevents the move from running on the client.
+        client: false,
+        // Prevents the move counting towards a player’s number of moves.
+        noLimit: true,
+        // Processes the move even if it was dispatched from an out-of-date client.
+        // This can be risky; check the validity of the state update in your move.
+        ignoreStaleStateID: true,
+      },
+    },
+  */
+
+  // Called at the end of the game.
+  // `ctx.gameover` is available at this point.
+  // onEnd: (G, ctx) => G,
 
   // Everything below is OPTIONAL.
   /*
