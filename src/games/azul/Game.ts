@@ -207,8 +207,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         }
 
 
-        // TEST
-        ctx.events?.endGame(getWinner());
+        // TODO TEST
+        // ctx.events?.endGame(getWinner());
       },
       endIf: (G, ctx) => {
         console.log('calculateScore.endIf');
