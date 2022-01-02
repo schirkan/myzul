@@ -1,8 +1,20 @@
-import { useState } from 'react';
-import { createAzulClient } from './games/azul';
-import { GameSetup } from './components/GameSetup';
 import styles from './App.module.scss';
+import { Lobby } from 'boardgame.io/react';
+import { GameBoard } from './components/azul/GameBoard';
+import { AzulGame } from './games/azul/Game';
 
+export const App = () => {
+  return <div className={styles.container}>
+    <Lobby
+      gameServer={`http://${window.location.hostname}:8000`}
+      lobbyServer={`http://${window.location.hostname}:8000`}
+      gameComponents={[
+        { game: AzulGame, board: GameBoard }
+      ]}
+    />
+  </div>
+}
+/*
 export const App = () => {
   const [config, setConfig] = useState<{
     game: string,
@@ -31,3 +43,4 @@ export const App = () => {
     {content}
   </div>;
 }
+*/

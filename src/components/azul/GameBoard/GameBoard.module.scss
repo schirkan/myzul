@@ -3,14 +3,8 @@
   display: grid;
   gap: 10px;
   grid-template-columns: max-content;
-  margin: auto;
-  width: fit-content;
-
-  // --- TODO:  REMOVE ---
-  // pass&play
-  // position: absolute;
-  // top: 0;
-  // --- REMOVE ---
+  // margin: auto;
+  // width: fit-content;
 
   section {
     padding: 10px;
@@ -32,10 +26,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    // justify-content: center;
-  }
-
-  footer {
   }
 }
 
@@ -72,7 +62,6 @@
   left: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.3);
-  // text-align: center;
   z-index: 99;
   padding-top: 20%;
 
@@ -88,9 +77,5 @@
     display: block;
     margin: auto;
     margin-top: 20px;
-    // box-shadow: #0d94d3 0 0 5px;
-    &:hover {
-      box-shadow: rgba(13, 148, 211, 0.8) 0 0 9px;
-    }
   }
 }

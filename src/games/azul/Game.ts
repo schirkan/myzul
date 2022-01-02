@@ -2,7 +2,7 @@ import type { Ctx, Game } from "boardgame.io";
 import { defaultGameSetup } from "./azulConfig";
 import { AzulGameState, GameSetup } from "./models";
 import { calculateScore, moveTile, selectSourceTile, selectTargetLocation } from "./moves";
-import { ActivePlayers, TurnOrder } from 'boardgame.io/core';
+import { TurnOrder } from 'boardgame.io/core';
 
 export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   // The name of the game.

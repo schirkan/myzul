@@ -10,6 +10,7 @@ import { TilePlaceholder } from '../TilePlaceholder';
 import styles from './GameBoard.module.scss';
 import { ScoreBoard } from './../ScoreBoard';
 import { GameContext } from '../GameContext';
+import { LobbyClient } from 'boardgame.io/client';
 
 type Props = GameSetup & {
   numPlayers: number,
@@ -59,6 +60,19 @@ const Boards: React.FC<Props> = React.memo((props) => {
   </>
 });
 
+const lobbyClient = new LobbyClient({ server: 'http://' + window.location.hostname + ':8000' });
+
+const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) => {
+  const onClick = async () => {
+    await lobbyClient.leaveMatch('MyZul', props.matchID, {
+      playerID: props.playerID!,
+      credentials: props.credentials!,
+    });
+    window.location.reload();
+  }
+  return <button onClick={onClick}>Zurück zur Lobby</button>
+});
+
 export const GameBoard: React.FC<BoardProps<AzulGameState>> = (props) => {
   const tileContext = useMemo<TileContextType>(() => {
     return createTileContext(props);
@@ -66,10 +80,7 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = (props) => {
 
   tileContext.setBoardProps(props);
 
-  return <div className={styles.container}
-  // pass&play
-  // style={{ visibility: props.ctx.currentPlayer === props.playerID ? 'unset' : 'hidden' }}
-  >
+  return <div className={styles.container}  >
     <GameContext.Provider value={props}>
       <TileContext.Provider value={tileContext}>
         <Boards
@@ -80,17 +91,11 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = (props) => {
           floorSetup={props.G.config.floorSetup}
           wallSetup={props.G.config.wallSetup} />
         {props.G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
-        {/* <footer>
-          <section>
-            <button onClick={props.undo}>Undo</button>
-            <button onClick={props.redo}>Redo</button>
-          </section>
-        </footer> */}
       </TileContext.Provider>
       {props.ctx.gameover && <div className={styles.gameover}>
         <section>
           <ScoreBoard />
-          <button onClick={props.reset}>Neues Spiel</button>
+          <PlayAgainButton {...props} />
         </section>
       </div>}
     </GameContext.Provider>

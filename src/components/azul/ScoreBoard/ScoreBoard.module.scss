@@ -29,6 +29,12 @@
     text-decoration: underline;
   }
 
+  &:not([data-connected="true"]) {
+    &::after {
+      content: " ...";
+    }
+  }
+
   &::before {
     content: " ";
     background: var(--color);
