@@ -1,7 +1,6 @@
 import { Ctx, MoveFn } from "boardgame.io";
-import { TilePlaceholderProps } from "../../components/azul/TilePlaceholder";
 import { floorSetups, wallSetups } from "./azulConfig";
-import { AzulGameState, AzulTileState, BoardType } from "./models";
+import { AzulGameState, AzulTileState, BoardType, TilePlaceholderState } from "./models";
 
 export const INVALID_MOVE = "INVALID_MOVE";
 
@@ -23,7 +22,7 @@ export const selectSourceTile: MoveFn<AzulGameState> = (G, ctx, tile: AzulTileSt
   // Placeholder selectable machen?
 };
 
-export const selectScoreTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TilePlaceholderProps) => {
+export const selectScoreTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TilePlaceholderState) => {
   if (target.location.boardId === undefined || target.location.boardType !== "Wall") return INVALID_MOVE;
   const maxTilesInRow = target.location.y! + 1;
 
@@ -115,7 +114,7 @@ const calculatePatternRow = async (G: AzulGameState, ctx: Ctx, y: number) => {
   }
 }
 
-const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceholderProps) => {
+const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceholderState) => {
   if (!target.location.boardId || target.location.x === undefined || target.location.y === undefined) {
     throw new Error('calculateTileScore: location incomplete');
   }
@@ -192,7 +191,7 @@ const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceh
 }
 
 // move all selected tiles to new board
-export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TilePlaceholderProps) => {
+export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TilePlaceholderState) => {
   if (target.location.boardId !== ctx.currentPlayer) return INVALID_MOVE;
   if (ctx.playerID && ctx.playerID !== ctx.currentPlayer) return INVALID_MOVE;
 

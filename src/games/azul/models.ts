@@ -7,6 +7,10 @@ export type TilePlaceholderConfig = {
   multiplier: number
 }
 
+export type TilePlaceholderState = Partial<TilePlaceholderConfig> & {
+  location: TileLocation
+};
+
 export type WallSetup = Array<Array<TilePlaceholderConfig>>;
 
 export type FloorSetup = number[];
