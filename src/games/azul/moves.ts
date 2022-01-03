@@ -222,8 +222,7 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: Tile
       x.location.boardType === 'Factory' &&
       x.location.boardId === sourceBoardId
     );
-    var centerTiles = G.tiles.filter(x => x.location.boardType === 'CenterOfTable');
-    let counter = centerTiles.length;
+    let counter = G.tiles.filter(x => x.location.boardType === 'CenterOfTable').length;
     factoryTiles.forEach(x => moveTile(x, 'CenterOfTable', undefined, counter++));
   }
 
