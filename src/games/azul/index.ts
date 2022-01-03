@@ -5,6 +5,9 @@ import { Local } from 'boardgame.io/multiplayer';
 import { SocketIO } from 'boardgame.io/multiplayer'
 import { Debug } from 'boardgame.io/debug';
 
+let server = window.location.hostname;
+if (server === 'localhost') server += ':8000';
+
 export const createAzulClient = (numPlayers: number) => Client({
   // A game object.
   game: AzulGame,
@@ -49,7 +52,7 @@ export const createAzulClient = (numPlayers: number) => Client({
   // Additionally, you can write your own transport implementation.
   // See `src/client/client.js` for details.
   // multiplayer: Local({ /* ... */ }),
-  multiplayer: SocketIO({ server: window.location.hostname + ':8000' }),
+  multiplayer: SocketIO({ server }),
 
   // Set to false to disable the Debug UI.
   debug: {
