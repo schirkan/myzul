@@ -4,11 +4,14 @@ import { GameBoard } from './components/azul/GameBoard';
 import { AzulGame } from './games/azul/Game';
 import githubIcon from './assets/GitHub-Mark-64px.png';
 
+let server = window.location.hostname;
+if (server === 'localhost') server += ':8000';
+
 export const App = () => {
   return <div className={styles.container}>
     <Lobby
-      gameServer={`http://${window.location.hostname}:8000`}
-      lobbyServer={`http://${window.location.hostname}:8000`}
+      gameServer={'http://' + server}
+      lobbyServer={'http://' + server}
       gameComponents={[
         { game: AzulGame, board: GameBoard }
       ]}
