@@ -1,28 +1,36 @@
 import { BoardProps } from 'boardgame.io/react';
 import React from 'react';
-import { AzulGameState, AzulTileState } from "../../games/azul/models";
-import { TilePlaceholderProps } from './TilePlaceholder';
+import { GetTileLocationId } from '../../games/azul/azulConfig';
+import { AzulGameState, AzulTileState, TilePlaceholderState } from "../../games/azul/models";
 
 export type TileContextType = {
   setBoardProps: (newProps: BoardProps<AzulGameState>) => void,
   placeholderElements: {
-    [index: string]: HTMLDivElement,
+    [index: string]: HTMLElement,
   },
   placeholderProps: {
-    [index: string]: TilePlaceholderProps,
+    [index: string]: TilePlaceholderState,
   },
   onTileClick: (tile: AzulTileState) => void,
-  onPlaceholderClick: (placeholder: TilePlaceholderProps) => void
+  onPlaceholderClick: (placeholder: TilePlaceholderState) => void
+  registerPlaceholder: (placeholder: TilePlaceholderState, element: HTMLElement) => () => void
 }
 
-export const createTileContext = (initialProps?: BoardProps<AzulGameState>): TileContextType => {
-  let props = initialProps;
+export const createTileContext = (): TileContextType => {
+  let props: BoardProps<AzulGameState> | undefined = undefined;
+  let placeholderElements: {
+    [index: string]: HTMLElement,
+  } = {};
+  let placeholderProps: {
+    [index: string]: TilePlaceholderState,
+  } = {};
+
   return {
     setBoardProps: (newProps: BoardProps<AzulGameState>) => {
       props = newProps;
     },
-    placeholderElements: {},
-    placeholderProps: {},
+    placeholderElements,
+    placeholderProps,
     onTileClick: (tile) => {
       console.log('selectSourceTile', tile);
       props?.moves?.selectSourceTile(tile);
@@ -30,6 +38,16 @@ export const createTileContext = (initialProps?: BoardProps<AzulGameState>): Til
     onPlaceholderClick: (placeholder) => {
       console.log('selectTargetLocation', placeholder);
       props?.moves?.selectTargetLocation(placeholder);
+    },
+    registerPlaceholder: (placeholder: TilePlaceholderState, element: HTMLElement) => {
+      console.log('registerPlaceholder');
+      const id = GetTileLocationId(placeholder.location);
+      placeholderProps[id] = placeholder;
+      placeholderElements[id] = element;
+      return () => {
+        delete (placeholderElements[id]);
+        delete (placeholderProps[id]);
+      }
     }
   };
 }

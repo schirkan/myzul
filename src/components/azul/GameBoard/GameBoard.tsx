@@ -75,8 +75,8 @@ const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) 
 
 export const GameBoard: React.FC<BoardProps<AzulGameState>> = (props) => {
   const tileContext = useMemo<TileContextType>(() => {
-    return createTileContext(props);
-  }, undefined);
+    return createTileContext();
+  }, []);
 
   tileContext.setBoardProps(props);
 
