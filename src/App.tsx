@@ -2,6 +2,7 @@ import styles from './App.module.scss';
 import { Lobby } from 'boardgame.io/react';
 import { GameBoard } from './components/azul/GameBoard';
 import { AzulGame } from './games/azul/Game';
+import githubIcon from './assets/GitHub-Mark-64px.png';
 
 export const App = () => {
   return <div className={styles.container}>
@@ -12,6 +13,9 @@ export const App = () => {
         { game: AzulGame, board: GameBoard }
       ]}
     />
+    <a href="https://github.com/schirkan/myzul-server" className={styles.githubIcon}>
+      <img alt="github" title="View on GitHub" src={githubIcon} />
+    </a>
   </div>
 }
 /*

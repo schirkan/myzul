@@ -20,7 +20,7 @@ export const Tile: React.FC<AzulTileState> = React.memo((props) => {
       const x = rect.left + window.scrollX;
       setPosition({ transform: 'translateX(' + x + 'px) translateY(' + y + 'px)' });
     }
-  }, [props.location, width]);
+  }, [props.location, width, context.placeholderElements]);
 
   return <div
     className={styles.container}
