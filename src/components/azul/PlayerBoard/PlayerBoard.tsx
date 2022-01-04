@@ -1,7 +1,7 @@
 import React from 'react';
 import { GameSetup } from '../../../games/azul/models';
 import { FloorLine } from '../FloorLine';
-import { PlayerName } from '../GameContext';
+import { PlayerName } from '../../../common/GameContext';
 import { PatternLines } from '../PatternLines';
 import { Wall } from '../Wall';
 import styles from './PlayerBoard.module.scss';

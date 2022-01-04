@@ -4,7 +4,7 @@ import { AzulTileState } from "../../../games/azul/models";
 import { useTileContext } from '../TileContext';
 import styles from './Tile.module.scss';
 import { useWindowWidth } from '@react-hook/window-size/throttled'
-import { useGameContext } from '../GameContext';
+import { useGameContext } from '../../../common/GameContext';
 
 export const Tile: React.FC<AzulTileState> = React.memo((props) => {
   const tileContext = useTileContext();

@@ -5,8 +5,6 @@
 
   section {
     padding: 10px;
-    overflow: hidden;
-
     border-radius: 12px;
     border: 1px solid rgba(209, 213, 219, 0.3);
     backdrop-filter: blur(2px);
@@ -35,32 +33,39 @@
 }
 
 .centerOfTable {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
 }
 
 .playerBoard {
   display: inline-block;
   // background-image: url("./../../../assets/simon-berger-JH_R66BihvA-unsplash.jpg");
-  background-image: url("./../../../assets/andy-art-ASbxmrhbTKM-unsplash.jpg");
+  // background-image: url("./../../../assets/andy-art-ASbxmrhbTKM-unsplash.jpg");
   // background-image: url("./../../../assets/lukas-blazek-EWDvHNNfUmQ-unsplash.jpg");
   // background-position: bottom left;
   background-position: top center;
 
   @keyframes pulse {
     0% {
-      box-shadow: 0 0 3px 1px gold;
+      opacity: 0.3;
     }
     50% {
-      box-shadow: 0 0 5px 3px gold;
+      opacity: 1;
     }
     100% {
-      box-shadow: 0 0 3px 1px gold;
+      opacity: 0.3;
     }
   }
 
-  &[data-active="true"] {
+  &[data-active="true"]::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: 12px;
+    box-shadow: 0 0 5px 3px gold;
+    opacity: 0;
     animation: pulse 2s linear infinite;
   }
 }

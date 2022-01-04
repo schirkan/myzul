@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ScoreBoard.module.scss';
-import { getPlayerIsConnected, getPlayerName, useGameContext } from './../GameContext';
+import { getPlayerIsConnected, getPlayerName, useGameContext } from '../../../common/GameContext';
 import { playerColor } from '../../../games/azul/models';
 
 export const ScoreBoard: React.FC = React.memo(() => {

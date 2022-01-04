@@ -1,8 +1,8 @@
 import { BoardProps } from 'boardgame.io/react';
 import React, { useContext } from 'react';
-import { AzulGameState } from "../../games/azul/models";
+// import { AzulGameState } from "../games/azul/models";
 
-export type GameContextType = BoardProps<AzulGameState> | undefined;
+export type GameContextType = BoardProps<any> | undefined;
 
 export const GameContext = React.createContext<GameContextType>(undefined);
 
@@ -16,12 +16,12 @@ export const getPlayerName = (context: GameContextType, playerId: string) => {
   }
 }
 
-export const PlayerName = React.memo((props: { playerId: string }) => {
-  const gameContext = useContext(GameContext);
-  return <>{getPlayerName(gameContext, props.playerId)}</>;
-})
-
 export const getPlayerIsConnected = (context: GameContextType, playerId: string) => {
   let result = context?.matchData![+playerId].isConnected;
   return result === undefined ? true : result;
 }
+
+export const PlayerName = React.memo((props: { playerId: string }) => {
+  const gameContext = useContext(GameContext);
+  return <>{getPlayerName(gameContext, props.playerId)}</>;
+})

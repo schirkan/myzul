@@ -3,7 +3,7 @@ import { Lobby } from 'boardgame.io/react';
 import { GameBoard } from './components/azul/GameBoard';
 import { AzulGame } from './games/azul/Game';
 import githubIcon from './assets/GitHub-Mark-64px.png';
-import { getServerUrl } from './games/azul';
+import { serverUrl } from './games/azul';
 import { ThemeSelection } from './components/ThemeSelection';
 import { useTheme } from './common/ThemeContext';
 
@@ -11,11 +11,12 @@ export const App = () => {
   const [theme] = useTheme();
   return <div className={styles.container} data-theme={theme}>
     <Lobby
-      gameServer={getServerUrl()}
-      lobbyServer={getServerUrl()}
+      gameServer={serverUrl}
+      lobbyServer={serverUrl}
       gameComponents={[
         { game: AzulGame, board: GameBoard }
       ]}
+    // refreshInterval={5000}
     />
     <ThemeSelection className={styles.themeSelection} />
     <a href="https://github.com/schirkan/myzul-server" target="_blank" rel="noreferrer" className={styles.githubIcon}>

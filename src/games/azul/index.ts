@@ -8,7 +8,7 @@ import { Debug } from 'boardgame.io/debug';
 let server = window.location.protocol + '//' + window.location.hostname;
 if (window.location.hostname === 'localhost') server += ':8000';
 
-export const getServerUrl = () => server;
+export const serverUrl = server;
 
 export const createAzulLocalClient = (numPlayers: number) => Client({
   // A game object.
