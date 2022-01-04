@@ -1,4 +1,16 @@
 .container {
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 3px 1px gold;
+    }
+    50% {
+      box-shadow: 0 0 5px 3px gold;
+    }
+    100% {
+      box-shadow: 0 0 3px 1px gold;
+    }
+  }
+
   display: inline-block;
   width: 40px;
   min-width: 40px;
@@ -153,6 +165,7 @@
     &::after {
       transform: scale(1.05);
       box-shadow: rgba(0, 0, 0, 0.4) 0 0 10px;
+      animation: pulse 2s linear infinite;
     }
   }
 

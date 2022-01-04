@@ -55,3 +55,5 @@ export const createTileContext = (): TileContextType => {
 export const defaultContext: TileContextType = createTileContext();
 
 export const TileContext = React.createContext(defaultContext);
+
+export const useTileContext = () => React.useContext(TileContext);

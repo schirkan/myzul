@@ -1,35 +1,36 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { GetTileLocationId } from '../../../games/azul/azulConfig';
 import { AzulTileState } from "../../../games/azul/models";
-import { TileContext } from '../TileLocationContext';
+import { useTileContext } from '../TileContext';
 import styles from './Tile.module.scss';
 import { useWindowWidth } from '@react-hook/window-size/throttled'
+import { useGameContext } from '../GameContext';
 
 export const Tile: React.FC<AzulTileState> = React.memo((props) => {
-  const context = useContext(TileContext);
+  const tileContext = useTileContext();
+  const gameContext = useGameContext();
   const el = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ transform: '' });
   const width = useWindowWidth();
 
   useEffect(() => {
     const id = GetTileLocationId(props.location);
-    const placeholder = context.placeholderElements[id];
+    const placeholder = tileContext.placeholderElements[id];
     if (placeholder && el.current) {
       var rect = placeholder.getBoundingClientRect();
       const y = rect.top + window.scrollY;
       const x = rect.left + window.scrollX;
       setPosition({ transform: 'translateX(' + x + 'px) translateY(' + y + 'px)' });
     }
-  }, [props.location, width, context.placeholderElements]);
+  }, [props.location, width, tileContext.placeholderElements]);
 
   return <div
     className={styles.container}
     style={{ ...position }}
     data-color={props.color}
-    data-selectable={props.selectable}
+    data-selectable={props.selectable && gameContext?.isActive}
     data-selected={props.selected}
-    // data-board-type={props.location.boardType}
-    onClick={() => props.selectable && context.onTileClick(props)}
+    onClick={() => props.selectable && tileContext.onTileClick(props)}
     ref={el}>
   </div>;
 });

@@ -1,19 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styles from './ScoreBoard.module.scss';
-import { GameContext } from './../GameContext';
+import { getPlayerIsConnected, getPlayerName, useGameContext } from './../GameContext';
 import { playerColor } from '../../../games/azul/models';
 
 export const ScoreBoard: React.FC = React.memo(() => {
-  const gameContext = useContext(GameContext);
-
-  // console.log(gameContext!.matchData![0]);
+  const gameContext = useGameContext();
 
   let activePlayerId = gameContext?.ctx.currentPlayer;
-  let currentPlayerId = gameContext?.playerID
+  let currentPlayerId = gameContext?.playerID;
 
   if (gameContext?.ctx.gameover) {
     activePlayerId = gameContext?.ctx.gameover.winnerPlayerId;
-    currentPlayerId = gameContext?.ctx.gameover.winnerPlayerId
+    currentPlayerId = gameContext?.ctx.gameover.winnerPlayerId;
   }
 
   return <div className={styles.container}>
@@ -23,9 +21,9 @@ export const ScoreBoard: React.FC = React.memo(() => {
         <span className={styles.playerName}
           data-active={activePlayerId === playerId}
           data-current={currentPlayerId === playerId}
-          data-connected={gameContext?.matchData![+playerId].isConnected}
+          data-connected={getPlayerIsConnected(gameContext, playerId)}
           style={{ "--color": playerColor[playerId] } as any}>
-          {gameContext?.matchData![+playerId].name || 'Spieler ' + (+playerId + 1)}
+          {getPlayerName(gameContext, playerId)}
         </span>
         <span>{gameContext?.G.score[playerId] || 0}</span>
       </div>

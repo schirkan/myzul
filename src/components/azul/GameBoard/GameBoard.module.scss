@@ -1,10 +1,7 @@
 .container {
-  // position: relative;
   display: grid;
   gap: 10px;
   grid-template-columns: max-content;
-  // margin: auto;
-  // width: fit-content;
 
   section {
     padding: 10px;
@@ -50,6 +47,22 @@
   // background-image: url("./../../../assets/lukas-blazek-EWDvHNNfUmQ-unsplash.jpg");
   // background-position: bottom left;
   background-position: top center;
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 3px 1px gold;
+    }
+    50% {
+      box-shadow: 0 0 5px 3px gold;
+    }
+    100% {
+      box-shadow: 0 0 3px 1px gold;
+    }
+  }
+
+  &[data-active="true"] {
+    animation: pulse 2s linear infinite;
+  }
 }
 
 .scoreBoard {

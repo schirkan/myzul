@@ -1,18 +1,29 @@
+// @media screen and (max-width: 1920px) {
+//   .container {
+//     background-size: auto !important;
+//   }
+// }
+
 .container {
   min-width: 100%;
   width: fit-content;
   min-height: 100vh;
   padding: 10px;
-  // overflow: auto;
 
   user-select: none;
 
-  // background-image: url("./assets/tim-mossholder-07uiqD9LS6U-unsplash.jpg");
-  background-image: url("./assets/dark-wood-background.jpg");
-  // background-image: url("./assets/sharon-mccutcheon-WqPAETBU2G8-unsplash.jpg");
-  // background-position: top left;
-  // background-repeat: repeat;
-  // background-size: cover;
+  &[data-theme="dark-wood"] {
+    background-image: url("./assets/dark-wood-background.jpg");
+  }
+  &[data-theme="light-wood"] {
+    background-image: url("./assets/lukas-blazek-EWDvHNNfUmQ-unsplash.jpg");
+    background-position: top right;
+  }
+  &[data-theme="dark-neon"] {
+    background-image: url("./assets/sharon-mccutcheon-WqPAETBU2G8-unsplash.jpg");
+  }
+
+  background-size: cover;
 
   color: #fff;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -60,6 +71,12 @@
   }
 }
 
+.themeSelection {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+}
+
 .githubIcon {
   background: #fff;
   border-radius: 50%;
@@ -84,6 +101,7 @@
     padding: 0 !important;
     margin: auto;
     width: fit-content;
+    min-width: 600px;
 
     .phase:nth-child(2) {
       padding: 10px;

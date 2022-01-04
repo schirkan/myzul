@@ -5,12 +5,13 @@ import { PlayerBoard } from '../PlayerBoard';
 import { Tile } from '../Tile';
 import { TileStorage } from '../TileStorage';
 import { AzulGameState, GameSetup } from "../../../games/azul/models";
-import { TileContext, TileContextType, createTileContext } from '../TileLocationContext';
+import { TileContext, TileContextType, createTileContext } from '../TileContext';
 import { TilePlaceholder } from '../TilePlaceholder';
 import styles from './GameBoard.module.scss';
 import { ScoreBoard } from './../ScoreBoard';
-import { GameContext } from '../GameContext';
+import { GameContext, useGameContext } from '../GameContext';
 import { LobbyClient } from 'boardgame.io/client';
+import { getServerUrl } from '../../../games/azul';
 
 type Props = GameSetup & {
   numPlayers: number,
@@ -20,6 +21,7 @@ type Props = GameSetup & {
 };
 
 const Boards: React.FC<Props> = React.memo((props) => {
+  const gameContext = useGameContext();
   return <>
     <header>
       <section className={styles.factories}>
@@ -40,35 +42,29 @@ const Boards: React.FC<Props> = React.memo((props) => {
       </section>
     </header>
     <main>
-      <section className={styles.playerBoard}>
-        <PlayerBoard config={props} playerId={props.players[0]} />
-      </section>
-      <section className={styles.playerBoard}>
-        <PlayerBoard config={props} playerId={props.players[1]} />
-      </section>
-      {props.numPlayers > 2 && (
-        <section className={styles.playerBoard}>
-          <PlayerBoard config={props} playerId={props.players[2]} />
-        </section>
-      )}
-      {props.numPlayers > 3 && (
-        <section className={styles.playerBoard}>
-          <PlayerBoard config={props} playerId={props.players[3]} />
+      {props.players.map(playerId =>
+        <section key={playerId}
+          className={styles.playerBoard}
+          data-active={playerId === gameContext?.ctx.currentPlayer}>
+          <PlayerBoard config={props} playerId={playerId} />
         </section>
       )}
     </main>
   </>
 });
 
-const lobbyClient = new LobbyClient({ server: 'http://' + window.location.hostname + ':8000' });
+const lobbyClient = new LobbyClient({ server: getServerUrl() });
 
 const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) => {
   const onClick = async () => {
-    await lobbyClient.leaveMatch('MyZul', props.matchID, {
-      playerID: props.playerID!,
-      credentials: props.credentials!,
-    });
-    window.location.reload();
+    try {
+      await lobbyClient.leaveMatch('MyZul', props.matchID, {
+        playerID: props.playerID!,
+        credentials: props.credentials!,
+      });
+    } finally {
+      window.location.reload();
+    }
   }
   return <button onClick={onClick}>Zurück zur Lobby</button>
 });
@@ -80,7 +76,7 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = (props) => {
 
   tileContext.setBoardProps(props);
 
-  return <div className={styles.container}  >
+  return <div className={styles.container}>
     <GameContext.Provider value={props}>
       <TileContext.Provider value={tileContext}>
         <Boards

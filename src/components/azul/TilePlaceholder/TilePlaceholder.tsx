@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import styles from './TilePlaceholder.module.scss';
-import { TileContext } from '../TileLocationContext';
+import { TileContext } from '../TileContext';
 import { TilePlaceholderState } from '../../../games/azul/models';
 
 export const TilePlaceholder: React.FC<TilePlaceholderState> = React.memo((props) => {
