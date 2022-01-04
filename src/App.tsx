@@ -18,7 +18,7 @@ export const App = () => {
       ]}
     />
     <ThemeSelection className={styles.themeSelection} />
-    <a href="https://github.com/schirkan/myzul-server" target="_blank" className={styles.githubIcon}>
+    <a href="https://github.com/schirkan/myzul-server" target="_blank" rel="noreferrer" className={styles.githubIcon}>
       <img alt="github" title="View on GitHub" src={githubIcon} />
     </a>
   </div>

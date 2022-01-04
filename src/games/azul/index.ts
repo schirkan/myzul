@@ -2,7 +2,7 @@ import { Client } from 'boardgame.io/react';
 import { GameBoard } from '../../components/azul/GameBoard';
 import { AzulGame } from './Game';
 import { Local } from 'boardgame.io/multiplayer';
-import { SocketIO } from 'boardgame.io/multiplayer'
+// import { SocketIO } from 'boardgame.io/multiplayer'
 import { Debug } from 'boardgame.io/debug';
 
 let server = window.location.protocol + '//' + window.location.hostname;
