@@ -1,8 +1,7 @@
 import React from 'react';
 import styles from './ScoreBoard.module.scss';
 import { getPlayerIsConnected, getPlayerName, useGameContext } from '../../../common/GameContext';
-import { playerColor } from '../../../games/azul/models';
-import { AzulGameover } from '../../../games/azul/Game';
+import { AzulGameover, playerColor } from '../../../games/azul/models';
 
 export const ScoreBoard: React.FC = React.memo(() => {
   const gameContext = useGameContext();
