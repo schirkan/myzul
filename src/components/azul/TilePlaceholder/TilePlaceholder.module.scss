@@ -13,23 +13,23 @@
   color: #333;
 
   &[data-color="red"] {
-    background: rgb(241, 161, 161);
+    background: rgba(241, 161, 161, 0.8);
   }
   &[data-color="green"] {
-    background: rgb(187, 236, 187);
+    background: rgba(162, 247, 162, 0.8);
   }
   &[data-color="blue"] {
-    background: rgb(193, 226, 236);
+    background: rgba(193, 226, 236, 0.8);
   }
   &[data-color="yellow"] {
-    background: lightyellow;
+    background: rgba(252, 252, 170, 0.8);
   }
   &[data-color="black"] {
-    background: rgb(184, 184, 184);
-    // color: #fff;
+    background: rgba(150, 150, 150, 0.8);
   }
   &[data-color="none"] {
-    background: transparent;
+    // background: transparent;
+    background: rgba(255, 255, 255, 0.2);
   }
 
   &[data-board-type="Factory"] {

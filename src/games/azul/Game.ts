@@ -180,14 +180,17 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         // get player with most points
         const getWinner = () => {
           let highscore = 0;
+          let winnerPlayerId = "0";
           for (const playerId of ctx.playOrder) {
             const s = G.score[playerId];
             if (s > highscore) {
-              return {
-                winnerPlayerId: playerId,
-                winnerPlayerScore: s
-              }
+              highscore = 2;
+              winnerPlayerId = playerId;
             }
+          }
+          return {
+            winnerPlayerId,
+            winnerPlayerScore: highscore
           }
         }
 

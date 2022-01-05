@@ -9,7 +9,7 @@ export const NotifyActivePlayer: React.FC = React.memo(() => {
   const gameContext = useGameContext();
 
   useEffect(() => {
-    if (gameContext?.isActive) {
+    if (!document.hasFocus() && gameContext?.isActive) {
       play();
     }
   }, [play, gameContext?.isActive]);
