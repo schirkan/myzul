@@ -46,6 +46,11 @@ export interface AzulGameState {
   nextStartPlayerId?: string;
 }
 
+export type AzulGameover = {
+  winnerPlayerId: string;
+  winnerPlayerScore: number;
+}
+
 export const playerColor: { [key: string]: string } = {
   '0': '#48f',
   '1': '#4b6',

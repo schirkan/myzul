@@ -1,13 +1,8 @@
 import type { Ctx, Game } from "boardgame.io";
 import { defaultGameSetup } from "./azulConfig";
-import { AzulGameState, GameSetup } from "./models";
+import { AzulGameover, AzulGameState, GameSetup } from "./models";
 import { calculateScore, moveTile, selectSourceTile, selectTargetLocation } from "./moves";
 import { TurnOrder } from 'boardgame.io/core';
-
-export type AzulGameover = {
-  winnerPlayerId: string;
-  winnerPlayerScore: number;
-}
 
 export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   // The name of the game.
