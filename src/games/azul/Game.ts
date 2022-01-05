@@ -4,6 +4,11 @@ import { AzulGameState, GameSetup } from "./models";
 import { calculateScore, moveTile, selectSourceTile, selectTargetLocation } from "./moves";
 import { TurnOrder } from 'boardgame.io/core';
 
+export type AzulGameover = {
+  winnerPlayerId: string;
+  winnerPlayerScore: number;
+}
+
 export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   // The name of the game.
   name: 'MyZul',
@@ -178,7 +183,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       onEnd: (G, ctx) => {
         console.log('calculateScore.onEnd');
         // get player with most points
-        const getWinner = () => {
+        const getWinner = (): AzulGameover => {
           let highscore = 0;
           let winnerPlayerId = "0";
           for (const playerId of ctx.playOrder) {
