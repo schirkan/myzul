@@ -10,9 +10,9 @@ export const config = {
   effects: {
     // Each effect is named by its key.
     // This creates a zero-config endTurn effect:
-    endTurn: {
-      duration: 2,
-    },
+    // endTurn: {
+    //   duration: 2,
+    // },
 
     // rollDie: {
     //   // Effects can declare a `create` function.
