@@ -14,7 +14,7 @@ import { CenterOfTable } from '../CenterOfTable';
 import { NotifyActivePlayer } from '../../NotifyActivePlayer';
 import { serverUrl } from '../../../api/config';
 import { SubmitUserScore } from '../../SubmitUserScore';
-import { useLatestPropsOnEffect } from 'bgio-effects/react';
+// import { useLatestPropsOnEffect } from 'bgio-effects/react';
 
 type Props = GameSetup & {
   numPlayers: number,

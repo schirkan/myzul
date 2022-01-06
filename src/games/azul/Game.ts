@@ -139,8 +139,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           move: selectSourceTile
         },
         selectTargetLocation: {
-          move: (G, ctx) => {
-            selectTargetLocation(G, ctx);
+          move: (G, ctx, params) => {
+            selectTargetLocation(G, ctx, params);
             // delay
             (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.delay();
           }
