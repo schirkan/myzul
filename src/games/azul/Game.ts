@@ -121,8 +121,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         G.initialized = false;
         // get next starting player
         G.startPlayerId = G.tiles.find(x => x.color === 'white')?.location.boardId;
-        // delay
-        (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.delay();
       },
       endIf: (G, ctx) => {
         // console.log('placeTiles.endIf');
@@ -172,6 +170,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     calculateScore: {
       onBegin: (G, ctx) => {
         console.log('calculateScore.onBegin');
+        // delay
+        (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.delay();
         calculateScore(G, ctx);
       },
       onEnd: (G, ctx) => {
