@@ -184,7 +184,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           for (const playerId of ctx.playOrder) {
             const s = G.score[playerId];
             if (s > highscore) {
-              highscore = 2;
+              highscore = s;
               winnerPlayerId = playerId;
             }
           }
