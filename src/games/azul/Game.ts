@@ -139,7 +139,11 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           move: selectSourceTile
         },
         selectTargetLocation: {
-          move: selectTargetLocation
+          move: (G, ctx) => {
+            selectTargetLocation(G, ctx);
+            // delay
+            (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.delay();
+          }
         }
       },
       turn: {
@@ -170,8 +174,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     calculateScore: {
       onBegin: (G, ctx) => {
         console.log('calculateScore.onBegin');
-        // delay
-        (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.delay();
         calculateScore(G, ctx);
       },
       onEnd: (G, ctx) => {
