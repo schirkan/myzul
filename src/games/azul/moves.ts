@@ -68,11 +68,16 @@ const calculateFloorLines = async (G: AzulGameState, ctx: Ctx) => {
 
     // calculare score
     tiles.forEach(tile => {
-      if (tile.location.boardId && tile.location.x) {
+      if (tile.location.x) {
         let points = floorSetups[G.config.floorSetup][tile.location.x];
-        G.score[tile.location.boardId].points += points;
+        G.score[playerId].points += points;
       }
     });
+
+    // no negative score
+    if (G.score[playerId].points < 0) {
+      G.score[playerId].points = 0;
+    }
 
     // move to storage
     moveToTileStorage(tiles);
