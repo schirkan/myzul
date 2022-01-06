@@ -15,7 +15,12 @@ export const App = () => {
       gameServer={serverUrl}
       lobbyServer={serverUrl}
       gameComponents={[
-        { game: AzulGame, board: EffectsBoardWrapper(GameBoard) }
+        {
+          game: AzulGame,
+          board: EffectsBoardWrapper(GameBoard, {
+            updateStateAfterEffects: true,
+          })
+        }
       ]}
     />
     <ThemeSelection className={styles.themeSelection} />
