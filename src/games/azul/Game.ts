@@ -1,36 +1,38 @@
-import type { Ctx, Game } from "boardgame.io";
-import { defaultGameSetup } from "./azulConfig";
-import { AzulGameover, AzulGameState, GameSetup } from "./models";
-import { calculateScore, moveTile, selectSourceTile, selectTargetLocation } from "./moves";
+import type { Ctx, Game } from 'boardgame.io';
+import { defaultGameSetup } from './azulConfig';
+import { AzulGameover, AzulGameState, GameSetup } from './models';
+import { calculateScore, moveTile, selectSourceTile, selectTargetLocation } from './moves';
 import { TurnOrder } from 'boardgame.io/core';
+// import { EffectsCtxMixin } from 'bgio-effects';
 import { EffectsPlugin } from 'bgio-effects/plugin';
 
-export const config = {
+export const effectsConfig = {
   // Declare the effect types you need.
   effects: {
     // Each effect is named by its key.
     // This creates a zero-config endTurn effect:
-    // endTurn: {
-    //   duration: 2,
-    // },
+    endTurn: {
+      duration: 2,
+    },
 
-    // rollDie: {
-    //   // Effects can declare a `create` function.
-    //   // If defined, the return value of create will be
-    //   // available as the payload for an effect.
-    //   create: (value) => ({ value }),
+    wait: {
+      // Effects can declare a `create` function.
+      // If defined, the return value of create will be
+      // available as the payload for an effect.
+      // create: (value) => ({ value }),
 
-    //   // Effects can declare a default duration in seconds
-    //   // (see “Sequencing effects” below).
-    //   duration: 2,
-    // },
+      // Effects can declare a default duration in seconds
+      // (see “Sequencing effects” below).
+      duration: 2,
+    },
   },
 };
 
+// export const AzulGame: Game<AzulGameState, Ctx & EffectsCtxMixin<typeof effectsConfig>, GameSetup> = {
 export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   // The name of the game.
   name: 'MyZul',
-  plugins: [EffectsPlugin(config)],
+  plugins: [EffectsPlugin(effectsConfig)],
 
   // The minimum and maximum number of players supported (This is only enforced when using the Lobby server component.)
   minPlayers: 2,
@@ -117,17 +119,17 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         }
 
         let availableTiles = G.tiles.filter(x =>
-          x.location.boardType === "TileBag" &&
-          x.color !== "white");
+          x.location.boardType === 'TileBag' &&
+          x.color !== 'white');
 
         // refill bag
         if (availableTiles.length < G.factories * G.config.tilesPerFactory) {
           const storageTiles = G.tiles.filter(x =>
-            x.location.boardType === "TileStorage");
-          storageTiles.forEach(x => moveTile(x, "TileBag"));
+            x.location.boardType === 'TileStorage');
+          storageTiles.forEach(x => moveTile(x, 'TileBag'));
           availableTiles = G.tiles.filter(x =>
-            x.location.boardType === "TileBag" &&
-            x.color !== "white");
+            x.location.boardType === 'TileBag' &&
+            x.color !== 'white');
         }
 
         // place tiles on factories
@@ -138,8 +140,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         }
 
         // place white tile on table
-        const whiteTile = G.tiles.find(x => x.color === "white");
-        moveTile(whiteTile!, "CenterOfTable", undefined, 0);
+        const whiteTile = G.tiles.find(x => x.color === 'white');
+        moveTile(whiteTile!, 'CenterOfTable', undefined, 0);
 
         // make tiles selectable
         G.tiles
@@ -154,7 +156,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         console.log('placeTiles.onEnd');
         G.initialized = false;
         // get next starting player
-        G.startPlayerId = G.tiles.find(x => x.color === "white")?.location.boardId;
+        G.startPlayerId = G.tiles.find(x => x.color === 'white')?.location.boardId;
       },
       endIf: (G, ctx) => {
         console.log('placeTiles.endIf');
@@ -162,8 +164,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         if (!G.initialized) return false;
         // end if no tiles left
         const factoryTiles = G.tiles.filter(x =>
-          x.location.boardType === "Factory" ||
-          x.location.boardType === "CenterOfTable");
+          x.location.boardType === 'Factory' ||
+          x.location.boardType === 'CenterOfTable');
         return factoryTiles.length === 0;
       },
       next: 'calculateScore',
@@ -210,7 +212,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         // get player with most points
         const getWinner = (): AzulGameover => {
           let highscore = 0;
-          let winnerPlayerId = "0";
+          let winnerPlayerId = '0';
           for (const playerId of ctx.playOrder) {
             const s = G.score[playerId];
             if (s.points > highscore) {
@@ -225,7 +227,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         }
 
         // check end condition
-        const wallTiles = G.tiles.filter(x => x.location.boardType === "Wall");
+        const wallTiles = G.tiles.filter(x => x.location.boardType === 'Wall');
         for (const playerId of ctx.playOrder) {
           const playerWallTiles = wallTiles.filter(x => x.location.boardId === playerId);
           for (let row = 0; row < 5; row++) {
@@ -252,7 +254,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           for (const playerId of ctx.playOrder) {
             // get tiles 
             const tiles = G.tiles.filter(x =>
-              x.location.boardType === "PatternLine" &&
+              x.location.boardType === 'PatternLine' &&
               x.location.boardId === playerId &&
               x.location.y === row
             );
