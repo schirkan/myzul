@@ -9,6 +9,7 @@ export const getHighscores = async (): Promise<HighscoreItem[]> => {
 };
 
 export const submitUserScore = async (data: UserScore): Promise<void> => {
+  console.log('submitUserScore', data);
   await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

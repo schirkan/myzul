@@ -13,6 +13,7 @@ import { LobbyClient } from 'boardgame.io/client';
 import { CenterOfTable } from '../CenterOfTable';
 import { NotifyActivePlayer } from '../../NotifyActivePlayer';
 import { serverUrl } from '../../../api/config';
+import { SubmitUserScore } from '../../SubmitUserScore';
 
 type Props = GameSetup & {
   numPlayers: number,
@@ -96,6 +97,7 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props)
           <PlayAgainButton {...props} />
         </section>
       </div>}
+      <SubmitUserScore />
     </GameContext.Provider>
   </div>;
 });

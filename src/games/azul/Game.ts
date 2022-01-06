@@ -149,7 +149,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           G.turnStartTimestamp = Date.now();
         },
         onEnd: (G, ctx) => {
-          G.score[ctx.currentPlayer].time += Date.now() - G.turnStartTimestamp;
+          // save playtime
+          G.score[ctx.currentPlayer].time += (Date.now() - G.turnStartTimestamp) / 1000;
         },
         order: {
           first: (G, ctx) => ctx.playOrder.findIndex(x => x === G.startPlayerId),

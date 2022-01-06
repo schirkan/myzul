@@ -5,6 +5,17 @@ import styles from './Highscore.module.scss';
 
 type Props = {};
 
+const formatDuration = (sec_num: number) => {
+  var hours: string | number = Math.floor(sec_num / 3600);
+  var minutes: string | number = Math.floor((sec_num - (hours * 3600)) / 60);
+  var seconds: string | number = sec_num - (hours * 3600) - (minutes * 60);
+
+  if (hours < 10) { hours = "0" + hours; }
+  if (minutes < 10) { minutes = "0" + minutes; }
+  if (seconds < 10) { seconds = "0" + seconds; }
+  return hours + ':' + minutes + ':' + seconds;
+};
+
 export const Highscore: React.FC<Props> = React.memo((props) => {
   const [data, setData] = useState<HighscoreItem[]>([]);
 
@@ -31,7 +42,7 @@ export const Highscore: React.FC<Props> = React.memo((props) => {
             <td>{data.points}</td>
             <td>{data.games}</td>
             <td>{data.won}</td>
-            <td>{data.duration}</td>
+            <td>{formatDuration(data.duration)}</td>
           </tr>
         )}
       </tbody>

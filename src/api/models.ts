@@ -7,6 +7,7 @@ export interface HighscoreItem {
 }
 
 export interface UserScore {
+  matchId: string;
   username: string;
   won: boolean;
   points: number;
