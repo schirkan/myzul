@@ -3,26 +3,13 @@ import { defaultGameSetup } from './azulConfig';
 import { AzulGameover, AzulGameState, GameSetup } from './models';
 import { calculateScore, moveTile, selectSourceTile, selectTargetLocation } from './moves';
 import { TurnOrder } from 'boardgame.io/core';
-// import { EffectsCtxMixin } from 'bgio-effects';
+import { EffectsCtxMixin } from 'bgio-effects';
 import { EffectsPlugin } from 'bgio-effects/plugin';
 
+// @see: https://github.com/delucis/bgio-effects
 export const effectsConfig = {
-  // Declare the effect types you need.
   effects: {
-    // Each effect is named by its key.
-    // This creates a zero-config endTurn effect:
     endTurn: {
-      duration: 2,
-    },
-
-    wait: {
-      // Effects can declare a `create` function.
-      // If defined, the return value of create will be
-      // available as the payload for an effect.
-      // create: (value) => ({ value }),
-
-      // Effects can declare a default duration in seconds
-      // (see “Sequencing effects” below).
       duration: 2,
     },
   },
@@ -184,6 +171,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         },
         onEnd: (G, ctx) => {
           G.score[ctx.currentPlayer].time += Date.now() - G.turnStartTimestamp;
+          (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.endTurn();
         },
         order: {
           first: (G, ctx) => ctx.playOrder.findIndex(x => x === G.startPlayerId),

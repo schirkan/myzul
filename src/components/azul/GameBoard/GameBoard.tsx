@@ -10,9 +10,9 @@ import styles from './GameBoard.module.scss';
 import { ScoreBoard } from './../ScoreBoard';
 import { GameContext, useGameContext } from '../../../common/GameContext';
 import { LobbyClient } from 'boardgame.io/client';
-import { serverUrl } from '../../../games/azul';
 import { CenterOfTable } from '../CenterOfTable';
 import { NotifyActivePlayer } from '../../NotifyActivePlayer';
+import { serverUrl } from '../../../api/config';
 
 type Props = GameSetup & {
   numPlayers: number,
