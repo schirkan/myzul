@@ -42,7 +42,6 @@ export interface AzulGameState {
   factories: number;
   tiles: AzulTileState[];
   score: { [key: string]: AzulPlayerScore };
-  calculationDelay: number;
   startPlayerId?: string;
   turnStartTimestamp: number;
 }

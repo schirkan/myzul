@@ -6,7 +6,6 @@ import { AzulGameover } from '../../games/azul/models';
 
 export const SubmitUserScore: React.FC = React.memo(() => {
   const gameContext = useGameContext();
-  // const [loading, setLoading] = useState<boolean | undefined>(undefined);
   const pid = gameContext?.playerID || "";
 
   const requestData = useMemo(() => {
@@ -25,9 +24,7 @@ export const SubmitUserScore: React.FC = React.memo(() => {
 
   useEffect(() => {
     if (requestData) {
-      // setLoading(true);
       submitUserScore(requestData);
-      // .then(() => setLoading(false));
     }
   }, [requestData]);
 

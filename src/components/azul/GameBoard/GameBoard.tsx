@@ -14,6 +14,7 @@ import { CenterOfTable } from '../CenterOfTable';
 import { NotifyActivePlayer } from '../../NotifyActivePlayer';
 import { serverUrl } from '../../../api/config';
 import { SubmitUserScore } from '../../SubmitUserScore';
+import { useLatestPropsOnEffect } from 'bgio-effects/react';
 
 type Props = GameSetup & {
   numPlayers: number,
@@ -78,6 +79,8 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props)
 
   tileContext.setBoardProps(props);
 
+  const { G } = useLatestPropsOnEffect<AzulGameState>('effects:start');
+
   return <div className={styles.container}>
     <GameContext.Provider value={props}>
       <TileContext.Provider value={tileContext}>
@@ -88,7 +91,7 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props)
           tilesPerFactory={props.G.config.tilesPerFactory}
           floorSetup={props.G.config.floorSetup}
           wallSetup={props.G.config.wallSetup} />
-        {props.G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
+        {G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
       </TileContext.Provider>
       <NotifyActivePlayer />
       {props.ctx.gameover && <div className={styles.gameover}>

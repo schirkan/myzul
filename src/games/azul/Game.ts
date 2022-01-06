@@ -9,7 +9,7 @@ import { EffectsPlugin } from 'bgio-effects/plugin';
 // @see: https://github.com/delucis/bgio-effects
 export const effectsConfig = {
   effects: {
-    endRound: {
+    delay: {
       duration: 2,
     },
   },
@@ -38,7 +38,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       config: setupData,
       score: {},
       initialized: false,
-      calculationDelay: 500,
       turnStartTimestamp: 0,
       startPlayerId: ctx.random?.Shuffle(ctx.playOrder)[0] // random starting player
     };
@@ -115,17 +114,18 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           .forEach(x => x.selectable = true);
 
         G.initialized = true;
+
+        // delay       
+        (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.delay();
       },
       onEnd: (G, ctx) => {
-        console.log('placeTiles.onEnd');
+        // console.log('placeTiles.onEnd');
         G.initialized = false;
         // get next starting player
         G.startPlayerId = G.tiles.find(x => x.color === 'white')?.location.boardId;
-        // delay       
-        (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.endRound();
       },
       endIf: (G, ctx) => {
-        console.log('placeTiles.endIf');
+        // console.log('placeTiles.endIf');
         // don't end before started
         if (!G.initialized) return false;
         // end if no tiles left
@@ -150,7 +150,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         },
         onEnd: (G, ctx) => {
           // save playtime
-          G.score[ctx.currentPlayer].time += (Date.now() - G.turnStartTimestamp) / 1000;
+          G.score[ctx.currentPlayer].time += Math.floor((Date.now() - G.turnStartTimestamp) / 1000);
         },
         order: {
           first: (G, ctx) => ctx.playOrder.findIndex(x => x === G.startPlayerId),
