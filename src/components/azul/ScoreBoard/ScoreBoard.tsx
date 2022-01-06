@@ -25,7 +25,7 @@ export const ScoreBoard: React.FC = React.memo(() => {
           style={{ "--color": playerColor[playerId] } as any}>
           {getPlayerName(gameContext, playerId)}
         </span>
-        <span>{gameContext?.G.score[playerId] || 0}</span>
+        <span>{gameContext?.G.score[playerId].points || 0}</span>
       </div>
     )}
   </div>;
