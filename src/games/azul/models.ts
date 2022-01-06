@@ -41,12 +41,18 @@ export interface AzulGameState {
   config: GameSetup;
   factories: number;
   tiles: AzulTileState[];
-  score: { [key: string]: number };
+  score: { [key: string]: AzulPlayerScore };
   calculationDelay: number;
-  nextStartPlayerId?: string;
+  startPlayerId?: string;
+  turnStartTimestamp: number;
 }
 
-export type AzulGameover = {
+export interface AzulPlayerScore {
+  points: number;
+  time: number;
+}
+
+export interface AzulGameover {
   winnerPlayerId: string;
   winnerPlayerScore: number;
 }

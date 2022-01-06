@@ -6,6 +6,7 @@ import githubIcon from './assets/GitHub-Mark-64px.png';
 import { serverUrl } from './games/azul';
 import { ThemeSelection } from './components/ThemeSelection';
 import { useTheme } from './common/ThemeContext';
+import { EffectsBoardWrapper } from 'bgio-effects/react';
 
 export const App = () => {
   const [theme] = useTheme();
@@ -14,9 +15,8 @@ export const App = () => {
       gameServer={serverUrl}
       lobbyServer={serverUrl}
       gameComponents={[
-        { game: AzulGame, board: GameBoard }
+        { game: AzulGame, board: EffectsBoardWrapper(GameBoard) }
       ]}
-    // refreshInterval={5000}
     />
     <ThemeSelection className={styles.themeSelection} />
     <a href="https://github.com/schirkan/myzul-server" target="_blank" rel="noreferrer" className={styles.githubIcon}>
@@ -24,33 +24,3 @@ export const App = () => {
     </a>
   </div>
 }
-/*
-export const App = () => {
-  const [config, setConfig] = useState<{
-    game: string,
-    numPlayers: number,
-    setupData: any
-  }>();
-
-  const onStartClick = (game: string, numPlayers: number, setupData: any) => {
-    setConfig({ game, numPlayers, setupData });
-  }
-
-  let content = undefined;
-
-  if (config?.game === 'AZUL') {
-    const Client = createAzulLocalClient(config.numPlayers);
-    content = <>
-      <Client playerID='0' />
-      <hr />
-      <Client playerID='1' />
-    </>
-  } else {
-    content = <GameSetup onStartClick={onStartClick} />
-  }
-
-  return <div className={styles.container}>
-    {content}
-  </div>;
-}
-*/

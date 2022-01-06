@@ -3,19 +3,41 @@ import { defaultGameSetup } from "./azulConfig";
 import { AzulGameover, AzulGameState, GameSetup } from "./models";
 import { calculateScore, moveTile, selectSourceTile, selectTargetLocation } from "./moves";
 import { TurnOrder } from 'boardgame.io/core';
+import { EffectsPlugin } from 'bgio-effects/plugin';
+
+export const config = {
+  // Declare the effect types you need.
+  effects: {
+    // Each effect is named by its key.
+    // This creates a zero-config endTurn effect:
+    endTurn: {
+      duration: 2,
+    },
+
+    // rollDie: {
+    //   // Effects can declare a `create` function.
+    //   // If defined, the return value of create will be
+    //   // available as the payload for an effect.
+    //   create: (value) => ({ value }),
+
+    //   // Effects can declare a default duration in seconds
+    //   // (see “Sequencing effects” below).
+    //   duration: 2,
+    // },
+  },
+};
 
 export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   // The name of the game.
   name: 'MyZul',
+  plugins: [EffectsPlugin(config)],
 
-  // The minimum and maximum number of players supported
-  // (This is only enforced when using the Lobby server component.)
+  // The minimum and maximum number of players supported (This is only enforced when using the Lobby server component.)
   minPlayers: 2,
   maxPlayers: 4,
 
   // Function that returns the initial value of G.
-  // setupData is an optional custom object that is
-  // passed through the Game Creation API.
+  // setupData is an optional custom object that is passed through the Game Creation API.
   setup: (ctx, setupData): AzulGameState => {
     if (!setupData) setupData = defaultGameSetup;
 
@@ -28,11 +50,16 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       score: {},
       initialized: false,
       calculationDelay: 500,
+      turnStartTimestamp: 0,
+      startPlayerId: ctx.random?.Shuffle(ctx.playOrder)[0] // random starting player
     };
 
     // init score
     ctx.playOrder.forEach(playerId => {
-      initialState.score[playerId] = 0;
+      initialState.score[playerId] = {
+        points: 0,
+        time: 0
+      };
     });
 
     // create tiles
@@ -48,7 +75,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     initialState.tiles.push({ color: 'white', selectable: false, location: { boardType: 'TileBag', x: 0 }, selected: false })
 
     // shuffle tiles
-    initialState.tiles = initialState.tiles.sort(() => Math.random() - 0.5)
+    // initialState.tiles = initialState.tiles.sort(() => Math.random() - 0.5)
+    initialState.tiles = ctx.random!.Shuffle(initialState.tiles);
 
     console.log('setup completed');
 
@@ -126,7 +154,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         console.log('placeTiles.onEnd');
         G.initialized = false;
         // get next starting player
-        G.nextStartPlayerId = G.tiles.find(x => x.color === "white")?.location.boardId;
+        G.startPlayerId = G.tiles.find(x => x.color === "white")?.location.boardId;
       },
       endIf: (G, ctx) => {
         console.log('placeTiles.endIf');
@@ -149,14 +177,16 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         }
       },
       turn: {
+        onBegin: (G, ctx) => {
+          G.turnStartTimestamp = Date.now();
+        },
+        onEnd: (G, ctx) => {
+          G.score[ctx.currentPlayer].time += Date.now() - G.turnStartTimestamp;
+        },
         order: {
-          first: (G, ctx) => {
-            // set starting player
-            const startPlayerPos = ctx.playOrder.findIndex(x => x === G.nextStartPlayerId);
-            return Math.max(startPlayerPos, 0);
-          },
+          first: (G, ctx) => ctx.playOrder.findIndex(x => x === G.startPlayerId),
           next: TurnOrder.DEFAULT.next
-        }, //TurnOrder.RESET,
+        },
         minMoves: 1,
         maxMoves: 1,
         onMove: (G, ctx) => {
@@ -183,8 +213,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           let winnerPlayerId = "0";
           for (const playerId of ctx.playOrder) {
             const s = G.score[playerId];
-            if (s > highscore) {
-              highscore = s;
+            if (s.points > highscore) {
+              highscore = s.points;
               winnerPlayerId = playerId;
             }
           }

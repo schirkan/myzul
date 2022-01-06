@@ -70,7 +70,7 @@ const calculateFloorLines = async (G: AzulGameState, ctx: Ctx) => {
     tiles.forEach(tile => {
       if (tile.location.boardId && tile.location.x) {
         let points = floorSetups[G.config.floorSetup][tile.location.x];
-        G.score[tile.location.boardId] += points;
+        G.score[tile.location.boardId].points += points;
       }
     });
 
@@ -187,7 +187,7 @@ const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceh
     points += 10;
   }
 
-  G.score[target.location.boardId] += points * (target.multiplier || 1);
+  G.score[target.location.boardId].points += points * (target.multiplier || 1);
 }
 
 // move all selected tiles to new board
