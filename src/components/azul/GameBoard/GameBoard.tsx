@@ -79,7 +79,7 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props)
 
   tileContext.setBoardProps(props);
 
-  const { G } = useLatestPropsOnEffect<AzulGameState>('effects:start');
+  // const { G } = useLatestPropsOnEffect<AzulGameState>('effects:start');
 
   return <div className={styles.container}>
     <GameContext.Provider value={props}>
@@ -91,7 +91,7 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props)
           tilesPerFactory={props.G.config.tilesPerFactory}
           floorSetup={props.G.config.floorSetup}
           wallSetup={props.G.config.wallSetup} />
-        {G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
+        {props.G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
       </TileContext.Provider>
       <NotifyActivePlayer />
       {props.ctx.gameover && <div className={styles.gameover}>

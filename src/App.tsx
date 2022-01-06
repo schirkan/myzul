@@ -10,7 +10,7 @@ import { serverUrl } from './api/config';
 import { Highscore } from './components/Highscore';
 
 const board = EffectsBoardWrapper(GameBoard, {
-  updateStateAfterEffects: true,
+  // updateStateAfterEffects: true,
 });
 
 export const App = () => {
