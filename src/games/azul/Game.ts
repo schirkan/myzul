@@ -9,7 +9,7 @@ import { EffectsPlugin } from 'bgio-effects/plugin';
 // @see: https://github.com/delucis/bgio-effects
 export const effectsConfig = {
   effects: {
-    endTurn: {
+    endRound: {
       duration: 2,
     },
   },
@@ -64,7 +64,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     initialState.tiles.push({ color: 'white', selectable: false, location: { boardType: 'TileBag', x: 0 }, selected: false })
 
     // shuffle tiles
-    // initialState.tiles = initialState.tiles.sort(() => Math.random() - 0.5)
     initialState.tiles = ctx.random!.Shuffle(initialState.tiles);
 
     console.log('setup completed');
@@ -73,28 +72,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   },
 
   phases: {
-    // setup: {
-    //   moves: {
-    //     start: {
-    //       move: (G, ctx) => {
-
-    //         G.initialized = true;
-
-    //         ctx.events?.endPhase();
-    //       }
-    //     },
-    //   },
-    //   turn: {
-    //     activePlayers: { all: Stage.NULL },
-    //     order: TurnOrder.RESET,
-    //     onBegin: (G) => {
-    //       G.initialized = false;
-    //     }
-    //   },
-    //   start: true,
-    //   next: 'placeTiles',
-    // },
-
     placeTiles: {
       start: true,
       onBegin: (G, ctx) => {
@@ -144,6 +121,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         G.initialized = false;
         // get next starting player
         G.startPlayerId = G.tiles.find(x => x.color === 'white')?.location.boardId;
+        // delay       
+        (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.endRound();
       },
       endIf: (G, ctx) => {
         console.log('placeTiles.endIf');
@@ -171,7 +150,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         },
         onEnd: (G, ctx) => {
           G.score[ctx.currentPlayer].time += Date.now() - G.turnStartTimestamp;
-          (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.endTurn();
         },
         order: {
           first: (G, ctx) => ctx.playOrder.findIndex(x => x === G.startPlayerId),
@@ -258,8 +236,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         return true;
       },
       turn: {
-        // order: TurnOrder.ONCE,
-        // activePlayers: ActivePlayers.ALL,
         activePlayers: { all: 'selectTargetLocation' },
         stages: {
           selectTargetLocation: {
