@@ -115,6 +115,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
 
         G.initialized = true;
 
+        // delay
+        (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.delay();
       },
       onEnd: (G, ctx) => {
         // console.log('placeTiles.onEnd');
@@ -139,11 +141,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
           move: selectSourceTile
         },
         selectTargetLocation: {
-          move: (G, ctx, params) => {
-            selectTargetLocation(G, ctx, params);
-            // delay
-            (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.delay();
-          }
+          move: selectTargetLocation
         }
       },
       turn: {
