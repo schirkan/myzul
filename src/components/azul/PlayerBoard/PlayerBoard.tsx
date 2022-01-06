@@ -4,6 +4,7 @@ import { FloorLine } from '../FloorLine';
 import { PlayerName } from '../../../common/GameContext';
 import { PatternLines } from '../PatternLines';
 import { Wall } from '../Wall';
+import { Timer } from '../Timer';
 import styles from './PlayerBoard.module.scss';
 
 type Props = {
@@ -24,6 +25,7 @@ export const PlayerBoard: React.FC<Props> = React.memo((props) => {
     </div>
     <div className={styles.bottom}>
       <FloorLine playerId={props.playerId} config={props.config.floorSetup} />
+      <Timer playerId={props.playerId} />
     </div>
   </div>;
 });
