@@ -1,33 +1,41 @@
 [data-theme="dark-neon"] {
   .container {
     &[data-color]::after {
-      box-shadow: inset 0 0 15px 0px rgba(0, 0, 0, 0.7);
-      border: 2px solid rgba(0, 0, 0, 0.4);
+      // box-shadow: inset 0 0 15px 0px rgba(0, 0, 0, 0.7);
+      // border: 2px solid rgba(0, 0, 0, 0.4);
+      border: none;
     }
 
     &[data-color="red"]::after {
-      background: #ff355e;
+      // background: #ff355e;
+      background: url("./../../../assets/tile-pink.svg");
     }
 
     &[data-color="green"]::after {
-      background: #66ff66;
+      // background: #66ff66;
+      background: url("./../../../assets/tile-green.svg");
     }
 
     &[data-color="blue"]::after {
-      background: #50bfe6;
+      // background: #50bfe6;
+      background: url("./../../../assets/tile-blue.svg");
     }
 
     &[data-color="yellow"]::after {
-      background: #ffff66;
+      // background: #ffff66;
+      background: url("./../../../assets/tile-yellow.svg");
     }
 
     &[data-color="black"]::after {
-      background: #888;
+      // background: #888;
+      background: url("./../../../assets/tile-purple.svg");
     }
 
     &[data-color="white"]::after {
-      background: #fff;
-      color: #2243b6;
+      // background: #fff;
+      // color: #2243b6;
+      color: transparent;
+      background: url("./../../../assets/tile-begin.svg");
     }
   }
 }
