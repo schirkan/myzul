@@ -3,6 +3,8 @@
   bottom: 0;
   left: 0;
   overflow: hidden;
+  z-index: 999;
+  pointer-events: none;
 }
 
 .panel {
@@ -13,6 +15,10 @@
   label {
     text-shadow: #000 0px 0px 5px;
     user-select: none;
+  }
+
+  select {
+    width: 150px;
   }
 
   & > label {
@@ -26,6 +32,7 @@
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
 
+    pointer-events: all;
     cursor: pointer;
 
     &:hover {
@@ -43,6 +50,8 @@
     border: 2px solid rgba(0, 0, 0, 0.3);
     border-bottom: none;
     border-top-right-radius: 6px;
+
+    pointer-events: all;
 
     & > div {
       display: grid;

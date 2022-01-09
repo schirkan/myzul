@@ -3,12 +3,6 @@
   grid-template-columns: auto auto;
   gap: 10px;
 }
-.caption {
-  position: absolute;
-  color: #fff;
-  text-shadow: #000 0px 0px 5px;
-  margin: 5px;
-}
 .left {
 }
 .right {
@@ -25,4 +19,18 @@
   align-items: center;
   justify-content: space-between;
   margin-right: 20px;
+}
+.caption {
+  position: absolute;
+  color: #fff;
+  text-shadow: #000 0px 0px 5px;
+  margin: 5px;
+}
+
+[data-theme-board="original"] {
+  .caption {
+    color: #222;
+    margin-top: 100px;
+    text-shadow: #999 0px 0px 2px;
+  }
 }

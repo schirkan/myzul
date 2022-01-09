@@ -18,8 +18,8 @@ export const Tile: React.FC<AzulTileState> = React.memo((props) => {
     const placeholder = tileContext.placeholderElements[id];
     if (placeholder && el.current) {
       var rect = placeholder.getBoundingClientRect();
-      const y = rect.top + window.scrollY;
-      const x = rect.left + window.scrollX;
+      const y = rect.y + window.scrollY - 1; // -border
+      const x = rect.x + window.scrollX - 1; // -border
       setPosition({ transform: 'translateX(' + x + 'px) translateY(' + y + 'px)' });
     }
   }, [props.location, width, tileContext.placeholderElements]);

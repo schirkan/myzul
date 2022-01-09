@@ -93,6 +93,13 @@
     &[data-color="white"]::after {
       background: #fff;
       color: #2243b6;
+
+      content: "1";
+      line-height: 38px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      font-family: serif;
     }
   }
 }
@@ -240,7 +247,7 @@
     --one-color: rgb(93, 160, 247);
 
     &[data-color="white"]::after {
-      border-color: rgb(255, 255, 255);
+      border-color: white;
 
       color: var(--one-color);
       background-color: var(--one-color);
