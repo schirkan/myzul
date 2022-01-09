@@ -4,3 +4,11 @@
   gap: 5px;
   text-align: center;
 }
+
+[data-theme-board="original"] {
+  .container {
+    color: transparent;
+    gap: 8.5px;
+    font-size: 9px;
+  }
+}

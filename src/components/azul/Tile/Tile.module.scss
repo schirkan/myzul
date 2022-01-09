@@ -1,45 +1,3 @@
-[data-theme="dark-neon"] {
-  .container {
-    &[data-color]::after {
-      // box-shadow: inset 0 0 15px 0px rgba(0, 0, 0, 0.7);
-      // border: 2px solid rgba(0, 0, 0, 0.4);
-      border: none;
-    }
-
-    &[data-color="red"]::after {
-      // background: #ff355e;
-      background: url("./../../../assets/tile-pink.svg");
-    }
-
-    &[data-color="green"]::after {
-      // background: #66ff66;
-      background: url("./../../../assets/tile-green.svg");
-    }
-
-    &[data-color="blue"]::after {
-      // background: #50bfe6;
-      background: url("./../../../assets/tile-blue.svg");
-    }
-
-    &[data-color="yellow"]::after {
-      // background: #ffff66;
-      background: url("./../../../assets/tile-yellow.svg");
-    }
-
-    &[data-color="black"]::after {
-      // background: #888;
-      background: url("./../../../assets/tile-purple.svg");
-    }
-
-    &[data-color="white"]::after {
-      // background: #fff;
-      // color: #2243b6;
-      color: transparent;
-      background: url("./../../../assets/tile-begin.svg");
-    }
-  }
-}
-
 .container {
   @keyframes pulse {
     0% {
@@ -72,134 +30,8 @@
     border-radius: 4px;
     border-style: solid;
     border-width: 2px;
-    transition: transform 0.5s; //, box-shadow 0.5s;
+    transition: transform 0.5s;
     box-shadow: #888 0 0 0;
-  }
-
-  &[data-color="red"]::after {
-    // background-color: red;
-    border-color: #833;
-
-    background-color: white;
-    background-image: linear-gradient(90deg, rgba(200, 0, 0, 0.5) 50%, transparent 50%),
-      linear-gradient(rgba(200, 0, 0, 0.5) 50%, transparent 50%);
-    background-size: 50% 50%;
-  }
-
-  &[data-color="green"]::after {
-    background: green;
-    border-color: #161;
-
-    background-image: radial-gradient(
-        closest-side,
-        transparent 0%,
-        transparent 75%,
-        #b6cc66 76%,
-        #b6cc66 85%,
-        #edffdb 86%,
-        #edffdb 94%,
-        #ffffff 95%,
-        #ffffff 103%,
-        #d9e6a7 104%,
-        #d9e6a7 112%,
-        #798b3c 113%,
-        #798b3c 121%,
-        #ffffff 122%,
-        #ffffff 130%,
-        #e0ead7 131%,
-        #e0ead7 140%
-      ),
-      radial-gradient(
-        closest-side,
-        transparent 0%,
-        transparent 75%,
-        #b6cc66 76%,
-        #b6cc66 85%,
-        #edffdb 86%,
-        #edffdb 94%,
-        #ffffff 95%,
-        #ffffff 103%,
-        #d9e6a7 104%,
-        #d9e6a7 112%,
-        #798b3c 113%,
-        #798b3c 121%,
-        #ffffff 122%,
-        #ffffff 130%,
-        #e0ead7 131%,
-        #e0ead7 140%
-      );
-    background-size: 110px 110px;
-    background-color: #c8d3a7;
-    background-position: 0 0, 55px 55px;
-  }
-
-  &[data-color="blue"]::after {
-    background: blue;
-    border-color: #338;
-
-    background-color: white;
-    background-image: radial-gradient(midnightblue 9px, transparent 10px);
-    background-size: 18px 18px;
-    background-position: 0 0;
-  }
-
-  &[data-color="yellow"]::after {
-    // background: yellow;
-    border-color: #d3a122;
-
-    background: radial-gradient(
-        circle at 100% 50%,
-        transparent 20%,
-        rgba(255, 255, 255, 0.3) 21%,
-        rgba(255, 255, 255, 0.3) 34%,
-        transparent 35%,
-        transparent
-      ),
-      radial-gradient(
-          circle at 0% 50%,
-          transparent 20%,
-          rgba(255, 255, 255, 0.3) 21%,
-          rgba(255, 255, 255, 0.3) 34%,
-          transparent 35%,
-          transparent
-        )
-        0 11px;
-    background-color: #fabf29;
-    background-size: 12px 14px;
-  }
-
-  &[data-color="black"]::after {
-    background: black;
-    border-color: #333;
-
-    // background-color: gray;
-    background-image: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 10px,
-      rgba(255, 255, 255, 0.5) 10px,
-      rgba(255, 255, 255, 0.5) 20px
-    );
-  }
-
-  --one-color: rgb(93, 160, 247);
-
-  &[data-color="white"]::after {
-    // background-color: #fff;
-    border-color: rgb(255, 255, 255);
-
-    color: var(--one-color);
-    background-color: var(--one-color);
-    background-image: radial-gradient(closest-side, transparent 90%, white 99%),
-      radial-gradient(closest-side, transparent 90%, white 99%);
-    background-size: 36px 36px;
-    background-position: 0 0, 18px 18px;
-    content: "1";
-    line-height: 34px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    font-family: serif;
   }
 
   &[data-selected="true"] {
@@ -227,10 +59,201 @@
 
   &[data-selectable="true"] {
     cursor: pointer;
+  }
+}
 
-    // &:hover::after {
-    // transform: scale(1.1);
-    // box-shadow: rgba(0, 0, 0, 0.4) 0 0 10px;
-    // }
+[data-theme-tile="neon"] {
+  .container {
+    &[data-color]::after {
+      box-shadow: inset 0 0 15px 0px rgba(0, 0, 0, 0.7);
+      border: 2px solid rgba(0, 0, 0, 0.4);
+      border: none;
+    }
+
+    &[data-color="red"]::after {
+      background: #ff355e;
+    }
+
+    &[data-color="green"]::after {
+      background: #66ff66;
+    }
+
+    &[data-color="blue"]::after {
+      background: #50bfe6;
+    }
+
+    &[data-color="yellow"]::after {
+      background: #ffff66;
+    }
+
+    &[data-color="black"]::after {
+      background: #888;
+    }
+
+    &[data-color="white"]::after {
+      background: #fff;
+      color: #2243b6;
+    }
+  }
+}
+
+[data-theme-tile="light-pattern"] {
+  .container {
+    &[data-color]::after {
+      border: none;
+    }
+
+    &[data-color="red"]::after {
+      background: url("./../../../assets/tile-pink.svg");
+    }
+
+    &[data-color="green"]::after {
+      background: url("./../../../assets/tile-green.svg");
+    }
+
+    &[data-color="blue"]::after {
+      background: url("./../../../assets/tile-blue.svg");
+    }
+
+    &[data-color="yellow"]::after {
+      background: url("./../../../assets/tile-yellow.svg");
+    }
+
+    &[data-color="black"]::after {
+      background: url("./../../../assets/tile-purple.svg");
+    }
+
+    &[data-color="white"]::after {
+      color: transparent;
+      background: url("./../../../assets/tile-begin.svg");
+    }
+  }
+}
+
+[data-theme-tile="dark-pattern"] {
+  .container {
+    &[data-color="red"]::after {
+      // background-color: red;
+      border-color: #833;
+
+      background-color: white;
+      background-image: linear-gradient(90deg, rgba(200, 0, 0, 0.5) 50%, transparent 50%),
+        linear-gradient(rgba(200, 0, 0, 0.5) 50%, transparent 50%);
+      background-size: 50% 50%;
+    }
+
+    &[data-color="green"]::after {
+      background: green;
+      border-color: #161;
+
+      background-image: radial-gradient(
+          closest-side,
+          transparent 0%,
+          transparent 75%,
+          #b6cc66 76%,
+          #b6cc66 85%,
+          #edffdb 86%,
+          #edffdb 94%,
+          #ffffff 95%,
+          #ffffff 103%,
+          #d9e6a7 104%,
+          #d9e6a7 112%,
+          #798b3c 113%,
+          #798b3c 121%,
+          #ffffff 122%,
+          #ffffff 130%,
+          #e0ead7 131%,
+          #e0ead7 140%
+        ),
+        radial-gradient(
+          closest-side,
+          transparent 0%,
+          transparent 75%,
+          #b6cc66 76%,
+          #b6cc66 85%,
+          #edffdb 86%,
+          #edffdb 94%,
+          #ffffff 95%,
+          #ffffff 103%,
+          #d9e6a7 104%,
+          #d9e6a7 112%,
+          #798b3c 113%,
+          #798b3c 121%,
+          #ffffff 122%,
+          #ffffff 130%,
+          #e0ead7 131%,
+          #e0ead7 140%
+        );
+      background-size: 110px 110px;
+      background-color: #c8d3a7;
+      background-position: 0 0, 55px 55px;
+    }
+
+    &[data-color="blue"]::after {
+      background: blue;
+      border-color: #338;
+
+      background-color: white;
+      background-image: radial-gradient(midnightblue 9px, transparent 10px);
+      background-size: 18px 18px;
+      background-position: 0 0;
+    }
+
+    &[data-color="yellow"]::after {
+      // background: yellow;
+      border-color: #d3a122;
+
+      background: radial-gradient(
+          circle at 100% 50%,
+          transparent 20%,
+          rgba(255, 255, 255, 0.3) 21%,
+          rgba(255, 255, 255, 0.3) 34%,
+          transparent 35%,
+          transparent
+        ),
+        radial-gradient(
+            circle at 0% 50%,
+            transparent 20%,
+            rgba(255, 255, 255, 0.3) 21%,
+            rgba(255, 255, 255, 0.3) 34%,
+            transparent 35%,
+            transparent
+          )
+          0 11px;
+      background-color: #fabf29;
+      background-size: 12px 14px;
+    }
+
+    &[data-color="black"]::after {
+      background: black;
+      border-color: #333;
+
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.5) 10px,
+        rgba(255, 255, 255, 0.5) 20px
+      );
+    }
+
+    --one-color: rgb(93, 160, 247);
+
+    &[data-color="white"]::after {
+      border-color: rgb(255, 255, 255);
+
+      color: var(--one-color);
+      background-color: var(--one-color);
+      background-image: radial-gradient(closest-side, transparent 90%, white 99%),
+        radial-gradient(closest-side, transparent 90%, white 99%);
+      background-size: 36px 36px;
+      background-position: 0 0, 18px 18px;
+      content: "1";
+      line-height: 34px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      font-family: serif;
+    }
   }
 }

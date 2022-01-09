@@ -4,25 +4,23 @@
 //   }
 // }
 
+[data-theme-background="dark-wood"] .container {
+  background-image: url("./assets/dark-wood-background.jpg");
+}
+[data-theme-background="light-wood"] .container {
+  background-image: url("./assets/lukas-blazek-EWDvHNNfUmQ-unsplash.jpg");
+  background-position: top right;
+}
+[data-theme-background="dark-neon"] .container {
+  background-image: url("./assets/jr-korpa-9XngoIpxcEo-unsplash.jpg");
+}
+
 .container {
   min-width: 100%;
   width: fit-content;
   min-height: 100vh;
   padding: 10px;
-
-  &[data-theme="dark-wood"] {
-    background-image: url("./assets/dark-wood-background.jpg");
-  }
-  &[data-theme="light-wood"] {
-    background-image: url("./assets/lukas-blazek-EWDvHNNfUmQ-unsplash.jpg");
-    background-position: top right;
-  }
-  &[data-theme="dark-neon"] {
-    background-image: url("./assets/jr-korpa-9XngoIpxcEo-unsplash.jpg");
-  }
-
   background-size: cover;
-
   color: #fff;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 

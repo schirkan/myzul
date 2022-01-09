@@ -28,7 +28,6 @@
     background: rgba(4, 4, 4, 0.8);
   }
   &[data-color="none"] {
-    // background: transparent;
     background: rgba(255, 255, 255, 0.2);
   }
 
@@ -37,10 +36,41 @@
   }
 }
 
-[data-theme="dark-neon"] {
+[data-theme-tile="light-pattern"] {
   .container {
     &[data-color="black"] {
       background: rgba(50, 0, 83, 0.8);
+    }
+    &[data-color="green"] {
+      background: rgba(6, 86, 53, 0.8);
+    }
+    &[data-color="red"] {
+      background: rgba(92, 0, 61, 0.8);
+    }
+    &[data-color="blue"] {
+      background: rgba(0, 37, 92, 0.8);
+    }
+    &[data-color="yellow"] {
+      background: rgba(90, 90, 0, 0.8);
+    }
+  }
+}
+
+[data-theme-tile="neon"] {
+  .container {
+    &[data-color="black"] {
+      background: rgba(50, 50, 50, 0.8);
+    }
+  }
+}
+
+[data-theme-board="original"] {
+  .container {
+    &[data-board-type="PatternLine"],
+    &[data-board-type="Wall"],
+    &[data-board-type="FloorLine"] {
+      background: transparent;
+      border-color: transparent;
     }
   }
 }

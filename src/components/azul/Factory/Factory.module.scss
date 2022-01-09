@@ -6,19 +6,22 @@
   grid-template-columns: min-content min-content;
   gap: 5px;
 
-  background-image: url("./../../../assets/factory.jpg");
-  background-position: center center;
-  background-size: cover;
-
-  background-size: 113%;
-  background-position: -9px -10px;
+  border: 1px solid transparent;
 }
 
-[data-theme="dark-neon"] {
+[data-theme-factory="transparent"] {
   .container {
     background: rgba(255, 255, 255, 0.2);
     border-style: solid;
     border-width: 1px;
     border-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+[data-theme-factory="original"] {
+  .container {
+    background-image: url("./../../../assets/factory.jpg");
+    background-size: 115%;
+    background-position: -10px -11px;
   }
 }

@@ -30,11 +30,31 @@
   gap: 5px;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  // background-image: url("./../../../assets/andy-art-ASbxmrhbTKM-unsplash.jpg");
-  // background-size: cover;
+}
+
+[data-theme-board="transparent"] {
+  // nothing here
+}
+
+[data-theme-board="original"] {
+  .playerBoard {
+    background-image: url("./../../../assets/player board.jpg");
+    background-size: 107%;
+    background-position: -16px -176px;
+  }
+}
+
+[data-theme-board="marble"] {
+  // .factories,
+  // .centerOfTable,
+  .playerBoard {
+    background-image: url("./../../../assets/andy-art-ASbxmrhbTKM-unsplash.jpg");
+    background-size: cover;
+  }
 }
 
 .centerOfTable {
+  // nothing here
 }
 
 .playerBoard {
