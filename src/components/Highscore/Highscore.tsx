@@ -29,20 +29,22 @@ export const Highscore: React.FC<Props> = React.memo((props) => {
       <thead>
         <tr>
           <th>Username</th>
-          <th>Points</th>
           <th>Games</th>
           <th>Won</th>
-          <th>Duration</th>
+          <th>Win ration</th>
+          <th>&Oslash; Points</th>
+          <th>&Oslash; Duration</th>
         </tr>
       </thead>
       <tbody>
         {data.map(data =>
           <tr key={data.username}>
             <td>{data.username}</td>
-            <td>{data.points}</td>
             <td>{data.games}</td>
             <td>{data.won}</td>
-            <td>{formatDuration(data.duration)}</td>
+            <td>{data.games / data.won}</td>
+            <td>{data.points / data.games}</td>
+            <td>{formatDuration(data.duration / data.games)}</td>
           </tr>
         )}
       </tbody>
