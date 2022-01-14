@@ -31,7 +31,7 @@ export const Highscore: React.FC<Props> = React.memo((props) => {
           <th>Username</th>
           <th>Games</th>
           <th>Won</th>
-          <th>Win ration</th>
+          <th>Ratio</th>
           <th>&Oslash; Points</th>
           <th>&Oslash; Duration</th>
         </tr>
@@ -42,9 +42,9 @@ export const Highscore: React.FC<Props> = React.memo((props) => {
             <td>{data.username}</td>
             <td>{data.games}</td>
             <td>{data.won}</td>
-            <td>{data.games / data.won}</td>
-            <td>{data.points / data.games}</td>
-            <td>{formatDuration(data.duration / data.games)}</td>
+            <td>{data.won > 0 ? data.games / data.won : 0}</td>
+            <td>{Math.round(data.points / data.games)}</td>
+            <td>{formatDuration(Math.round(data.duration / data.games))}</td>
           </tr>
         )}
       </tbody>
