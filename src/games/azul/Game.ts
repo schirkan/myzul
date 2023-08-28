@@ -1,7 +1,7 @@
 import type { Ctx, Game } from 'boardgame.io';
 import { defaultGameSetup } from './azulConfig';
-import { AzulGameover, AzulGameState, GameSetup } from './models';
-import { calculateScore, moveTile, selectSourceTile, selectTargetLocation } from './moves';
+import { AzulGameover, AzulGameState, GameSetup, TilePlaceholderState } from './models';
+import { calculateScore, canMoveToPatternLine, moveTile, selectSourceTile, selectTargetLocation } from './moves';
 import { TurnOrder } from 'boardgame.io/core';
 import { EffectsCtxMixin } from 'bgio-effects';
 import { EffectsPlugin } from 'bgio-effects/plugin';
@@ -70,6 +70,35 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     return initialState;
   },
 
+  ai: {
+    enumerate: (G, ctx, playerID) => {
+      let moves = [];
+      var selectedTiles = G.tiles.filter(x => x.selected);
+
+      //if (ctx.phase === 'calculateScore') return selectScoreTargetLocation(G, ctx, target);
+
+      if (selectedTiles.length) {
+        // allready selected
+        moves.push({ move: 'selectTargetLocation', args: [{ location: { boardType: 'FloorLine', boardId: playerID } } as TilePlaceholderState] });
+
+        for (let row = 0; row < 5; row++) {
+          if (canMoveToPatternLine(G, selectedTiles, playerID, row)) {
+            moves.push({ move: 'selectTargetLocation', args: [{ location: { boardType: 'PatternLine', boardId: playerID, y: row } } as TilePlaceholderState] });
+          }
+        }
+
+      } else {
+        // nothing selected yet
+        var selectableTiles = G.tiles.filter(x => x.selectable);
+        selectableTiles.forEach(t => {
+          moves.push({ move: 'selectSourceTile', args: [t] });
+        });
+      }
+
+      return moves;
+    },
+  },
+
   phases: {
     placeTiles: {
       start: true,
@@ -103,8 +132,8 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         }
 
         // place white tile on table
-        const whiteTile = G.tiles.find(x => x.color === 'white');
-        moveTile(whiteTile!, 'CenterOfTable', undefined, 0);
+        const whiteTile = G.tiles.find(x => x.color === 'white')!;
+        moveTile(whiteTile, 'CenterOfTable', undefined, 0);
 
         // make tiles selectable
         G.tiles
@@ -150,6 +179,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         },
         onEnd: (G, ctx) => {
           // save playtime
+          if (!ctx.currentPlayer || !G.score[ctx.currentPlayer]) return;
           G.score[ctx.currentPlayer].time += Math.floor((Date.now() - G.turnStartTimestamp) / 1000);
         },
         order: {
@@ -172,7 +202,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     calculateScore: {
       onBegin: (G, ctx) => {
         console.log('calculateScore.onBegin');
-        calculateScore(G, ctx);
+        calculateScore(G, ctx); // TODO: move to onEnd to calculate score after 'selectTargetLocation'?
       },
       onEnd: (G, ctx) => {
         console.log('calculateScore.onEnd');
@@ -207,9 +237,6 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
             }
           }
         }
-
-        // TODO TEST
-        // ctx.events?.endGame(getWinner());
       },
       endIf: (G, ctx) => {
         console.log('calculateScore.endIf');

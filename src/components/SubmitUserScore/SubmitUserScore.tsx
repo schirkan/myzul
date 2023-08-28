@@ -9,7 +9,8 @@ export const SubmitUserScore: React.FC = React.memo(() => {
   const pid = gameContext?.playerID || "";
 
   const requestData = useMemo(() => {
-    const username = gameContext?.matchData![+pid].name;
+    if (!gameContext?.matchData) return;
+    const username = gameContext?.matchData[+pid].name;
     if (!username) return;
 
     return {
@@ -20,7 +21,7 @@ export const SubmitUserScore: React.FC = React.memo(() => {
       won: (gameContext.ctx.gameover as AzulGameover)?.winnerPlayerId === pid
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameContext?.G.score[pid].points, gameContext?.G.score[pid].time]);
+  }, [gameContext?.G?.score && gameContext?.G?.score[pid]?.points, gameContext?.G?.score && gameContext?.G?.score[pid]?.time]);
 
   useEffect(() => {
     if (requestData) {

@@ -17,7 +17,8 @@ export const getPlayerName = (context: GameContextType, playerId: string) => {
 }
 
 export const getPlayerIsConnected = (context: GameContextType, playerId: string) => {
-  let result = context?.matchData![+playerId].isConnected;
+  if (!context?.matchData) return true;
+  let result = context?.matchData[+playerId].isConnected;
   return result === undefined ? true : result;
 }
 

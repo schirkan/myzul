@@ -2,25 +2,18 @@ import React, { useState } from 'react';
 import { floorSetups, wallSetups } from '../../games/azul/azulConfig';
 import styles from './GameSetup.module.scss';
 
+export type GameSetupData = { numPlayers: number, setupData: any };
+
 type Props = {
-  onStartClick: (game: string, numPlayers: number, setupData: any) => void
+  onStartClick: (data: GameSetupData) => void
 };
 
 export const GameSetup: React.FC<Props> = React.memo((props) => {
-  const games = ['AZUL'];
-  const [game, setGame] = useState('AZUL');
   const [numPlayers, setNumPlayers] = useState(2);
   const [wallSetup, setWallSetup] = useState('Default');
   const [floorSetup, setFloorSetup] = useState('Default');
 
   return <div className={styles.container}>
-    <h1>Game Selection</h1>
-    <div className={styles.grid}>
-      <label>Game:</label>
-      <select value={game} onChange={e => setGame(e.target.value)}>
-        {games.map(x => <option value={x} key={x}>{x}</option>)}
-      </select>
-    </div>
     <h1>Game Setup</h1>
     <div className={styles.grid}>
       <label>Number of player:</label>
@@ -35,6 +28,6 @@ export const GameSetup: React.FC<Props> = React.memo((props) => {
         {Object.keys(floorSetups).map(x => <option value={x} key={x}>{x}</option>)}
       </select>
     </div>
-    <button onClick={() => props.onStartClick(game, numPlayers, { wallSetup, floorSetup })}>Start</button>
+    <button onClick={() => props.onStartClick({ numPlayers, setupData: { wallSetup, floorSetup } })}>Start</button>
   </div>;
 });

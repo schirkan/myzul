@@ -18,13 +18,7 @@
 
   >button {
     width: 80%;
+    height: auto;
+    padding: 10px;
   }
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 150px auto;
-  gap: 2px;
-  margin: 10px 0;
-  text-align: left;
 }
