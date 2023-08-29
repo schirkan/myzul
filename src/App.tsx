@@ -38,20 +38,20 @@ export const App = () => {
       for (var i = 1; i < gameSetup.numPlayers; i++) {
         bots[i] = AzulBot;
       }
-      var MyClient = Client({
+      var BotClient = Client({
         game: AzulGame,
         board: GameBoard,
         numPlayers: gameSetup.numPlayers,
         multiplayer: Local({ bots }),
       });
-      gameClient = <MyClient playerID='0' />;
+      gameClient = <BotClient playerID='0' />;
     } else if (gameMode === 'local-multiplayer') {
-      var MyClient = Client({
+      var LocalMultiplayerClient = Client({
         game: AzulGame,
         board: GameBoard,
         numPlayers: gameSetup.numPlayers,
       });
-      gameClient = <MyClient />;
+      gameClient = <LocalMultiplayerClient />;
     }
   }
 
