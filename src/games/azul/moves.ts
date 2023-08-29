@@ -4,7 +4,7 @@ import { AzulGameState, AzulTileState, BoardType, TilePlaceholderState } from ".
 
 export const INVALID_MOVE = "INVALID_MOVE";
 
-export const selectSourceTile: MoveFn<AzulGameState> = (G, ctx, tile: AzulTileState) => {
+export const selectSourceTile: MoveFn<AzulGameState> = ({ G, ctx }, tile: AzulTileState) => {
   if (!tile.selectable) return INVALID_MOVE;
 
   // reset selection
@@ -22,7 +22,7 @@ export const selectSourceTile: MoveFn<AzulGameState> = (G, ctx, tile: AzulTileSt
   // Placeholder selectable machen?
 };
 
-export const selectScoreTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TilePlaceholderState) => {
+export const selectScoreTargetLocation: MoveFn<AzulGameState> = ({ G, ctx }, target: TilePlaceholderState) => {
   if (target.location.boardId === undefined || target.location.boardType !== "Wall") return INVALID_MOVE;
   const maxTilesInRow = target.location.y! + 1;
 
@@ -196,11 +196,12 @@ const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceh
 }
 
 // move all selected tiles to new board
-export const selectTargetLocation: MoveFn<AzulGameState> = (G, ctx, target: TilePlaceholderState) => {
+export const selectTargetLocation: MoveFn<AzulGameState> = (context, target: TilePlaceholderState) => {
+  var { G, ctx, playerID } = context;
   if (target.location.boardId !== ctx.currentPlayer) return INVALID_MOVE;
-  if (ctx.playerID && ctx.playerID !== ctx.currentPlayer) return INVALID_MOVE;
+  if (playerID && playerID !== ctx.currentPlayer) return INVALID_MOVE;
 
-  if (ctx.phase === 'calculateScore') return selectScoreTargetLocation(G, ctx, target);
+  if (ctx.phase === 'calculateScore') return selectScoreTargetLocation(context, target);
 
   var selectedTiles = G.tiles.filter(x => x.selected);
   if (!selectedTiles.length) return INVALID_MOVE;

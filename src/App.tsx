@@ -13,9 +13,9 @@ import { useState } from 'react';
 import { GameSetup, GameSetupData } from './components/GameSetup';
 import { AzulBot } from './games/azul/AzulBot';
 
-const board = EffectsBoardWrapper(GameBoard, {
-  updateStateAfterEffects: true,
-});
+// const board = EffectsBoardWrapper(GameBoard, {
+//   updateStateAfterEffects: true,
+// });
 
 export const App = () => {
   const [gameMode, setGameMode] = useState<GameMode>();
@@ -27,7 +27,7 @@ export const App = () => {
       <Lobby
         gameServer={serverUrl}
         lobbyServer={serverUrl}
-        gameComponents={[{ game: AzulGame, board: board }]}
+        gameComponents={[{ game: AzulGame, board: GameBoard }]}
         debug={true}
       />
       <Highscore />

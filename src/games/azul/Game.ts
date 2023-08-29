@@ -1,4 +1,4 @@
-import type { Ctx, Game } from 'boardgame.io';
+import type { Game } from 'boardgame.io';
 import { defaultGameSetup } from './azulConfig';
 import { AzulGameover, AzulGameState, GameSetup, TilePlaceholderState } from './models';
 import { calculateScore, canMoveToPatternLine, moveTile, selectSourceTile, selectTargetLocation } from './moves';
@@ -15,11 +15,11 @@ export const effectsConfig = {
   },
 };
 
-// export const AzulGame: Game<AzulGameState, Ctx & EffectsCtxMixin<typeof effectsConfig>, GameSetup> = {
-export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
+// export const AzulGame: Game<AzulGameState, EffectsCtxMixin<typeof effectsConfig>, GameSetup> = {
+export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
   // The name of the game.
   name: 'MyZul',
-  plugins: [EffectsPlugin(effectsConfig)],
+  // plugins: [EffectsPlugin(effectsConfig)],
 
   // The minimum and maximum number of players supported (This is only enforced when using the Lobby server component.)
   minPlayers: 2,
@@ -27,7 +27,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
 
   // Function that returns the initial value of G.
   // setupData is an optional custom object that is passed through the Game Creation API.
-  setup: (ctx, setupData): AzulGameState => {
+  setup: ({ ctx, random }, setupData): AzulGameState => {
     if (!setupData) setupData = defaultGameSetup;
 
     const tilesPerColor = 20;
@@ -39,7 +39,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
       score: {},
       initialized: false,
       turnStartTimestamp: 0,
-      startPlayerId: ctx.random?.Shuffle(ctx.playOrder)[0] // random starting player
+      startPlayerId: random?.Shuffle(ctx.playOrder)[0] // random starting player
     };
 
     // init score
@@ -63,7 +63,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     initialState.tiles.push({ color: 'white', selectable: false, location: { boardType: 'TileBag', x: 0 }, selected: false })
 
     // shuffle tiles
-    initialState.tiles = ctx.random!.Shuffle(initialState.tiles);
+    initialState.tiles = random!.Shuffle(initialState.tiles);
 
     console.log('setup completed');
 
@@ -102,7 +102,7 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
   phases: {
     placeTiles: {
       start: true,
-      onBegin: (G, ctx) => {
+      onBegin: ({ G, ctx /*, effects */ }) => {
         console.log('placeTiles.onBegin');
 
         if (ctx.gameover) {
@@ -145,15 +145,15 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         G.initialized = true;
 
         // delay
-        (ctx as any as EffectsCtxMixin<typeof effectsConfig>).effects.delay();
+        // effects.delay();
       },
-      onEnd: (G, ctx) => {
+      onEnd: ({ G, ctx }) => {
         // console.log('placeTiles.onEnd');
         G.initialized = false;
         // get next starting player
         G.startPlayerId = G.tiles.find(x => x.color === 'white')?.location.boardId;
       },
-      endIf: (G, ctx) => {
+      endIf: ({ G, ctx }) => {
         // console.log('placeTiles.endIf');
         // don't end before started
         if (!G.initialized) return false;
@@ -174,21 +174,21 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
         }
       },
       turn: {
-        onBegin: (G, ctx) => {
+        onBegin: ({ G, ctx }) => {
           G.turnStartTimestamp = Date.now();
         },
-        onEnd: (G, ctx) => {
+        onEnd: ({ G, ctx }) => {
           // save playtime
           if (!ctx.currentPlayer || !G.score[ctx.currentPlayer]) return;
           G.score[ctx.currentPlayer].time += Math.floor((Date.now() - G.turnStartTimestamp) / 1000);
         },
         order: {
-          first: (G, ctx) => ctx.playOrder.findIndex(x => x === G.startPlayerId),
-          next: TurnOrder.DEFAULT.next
+          first: ({ G, ctx }) => ctx.playOrder.findIndex(x => x === G.startPlayerId),
+          next: TurnOrder.DEFAULT.next as any // TODO ceck typing
         },
         minMoves: 1,
         maxMoves: 1,
-        onMove: (G, ctx) => {
+        onMove: ({ G, ctx }) => {
           // set selectable Tiles
           G.tiles.forEach(x => x.selectable = false);
           G.tiles.filter(x =>
@@ -200,11 +200,11 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
     },
 
     calculateScore: {
-      onBegin: (G, ctx) => {
+      onBegin: ({ G, ctx }) => {
         console.log('calculateScore.onBegin');
         calculateScore(G, ctx); // TODO: move to onEnd to calculate score after 'selectTargetLocation'?
       },
-      onEnd: (G, ctx) => {
+      onEnd: ({ G, ctx, events }) => {
         console.log('calculateScore.onEnd');
         // get player with most points
         const getWinner = (): AzulGameover => {
@@ -232,13 +232,13 @@ export const AzulGame: Game<AzulGameState, Ctx, GameSetup> = {
             if (count >= 5) {
               const winner = getWinner();
               console.log('WINNER', winner);
-              ctx.events?.endGame(winner);
+              events?.endGame(winner);
               return;
             }
           }
         }
       },
-      endIf: (G, ctx) => {
+      endIf: ({ G, ctx }) => {
         console.log('calculateScore.endIf');
 
         // loop rows

@@ -69,7 +69,7 @@ const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) 
       window.location.reload();
     }
   }
-  return <button onClick={onClick}>Zurück zur Lobby</button>
+  return <button onClick={onClick}>Zurück zum Hauptmenü</button>
 });
 
 export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props) => {
