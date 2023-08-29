@@ -14,32 +14,30 @@ var objectives = (G: AzulGameState, ctx: Ctx, playerID?: string): Objectives => 
     return {};
   }
 
-  /*
-    var floorTiles = G.tiles.filter(x =>
-      x.location.boardType === 'FloorLine' &&
-      x.location.boardId === playerID
+  var floorTiles = G.tiles.filter(x =>
+    x.location.boardType === 'FloorLine' &&
+    x.location.boardId === playerID
+  );
+
+  var floorSetup = floorSetups[G.config.floorSetup];
+
+  var fullRowBonus = 0;
+  // loop rows
+  for (let row = 0; row < 5; row++) {
+    const maxTilesInRow = row + 1;
+    // get tiles 
+    const tiles = G.tiles.filter(x =>
+      x.location.boardType === 'PatternLine' &&
+      x.location.boardId === playerID &&
+      x.location.y === row
     );
-  
-    var floorSetup = floorSetups[G.config.floorSetup];
-  
-    var fullRowBonus = 0;
-    // loop rows
-    for (let row = 0; row < 5; row++) {
-      const maxTilesInRow = row + 1;
-      // get tiles 
-      const tiles = G.tiles.filter(x =>
-        x.location.boardType === 'PatternLine' &&
-        x.location.boardId === playerID &&
-        x.location.y === row
-      );
-  
-      if (tiles.length >= maxTilesInRow) {
-        fullRowBonus += maxTilesInRow;
-      }
+
+    if (tiles.length >= maxTilesInRow) {
+      fullRowBonus += maxTilesInRow;
     }
-  
-    var floorPenalty = floorSetup.slice(0, floorTiles.length).reduce((a, b) => a + b, 0);
-  */
+  }
+
+  var floorPenalty = floorSetup.slice(0, floorTiles.length).reduce((a, b) => a + b, 0);
 
   return {
     'round-end': {
@@ -49,6 +47,9 @@ var objectives = (G: AzulGameState, ctx: Ctx, playerID?: string): Objectives => 
         );
         // Ausstieg bei Rundenanfang nach Auszählung
         if (factoryTiles.length === G.config.tilesPerFactory * G.factories) {
+          console.log("score:", G.score[playerID].points);
+          console.log("fullRowBonus:", fullRowBonus);
+          console.log("floorPenalty:", floorPenalty);
           return true;
         }
         if (ctx.gameover) {
