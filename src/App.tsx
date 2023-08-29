@@ -5,7 +5,7 @@ import { Local } from 'boardgame.io/multiplayer';
 import { GameBoard } from './components/azul/GameBoard';
 import { AzulGame } from './games/azul/Game';
 import { ThemeSelection } from './components/ThemeSelection';
-import { EffectsBoardWrapper } from 'bgio-effects/react';
+// import { EffectsBoardWrapper } from 'bgio-effects/react';
 import { serverUrl } from './api/config';
 import { Highscore } from './components/Highscore';
 import { GameMode, GameSelection } from './components/GameSelection';

@@ -3,17 +3,17 @@ import { defaultGameSetup } from './azulConfig';
 import { AzulGameover, AzulGameState, GameSetup, TilePlaceholderState } from './models';
 import { calculateScore, canMoveToPatternLine, moveTile, selectSourceTile, selectTargetLocation } from './moves';
 import { TurnOrder } from 'boardgame.io/core';
-import { EffectsCtxMixin } from 'bgio-effects';
-import { EffectsPlugin } from 'bgio-effects/plugin';
+// import { EffectsCtxMixin } from 'bgio-effects';
+// import { EffectsPlugin } from 'bgio-effects/plugin';
 
 // @see: https://github.com/delucis/bgio-effects
-export const effectsConfig = {
-  effects: {
-    delay: {
-      duration: 2,
-    },
-  },
-};
+// export const effectsConfig = {
+//   effects: {
+//     delay: {
+//       duration: 2,
+//     },
+//   },
+// };
 
 // export const AzulGame: Game<AzulGameState, EffectsCtxMixin<typeof effectsConfig>, GameSetup> = {
 export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
