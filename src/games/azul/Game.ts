@@ -3,23 +3,10 @@ import { defaultGameSetup } from './azulConfig';
 import { AzulGameover, AzulGameState, GameSetup, TilePlaceholderState } from './models';
 import { calculateScore, canMoveToPatternLine, moveTile, selectSourceTile, selectTargetLocation } from './moves';
 import { TurnOrder } from 'boardgame.io/core';
-// import { EffectsCtxMixin } from 'bgio-effects';
-// import { EffectsPlugin } from 'bgio-effects/plugin';
 
-// @see: https://github.com/delucis/bgio-effects
-// export const effectsConfig = {
-//   effects: {
-//     delay: {
-//       duration: 2,
-//     },
-//   },
-// };
-
-// export const AzulGame: Game<AzulGameState, EffectsCtxMixin<typeof effectsConfig>, GameSetup> = {
 export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
   // The name of the game.
   name: 'MyZul',
-  // plugins: [EffectsPlugin(effectsConfig)],
 
   // The minimum and maximum number of players supported (This is only enforced when using the Lobby server component.)
   minPlayers: 2,
@@ -39,7 +26,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
       score: {},
       initialized: false,
       turnStartTimestamp: 0,
-      startPlayerId: random?.Shuffle(ctx.playOrder)[0] // random starting player
+      startPlayerId: random.Shuffle(ctx.playOrder)[0] // random starting player
     };
 
     // init score

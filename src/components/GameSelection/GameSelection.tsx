@@ -3,7 +3,7 @@ import styles from './GameSelection.module.scss';
 import { BiBot, BiUser, BiGlobe, BiLaptop } from "react-icons/bi";
 
 
-export type GameMode = 'local-ai' | 'local-multiplayer' | 'online-multiplayer';
+export type GameMode = 'local-singleplayer' | 'local-multiplayer' | 'online-multiplayer';
 
 type Props = {
   onSelect: (mode: GameMode) => void
@@ -13,7 +13,7 @@ export const GameSelection: React.FC<Props> = React.memo((props) => {
   const iconSize = 30;
   return <div className={styles.container}>
     <h1>Game Mode</h1>
-    <button onClick={() => props.onSelect('local-ai')}>
+    <button onClick={() => props.onSelect('local-singleplayer')}>
       <BiUser size={iconSize} />
       <BiLaptop size={iconSize} />
       <BiBot size={iconSize} />
