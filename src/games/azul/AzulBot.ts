@@ -14,29 +14,53 @@ var objectives = (G: AzulGameState, ctx: Ctx, playerID?: string): Objectives => 
     return {};
   }
 
-  var floorTiles = G.tiles.filter(x =>
-    x.location.boardType === 'FloorLine' &&
-    x.location.boardId === playerID
-  );
-
-  var floorSetup = floorSetups[G.config.floorSetup];
-
-  var fullRowBonus = 0;
-  // loop rows
-  for (let row = 0; row < 5; row++) {
-    const maxTilesInRow = row + 1;
-    // get tiles 
-    const tiles = G.tiles.filter(x =>
-      x.location.boardType === 'PatternLine' &&
-      x.location.boardId === playerID &&
-      x.location.y === row
+  /*
+    var floorTiles = G.tiles.filter(x =>
+      x.location.boardType === 'FloorLine' &&
+      x.location.boardId === playerID
     );
-
-    if (tiles.length >= maxTilesInRow) {
-      fullRowBonus += maxTilesInRow;
+  
+    var floorSetup = floorSetups[G.config.floorSetup];
+  
+    var fullRowBonus = 0;
+    // loop rows
+    for (let row = 0; row < 5; row++) {
+      const maxTilesInRow = row + 1;
+      // get tiles 
+      const tiles = G.tiles.filter(x =>
+        x.location.boardType === 'PatternLine' &&
+        x.location.boardId === playerID &&
+        x.location.y === row
+      );
+  
+      if (tiles.length >= maxTilesInRow) {
+        fullRowBonus += maxTilesInRow;
+      }
     }
-  }
+  
+    var floorPenalty = floorSetup.slice(0, floorTiles.length).reduce((a, b) => a + b, 0);
+  */
 
+  return {
+    'round-end': {
+      checker: (G: AzulGameState, ctx: Ctx) => {
+        const factoryTiles = G.tiles.filter(x =>
+          x.location.boardType === 'Factory'
+        );
+        // Ausstieg bei Rundenanfang nach Auszählung
+        if (factoryTiles.length === G.config.tilesPerFactory * G.factories) {
+          return true;
+        }
+        if (ctx.gameover) {
+          return true;
+        }
+        return false;
+      },
+      weight: G.score[playerID].points - G.score[0].points
+      // + fullRowBonus - floorPenalty // TODO: gibt es nicht am Rundenanfang
+    },
+  }
+  /*
   return {
     'base-score': {
       checker: () => true,
@@ -56,14 +80,15 @@ var objectives = (G: AzulGameState, ctx: Ctx, playerID?: string): Objectives => 
     // },
     'floor-penalty': {
       checker: () => true,
-      weight: floorSetup.slice(0, floorTiles.length).reduce((a, b) => a + b, 0)
+      weight: floorPenalty
     }
   };
+  */
 }
 
 var playoutDepth = (G: AzulGameState, ctx: Ctx, playerID?: string): number => {
   var tilesLeft = G.tiles.filter(x => x.location.boardType === 'Factory').length;
-  return tilesLeft;
+  return tilesLeft * 2;
   // return Math.ceil(tilesLeft / ctx.numPlayers);
 }
 
