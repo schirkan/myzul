@@ -1,7 +1,9 @@
 import { MCTSBot } from 'boardgame.io/ai';
 import { AzulGameState } from './models';
-import { Ctx } from 'boardgame.io';
+import { Ctx, State } from 'boardgame.io';
 import { floorSetups } from './azulConfig';
+import { BotAction } from 'boardgame.io/dist/types/src/ai/bot';
+import { Node } from 'boardgame.io/dist/types/src/ai/mcts-bot';
 
 interface Objective {
   checker: (G: any, ctx: Ctx) => boolean;
@@ -20,6 +22,7 @@ var objectives = (G: AzulGameState, ctx: Ctx, playerID?: string): Objectives => 
   );
 
   var floorSetup = floorSetups[G.config.floorSetup];
+  var floorPenalty = floorSetup.slice(0, floorTiles.length).reduce((a, b) => a + b, 0);
 
   var fullRowBonus = 0;
   // loop rows
@@ -37,31 +40,7 @@ var objectives = (G: AzulGameState, ctx: Ctx, playerID?: string): Objectives => 
     }
   }
 
-  var floorPenalty = floorSetup.slice(0, floorTiles.length).reduce((a, b) => a + b, 0);
-
-  return {
-    'round-end': {
-      checker: (G: AzulGameState, ctx: Ctx) => {
-        const factoryTiles = G.tiles.filter(x =>
-          x.location.boardType === 'Factory'
-        );
-        // Ausstieg bei Rundenanfang nach Auszählung
-        if (factoryTiles.length === G.config.tilesPerFactory * G.factories) {
-          console.log("score:", G.score[playerID].points);
-          console.log("fullRowBonus:", fullRowBonus);
-          console.log("floorPenalty:", floorPenalty);
-          return true;
-        }
-        if (ctx.gameover) {
-          return true;
-        }
-        return false;
-      },
-      weight: G.score[playerID].points - G.score[0].points
-      // + fullRowBonus - floorPenalty // TODO: gibt es nicht am Rundenanfang
-    },
-  }
-  /*
+  // TODO: calculate new score
   return {
     'base-score': {
       checker: () => true,
@@ -75,27 +54,43 @@ var objectives = (G: AzulGameState, ctx: Ctx, playerID?: string): Objectives => 
       checker: () => true,
       weight: fullRowBonus
     },
-    // 'opponent-score': {
-    //   checker: () => true,
-    //   weight: G.score[0].points * -0.5
-    // },
     'floor-penalty': {
       checker: () => true,
       weight: floorPenalty
     }
   };
-  */
+
 }
 
 var playoutDepth = (G: AzulGameState, ctx: Ctx, playerID?: string): number => {
+  return 50;
+  /*
   var tilesLeft = G.tiles.filter(x => x.location.boardType === 'Factory').length;
   return tilesLeft * 2;
+  */
   // return Math.ceil(tilesLeft / ctx.numPlayers);
 }
 
 export class AzulBot extends MCTSBot {
+  private _playerID?: string = undefined;
+
   constructor(options: any) {
-    // super({ ...options, iterations: 100, playoutDepth: 50, objectives });
-    super({ ...options, iterations: 500, playoutDepth, objectives });
+    var myObjectives = (G: AzulGameState, ctx: Ctx, playerId: string) => objectives(G, ctx, this._playerID);
+
+    super({ iterations: 500, playoutDepth, objectives: myObjectives, ...options });
+  }
+
+  play(state: State<any>, playerID: string): Promise<{ action: BotAction; metadata: Node; }> {
+    this._playerID = playerID;
+    return super.play(state, playerID);
+  }
+
+  static Difficulty(iterations: number) {
+    function AzulBotWithDifficulty(options: any) {
+      return new AzulBot({ iterations, ...options });
+    }
+
+    return AzulBotWithDifficulty;
+    // return (options: any) => AzulBot({ iterations, ...options });
   }
 }

@@ -27,9 +27,19 @@ var LocalSingleplayer = () => {
   }
 
   var bots: any = {};
-  for (var i = 1; i < gameSetup.numPlayers; i++) {
-    bots[i] = AzulBot;
+  if (gameSetup.player1 > 0) {
+    bots[0] = AzulBot.Difficulty(gameSetup.player1);
   }
+  if (gameSetup.player2 > 0) {
+    bots[1] = AzulBot.Difficulty(gameSetup.player2);
+  }
+  if (gameSetup.player3 > 0) {
+    bots[2] = AzulBot.Difficulty(gameSetup.player3);
+  }
+  if (gameSetup.player4 > 0) {
+    bots[3] = AzulBot.Difficulty(gameSetup.player4);
+  }
+
   var LocalSingleplayerClient = Client({
     game: gameWithSetupData(AzulGame, gameSetup.setupData),
     board: GameBoard,

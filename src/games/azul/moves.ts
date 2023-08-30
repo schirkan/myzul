@@ -17,7 +17,7 @@ export const selectSourceTile: MoveFn<AzulGameState> = ({ G, ctx }, tile: AzulTi
   );
   newSelection.forEach(x => x.selected = true);
 
-  console.log('Selected Tiles: ', newSelection.length, tile.location.boardType, tile.location.boardId);
+  // console.log('Selected Tiles: ', newSelection.length, tile.location.boardType, tile.location.boardId);
 
   // Placeholder selectable machen?
 };
@@ -132,10 +132,13 @@ const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceh
     x.location.y === target.location.y
   ).map(x => x.location.x);
 
+  var hasHorizontalNeighbor = false;
+
   // right
   for (let x = target.location.x + 1; x < 5; x++) {
     if (tilesInRow.includes(x)) {
       points++;
+      hasHorizontalNeighbor = true;
     } else {
       break;
     }
@@ -145,21 +148,26 @@ const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceh
   for (let x = target.location.x - 1; x >= 0; x--) {
     if (tilesInRow.includes(x)) {
       points++;
+      hasHorizontalNeighbor = true;
     } else {
       break;
     }
   }
 
+  // find tiles in column
   const tilesInColumn = G.tiles.filter(x =>
     x.location.boardType === 'Wall' &&
     x.location.boardId === target.location.boardId &&
     x.location.x === target.location.x
   ).map(x => x.location.y);
 
+  var hasVerticalNeighbor = false;
+
   // down
   for (let y = target.location.y + 1; y < 5; y++) {
     if (tilesInColumn.includes(y)) {
       points++;
+      hasVerticalNeighbor = true;
     } else {
       break;
     }
@@ -169,9 +177,15 @@ const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceh
   for (let y = target.location.y - 1; y >= 0; y--) {
     if (tilesInColumn.includes(y)) {
       points++;
+      hasVerticalNeighbor = true;
     } else {
       break;
     }
+  }
+
+  // extra point - hasHorizontalNeighbor & hasVerticalNeighbor +1
+  if (hasHorizontalNeighbor && hasVerticalNeighbor) {
+    points += 1;
   }
 
   // extra points - row +2

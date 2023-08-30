@@ -1,8 +1,14 @@
 import type { Game } from 'boardgame.io';
 import { defaultGameSetup } from './azulConfig';
-import { AzulGameover, AzulGameState, GameSetup, TilePlaceholderState } from './models';
+import { AzulGameover, AzulGameState, GameSetup, TileColor, TilePlaceholderState } from './models';
 import { calculateScore, canMoveToPatternLine, moveTile, selectSourceTile, selectTargetLocation } from './moves';
 import { TurnOrder } from 'boardgame.io/core';
+
+const groupBy = <T>(array: T[], predicate: (value: T, index: number, array: T[]) => string) =>
+  array.reduce((acc, value, index, array) => {
+    (acc[predicate(value, index, array)] ||= []).push(value);
+    return acc;
+  }, {} as { [key: string]: T[] });
 
 export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
   // The name of the game.
@@ -52,7 +58,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
     // shuffle tiles
     initialState.tiles = random!.Shuffle(initialState.tiles);
 
-    console.log('setup completed');
+    // console.log('setup completed');
 
     return initialState;
   },
@@ -77,8 +83,22 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
       } else {
         // nothing selected yet
         var selectableTiles = G.tiles.filter(x => x.selectable);
-        selectableTiles.forEach(t => {
-          moves.push({ move: 'selectSourceTile', args: [t] });
+        // selectableTiles.forEach(t => {
+        //   moves.push({ move: 'selectSourceTile', args: [t] });
+        // });
+
+        // group by location
+        var tilesByLocation = groupBy(selectableTiles, x => x.location.boardType + '|' + x.location.boardId);
+
+        // add one per color
+        Object.keys(tilesByLocation).forEach(location => {
+          var colors: TileColor[] = [];
+          tilesByLocation[location].forEach(t => {
+            if (!colors.includes(t.color)) {
+              moves.push({ move: 'selectSourceTile', args: [t] });
+              colors.push(t.color);
+            }
+          });
         });
       }
 
@@ -90,10 +110,10 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
     placeTiles: {
       start: true,
       onBegin: ({ G, ctx /*, effects */ }) => {
-        console.log('placeTiles.onBegin');
+        // console.log('placeTiles.onBegin');
 
         if (ctx.gameover) {
-          console.log('stop - gameover');
+          // console.log('stop - gameover');
           return;
         }
 
@@ -188,11 +208,11 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
 
     calculateScore: {
       onBegin: ({ G, ctx }) => {
-        console.log('calculateScore.onBegin');
+        // console.log('calculateScore.onBegin');
         calculateScore(G, ctx); // TODO: move to onEnd to calculate score after 'selectTargetLocation'?
       },
       onEnd: ({ G, ctx, events }) => {
-        console.log('calculateScore.onEnd');
+        // console.log('calculateScore.onEnd');
         // get player with most points
         const getWinner = (): AzulGameover => {
           let highscore = 0;
@@ -218,7 +238,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
             const count = playerWallTiles.filter(x => x.location.y === row).length;
             if (count >= 5) {
               const winner = getWinner();
-              console.log('WINNER', winner);
+              // console.log('WINNER', winner);
               events?.endGame(winner);
               return;
             }
@@ -226,7 +246,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         }
       },
       endIf: ({ G, ctx }) => {
-        console.log('calculateScore.endIf');
+        // console.log('calculateScore.endIf');
 
         // loop rows
         for (let row = 0; row < 5; row++) {
@@ -241,13 +261,13 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
             );
 
             if (tiles.length >= maxTilesInRow) {
-              console.log('calculateScore.endIf: false - full rows left');
+              // console.log('calculateScore.endIf: false - full rows left');
               return false;
             }
           }
         }
 
-        console.log('calculateScore.endIf: true - no full rows left');
+        // console.log('calculateScore.endIf: true - no full rows left');
         return true;
       },
       turn: {
