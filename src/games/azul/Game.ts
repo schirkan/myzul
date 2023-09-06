@@ -23,7 +23,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
   setup: ({ ctx, random }, setupData): AzulGameState => {
     if (!setupData) setupData = defaultGameSetup;
 
-    const tilesPerColor = 20;
+    const tilesPerColor = 32;
 
     const initialState: AzulGameState = {
       factories: ctx.numPlayers * 2 + 1,
@@ -32,6 +32,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
       score: {},
       initialized: false,
       turnStartTimestamp: 0,
+      round: 0,
       startPlayerId: random.Shuffle(ctx.playOrder)[0] // random starting player
     };
 
@@ -72,13 +73,12 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
 
       if (selectedTiles.length) {
         // allready selected
-        moves.push({ move: 'selectTargetLocation', args: [{ location: { boardType: 'FloorLine', boardId: playerID } } as TilePlaceholderState] });
-
         for (let row = 0; row < 5; row++) {
           if (canMoveToPatternLine(G, selectedTiles, playerID, row)) {
             moves.push({ move: 'selectTargetLocation', args: [{ location: { boardType: 'PatternLine', boardId: playerID, y: row } } as TilePlaceholderState] });
           }
         }
+        moves.push({ move: 'selectTargetLocation', args: [{ location: { boardType: 'FloorLine', boardId: playerID } } as TilePlaceholderState] });
 
       } else {
         // nothing selected yet
@@ -150,9 +150,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
           .forEach(x => x.selectable = true);
 
         G.initialized = true;
-
-        // delay
-        // effects.delay();
+        G.round++;
       },
       onEnd: ({ G, ctx }) => {
         // console.log('placeTiles.onEnd');

@@ -44,6 +44,7 @@ export interface AzulGameState {
   score: { [key: string]: AzulPlayerScore };
   startPlayerId?: string;
   turnStartTimestamp: number;
+  round: number;
 }
 
 export interface AzulPlayerScore {

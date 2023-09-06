@@ -4,25 +4,19 @@ import { GameSetup } from '../../../games/azul/models';
 // import { floorSetups, wallSetups } from '../../../games/azul/azulConfig';
 import { defaultGameSetup } from './../../../games/azul/azulConfig';
 
-var player1Options = [
-  { value: 0, text: 'human' },
+var botOptions = [
   { value: 100, text: 'easy' },
   { value: 500, text: 'medium' },
   { value: 1000, text: 'hard' },
+  { value: -100, text: 'easy-new' },
+  { value: -500, text: 'medium-new' },
+  { value: -1000, text: 'hard-new' },
 ];
 
-var player2Options = [
-  { value: 100, text: 'easy' },
-  { value: 500, text: 'medium' },
-  { value: 1000, text: 'hard' },
-];
-
-var player3and4Options = [
-  { value: 0, text: '---' },
-  { value: 100, text: 'easy' },
-  { value: 500, text: 'medium' },
-  { value: 1000, text: 'hard' },
-];
+var player1Options = [{ value: 0, text: 'human' }, ...botOptions];
+var player2Options = [...botOptions];
+var player3Options = [{ value: 0, text: '---' }, ...botOptions];
+var player4Options = [{ value: 0, text: '---' }, ...botOptions];
 
 export type GameSetupSingleplayerData = {
   numPlayers: number,
@@ -70,15 +64,15 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
       </select>
       <label>Player 3:</label>
       <select value={player3} onChange={e => setPlayer3(parseInt(e.target.value))}>
-        {player3and4Options.map(x => <option value={x.value} key={x.value}>{x.text}</option>)}
+        {player3Options.map(x => <option value={x.value} key={x.value}>{x.text}</option>)}
       </select>
       <label>Player 4:</label>
       <select value={player4} onChange={e => setPlayer4(parseInt(e.target.value))}>
-        {player3and4Options.map(x => <option value={x.value} key={x.value}>{x.text}</option>)}
+        {player4Options.map(x => <option value={x.value} key={x.value}>{x.text}</option>)}
       </select>
     </div>
     <button onClick={() => props.onStartClick({
-      numPlayers: 2 + (player3 > 0 ? 1 : 0) + (player4 > 0 ? 1 : 0),
+      numPlayers: 2 + (player3 !== 0 ? 1 : 0) + (player4 !== 0 ? 1 : 0),
       setupData: defaultGameSetup, // { wallSetup, floorSetup, tilesPerFactory: 4 }
       player1,
       player2,
