@@ -14,6 +14,7 @@ import { CenterOfTable } from '../CenterOfTable';
 import { NotifyActivePlayer } from '../../NotifyActivePlayer';
 import { serverUrl } from '../../../api/config';
 import { SubmitUserScore } from '../../SubmitUserScore';
+// import { getGameStateId } from '../../../games/azul/gameStateId';
 
 type Props = GameSetup & {
   numPlayers: number,
@@ -40,6 +41,7 @@ const Boards: React.FC<Props> = React.memo((props) => {
       </section>
       <section className={styles.tileStorage}>
         <TileStorage />
+        {/* <button onClick={() => console.log(getGameStateId(gameContext?.G!, gameContext?.ctx!))}>GetId</button> */}
       </section>
     </header>
     <main>
@@ -55,15 +57,16 @@ const Boards: React.FC<Props> = React.memo((props) => {
   </>
 });
 
-const lobbyClient = new LobbyClient({ server: serverUrl });
-
 const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) => {
   const onClick = async () => {
     try {
-      await lobbyClient.leaveMatch('MyZul', props.matchID, {
-        playerID: props.playerID!,
-        credentials: props.credentials!,
-      });
+      if (props.credentials) {
+        const lobbyClient = new LobbyClient({ server: serverUrl });
+        await lobbyClient.leaveMatch('MyZul', props.matchID, {
+          playerID: props.playerID!,
+          credentials: props.credentials!,
+        });
+      }
     } finally {
       window.location.reload();
     }
@@ -77,8 +80,6 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props)
   }, []);
 
   tileContext.setBoardProps(props);
-
-  // const { G } = useLatestPropsOnEffect<AzulGameState>('effects:start');
 
   return <div className={styles.container}>
     <GameContext.Provider value={props}>

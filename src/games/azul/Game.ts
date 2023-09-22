@@ -83,9 +83,6 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
       } else {
         // nothing selected yet
         var selectableTiles = G.tiles.filter(x => x.selectable);
-        // selectableTiles.forEach(t => {
-        //   moves.push({ move: 'selectSourceTile', args: [t] });
-        // });
 
         // group by location
         var tilesByLocation = groupBy(selectableTiles, x => x.location.boardType + '|' + x.location.boardId);
@@ -195,11 +192,16 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         maxMoves: 1,
         onMove: ({ G, ctx }) => {
           // set selectable Tiles
+          G.tiles.forEach(x =>
+            x.selectable = x.location.boardType === 'Factory' || x.location.boardType === 'CenterOfTable'
+          );
+          /*
           G.tiles.forEach(x => x.selectable = false);
           G.tiles.filter(x =>
             x.location.boardType === 'Factory' ||
             x.location.boardType === 'CenterOfTable'
           ).forEach(x => x.selectable = true);
+          */
         },
       },
     },
@@ -237,6 +239,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
             if (count >= 5) {
               const winner = getWinner();
               // console.log('WINNER', winner);
+              ctx.gameover = winner;
               events?.endGame(winner);
               return;
             }

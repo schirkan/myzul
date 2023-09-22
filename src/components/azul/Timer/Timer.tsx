@@ -35,6 +35,7 @@ export const Timer: React.FC<Props> = React.memo((props) => {
   }, [gameContext?.ctx.turn]);
 
   if (props.playerId !== gameContext?.ctx.currentPlayer) return null;
+  if (gameContext?.ctx.gameover) return null;
 
   return <div className={styles.container}>
     {formatDuration(seconds)}

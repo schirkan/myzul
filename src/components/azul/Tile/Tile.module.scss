@@ -3,9 +3,11 @@
     0% {
       opacity: 0.3;
     }
+
     50% {
       opacity: 1;
     }
+
     100% {
       opacity: 0.3;
     }
@@ -18,7 +20,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  transition: transform 0.5s, z-index 0.5s;
+  transition: transform 0.5s,
+  z-index 0.5s;
   z-index: 1;
 
   &::after {
@@ -153,8 +156,7 @@
       background: green;
       border-color: #161;
 
-      background-image: radial-gradient(
-          closest-side,
+      background-image: radial-gradient(closest-side,
           transparent 0%,
           transparent 75%,
           #b6cc66 76%,
@@ -170,10 +172,8 @@
           #ffffff 122%,
           #ffffff 130%,
           #e0ead7 131%,
-          #e0ead7 140%
-        ),
-        radial-gradient(
-          closest-side,
+          #e0ead7 140%),
+        radial-gradient(closest-side,
           transparent 0%,
           transparent 75%,
           #b6cc66 76%,
@@ -189,8 +189,7 @@
           #ffffff 122%,
           #ffffff 130%,
           #e0ead7 131%,
-          #e0ead7 140%
-        );
+          #e0ead7 140%);
       background-size: 110px 110px;
       background-color: #c8d3a7;
       background-position: 0 0, 55px 55px;
@@ -210,23 +209,18 @@
       // background: yellow;
       border-color: #d3a122;
 
-      background: radial-gradient(
-          circle at 100% 50%,
+      background: radial-gradient(circle at 100% 50%,
           transparent 20%,
           rgba(255, 255, 255, 0.3) 21%,
           rgba(255, 255, 255, 0.3) 34%,
           transparent 35%,
-          transparent
-        ),
-        radial-gradient(
-            circle at 0% 50%,
-            transparent 20%,
-            rgba(255, 255, 255, 0.3) 21%,
-            rgba(255, 255, 255, 0.3) 34%,
-            transparent 35%,
-            transparent
-          )
-          0 11px;
+          transparent),
+        radial-gradient(circle at 0% 50%,
+          transparent 20%,
+          rgba(255, 255, 255, 0.3) 21%,
+          rgba(255, 255, 255, 0.3) 34%,
+          transparent 35%,
+          transparent) 0 11px;
       background-color: #fabf29;
       background-size: 12px 14px;
     }
@@ -235,13 +229,11 @@
       background: black;
       border-color: #333;
 
-      background-image: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(255, 255, 255, 0.5) 10px,
-        rgba(255, 255, 255, 0.5) 20px
-      );
+      background-image: repeating-linear-gradient(45deg,
+          transparent,
+          transparent 10px,
+          rgba(255, 255, 255, 0.5) 10px,
+          rgba(255, 255, 255, 0.5) 20px);
     }
 
     --one-color: rgb(93, 160, 247);

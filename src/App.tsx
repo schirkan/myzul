@@ -9,14 +9,15 @@ import { serverUrl } from './api/config';
 import { Highscore } from './components/Highscore';
 import { GameMode, GameSelection } from './components/GameSelection';
 import { useState } from 'react';
-import { createBot } from './games/azul/AzulBot';
+import { createBot } from './games/azul/bot';
 import { GameSetupSingleplayer, GameSetupSingleplayerData } from './components/GameSetup/GameSetupSingleplayer';
 import { GameSetupLocalMultiplayer } from './components/GameSetup/GameSetupLocalMultiplayer';
 import { Game } from 'boardgame.io';
 
 const gameWithSetupData = (game: Game, setupData: any) => ({
   ...game,
-  setup: (context: any) => setupData && game.setup && game.setup(context, setupData)
+  setup: (context: any) => setupData && game.setup && game.setup(context, setupData),
+  seed: window.location.search
 });
 
 var LocalSingleplayer = () => {
@@ -27,10 +28,10 @@ var LocalSingleplayer = () => {
   }
 
   var bots: any = {};
-  if (gameSetup.player1 !== 0) bots[0] = createBot(gameSetup.player1);
-  if (gameSetup.player2 !== 0) bots[1] = createBot(gameSetup.player2);
-  if (gameSetup.player3 !== 0) bots[2] = createBot(gameSetup.player3);
-  if (gameSetup.player4 !== 0) bots[3] = createBot(gameSetup.player4);
+  if (gameSetup.player1 !== '') bots[0] = createBot(gameSetup.player1);
+  if (gameSetup.player2 !== '') bots[1] = createBot(gameSetup.player2);
+  if (gameSetup.player3 !== '') bots[Object.keys(bots).length] = createBot(gameSetup.player3);
+  if (gameSetup.player4 !== '') bots[Object.keys(bots).length] = createBot(gameSetup.player4);
 
   var LocalSingleplayerClient = Client({
     game: gameWithSetupData(AzulGame, gameSetup.setupData),
