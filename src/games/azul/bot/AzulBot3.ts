@@ -35,9 +35,9 @@ export class AzulBot3 extends MCTSBot {
     var newGameScore = gameCopy.score as AzulGameState['score'];
 
     // get real last player
-    var lastPlayerIndex = ctx.playOrderPos > 0 ? ctx.playOrderPos - 1 : ctx.playOrder.length - 1;
-    var lastPlayerId = ctx.playOrder[lastPlayerIndex];
-    var wasBotMove = this._botPlayerID === lastPlayerId;
+    // var lastPlayerIndex = ctx.playOrderPos > 0 ? ctx.playOrderPos - 1 : ctx.playOrder.length - 1;
+    // var lastPlayerId = ctx.playOrder[lastPlayerIndex];
+    // var wasBotMove = this._botPlayerID === lastPlayerId;
 
     // no score for opponent
     //if (this._botPlayerID !== lastPlayerId) return {};
