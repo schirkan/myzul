@@ -91,7 +91,7 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props)
           tilesPerFactory={props.G.config.tilesPerFactory}
           floorSetup={props.G.config.floorSetup}
           wallSetup={props.G.config.wallSetup} />
-        {props.G.tiles.map((tile, index) => <Tile key={index} {...tile} />)}
+        {props.G.tiles.map((tile, index) => <Tile key={tile.id} {...tile} />)}
       </TileContext.Provider>
       <NotifyActivePlayer />
       {props.ctx.gameover && <div className={styles.gameover}>

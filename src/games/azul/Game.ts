@@ -28,6 +28,8 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
     const initialState: AzulGameState = {
       factories: ctx.numPlayers * 2 + 1,
       tiles: [],
+      tileStorage: [],
+      tileBag: [],
       config: setupData,
       score: {},
       initialized: false,
@@ -44,20 +46,22 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
       };
     });
 
+    let id = 0;
+
     // create tiles
     for (let i = 0; i < tilesPerColor; i++) {
-      initialState.tiles.push({ color: 'red', selectable: false, location: { boardType: 'TileBag' }, selected: false })
-      initialState.tiles.push({ color: 'green', selectable: false, location: { boardType: 'TileBag' }, selected: false })
-      initialState.tiles.push({ color: 'black', selectable: false, location: { boardType: 'TileBag' }, selected: false })
-      initialState.tiles.push({ color: 'blue', selectable: false, location: { boardType: 'TileBag' }, selected: false })
-      initialState.tiles.push({ color: 'yellow', selectable: false, location: { boardType: 'TileBag' }, selected: false })
+      initialState.tileBag.push({ color: 'red', selectable: false, location: { boardType: 'TileBag' }, selected: false, id: id++ })
+      initialState.tileBag.push({ color: 'green', selectable: false, location: { boardType: 'TileBag' }, selected: false, id: id++ })
+      initialState.tileBag.push({ color: 'black', selectable: false, location: { boardType: 'TileBag' }, selected: false, id: id++ })
+      initialState.tileBag.push({ color: 'blue', selectable: false, location: { boardType: 'TileBag' }, selected: false, id: id++ })
+      initialState.tileBag.push({ color: 'yellow', selectable: false, location: { boardType: 'TileBag' }, selected: false, id: id++ })
     }
 
     // create white tile
-    initialState.tiles.push({ color: 'white', selectable: false, location: { boardType: 'TileBag', x: 0 }, selected: false })
+    initialState.tiles.push({ color: 'white', selectable: false, location: { boardType: 'CenterOfTable', x: 0 }, selected: false, id: id++ })
 
     // shuffle tiles
-    initialState.tiles = random!.Shuffle(initialState.tiles);
+    initialState.tileBag = random.Shuffle(initialState.tileBag);
 
     // console.log('setup completed');
 
@@ -74,7 +78,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
       if (selectedTiles.length) {
         // allready selected
         for (let row = 0; row < 5; row++) {
-          if (canMoveToPatternLine(G, selectedTiles, playerID, row)) {
+          if (canMoveToPatternLine(G, selectedTiles[0], playerID, row)) {
             moves.push({ move: 'selectTargetLocation', args: [{ location: { boardType: 'PatternLine', boardId: playerID, y: row } } as TilePlaceholderState] });
           }
         }
@@ -106,7 +110,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
   phases: {
     placeTiles: {
       start: true,
-      onBegin: ({ G, ctx /*, effects */ }) => {
+      onBegin: ({ G, ctx, random }) => {
         // console.log('placeTiles.onBegin');
 
         if (ctx.gameover) {
@@ -114,30 +118,23 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
           return;
         }
 
-        let availableTiles = G.tiles.filter(x =>
-          x.location.boardType === 'TileBag' &&
-          x.color !== 'white');
-
         // refill bag
-        if (availableTiles.length < G.factories * G.config.tilesPerFactory) {
-          const storageTiles = G.tiles.filter(x =>
-            x.location.boardType === 'TileStorage');
-          storageTiles.forEach(x => moveTile(x, 'TileBag'));
-          availableTiles = G.tiles.filter(x =>
-            x.location.boardType === 'TileBag' &&
-            x.color !== 'white');
+        if (G.tileBag.length < G.factories * G.config.tilesPerFactory) {
+          G.tileStorage.forEach(x => moveTile(G, x, 'TileBag'));
         }
+        G.tileBag = random.Shuffle(G.tileBag);
 
         // place tiles on factories
         for (let fi = 0; fi < G.factories; fi++) {
           for (let ti = 0; ti < G.config.tilesPerFactory; ti++) {
-            moveTile(availableTiles[fi * G.config.tilesPerFactory + ti], 'Factory', fi, ti, 0);
+            moveTile(G, G.tileBag[fi * G.config.tilesPerFactory + ti], 'Factory', fi, ti, 0);
           }
         }
 
         // place white tile on table
-        const whiteTile = G.tiles.find(x => x.color === 'white')!;
-        moveTile(whiteTile, 'CenterOfTable', undefined, 0);
+        let whiteTile = G.tiles.find(x => x.color === 'white')!;
+        if (!whiteTile) whiteTile = G.tileStorage.find(x => x.color === 'white')!;
+        moveTile(G, whiteTile, 'CenterOfTable', undefined, 0);
 
         // make tiles selectable
         G.tiles
@@ -153,17 +150,16 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         // console.log('placeTiles.onEnd');
         G.initialized = false;
         // get next starting player
-        G.startPlayerId = G.tiles.find(x => x.color === 'white')?.location.boardId;
+        const whiteTile = G.tiles.find(x => x.color === 'white')!;
+        G.startPlayerId = whiteTile.location.boardId;
       },
       endIf: ({ G, ctx }) => {
         // console.log('placeTiles.endIf');
         // don't end before started
         if (!G.initialized) return false;
         // end if no tiles left
-        const factoryTiles = G.tiles.filter(x =>
-          x.location.boardType === 'Factory' ||
-          x.location.boardType === 'CenterOfTable');
-        return factoryTiles.length === 0;
+        const selectableTiles = G.tiles.filter(x => x.selectable);
+        return selectableTiles.length === 0;
       },
       next: 'calculateScore',
       moves: {

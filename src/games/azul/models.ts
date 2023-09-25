@@ -29,6 +29,7 @@ export type TileLocation = {
 }
 
 export interface AzulTileState {
+  id: number;
   color: TileColor;
   location: TileLocation;
   selected: boolean;
@@ -41,6 +42,8 @@ export interface AzulGameState {
   config: GameSetup;
   factories: number;
   tiles: AzulTileState[];
+  tileStorage: AzulTileState[];
+  tileBag: AzulTileState[];
   score: { [key: string]: AzulPlayerScore };
   startPlayerId?: string;
   turnStartTimestamp: number;

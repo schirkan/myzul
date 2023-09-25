@@ -17,7 +17,7 @@ import { Game } from 'boardgame.io';
 const gameWithSetupData = (game: Game, setupData: any) => ({
   ...game,
   setup: (context: any) => setupData && game.setup && game.setup(context, setupData),
-  seed: window.location.search
+  seed: window.location.search || undefined // TODO: use params / path
 });
 
 var LocalSingleplayer = () => {

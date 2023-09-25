@@ -39,10 +39,10 @@ export const selectScoreTargetLocation: MoveFn<AzulGameState> = ({ G, ctx }, tar
   const [first, ...rest] = tiles;
 
   // move tile
-  moveTile(first, "Wall", target.location.boardId, target.location.x, target.location.y);
+  moveTile(G, first, "Wall", target.location.boardId, target.location.x, target.location.y);
 
   // move rest to store
-  moveToTileStorage(rest);
+  rest.forEach(x => moveTile(G, x, 'TileStorage'));
 
   // calculare score
   calculateTileScore(G, ctx, target);
@@ -80,7 +80,7 @@ const calculateFloorLines = async (G: AzulGameState, ctx: Ctx) => {
     }
 
     // move to storage
-    moveToTileStorage(tiles);
+    tiles.forEach(x => moveTile(G, x, 'TileStorage'));
   }
 }
 
@@ -111,10 +111,10 @@ const calculatePatternRow = async (G: AzulGameState, ctx: Ctx, y: number) => {
       const [first, ...rest] = tiles;
 
       // move tiles
-      moveTile(first, "Wall", playerId, x, y);
+      moveTile(G, first, "Wall", playerId, x, y);
 
       // move rest to store
-      moveToTileStorage(rest);
+      rest.forEach(x => moveTile(G, x, 'TileStorage'));
     }
   }
 }
@@ -227,7 +227,7 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (context, target: Til
   if (target.location.boardType === 'FloorLine') {
     moveToFloorLine(G, selectedTiles, target.location.boardId);
   } else if (target.location.boardType === 'PatternLine') {
-    if (!canMoveToPatternLine(G, selectedTiles, target.location.boardId, target.location.y!)) {
+    if (!canMoveToPatternLine(G, selectedTiles[0], target.location.boardId, target.location.y!)) {
       console.log('invalid target');
       return INVALID_MOVE;
     }
@@ -243,7 +243,7 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (context, target: Til
       x.location.boardId === sourceBoardId
     );
     let counter = G.tiles.filter(x => x.location.boardType === 'CenterOfTable').length;
-    factoryTiles.forEach(x => moveTile(x, 'CenterOfTable', undefined, counter++));
+    factoryTiles.forEach(x => moveTile(G, x, 'CenterOfTable', undefined, counter++));
   }
 
   // move white tile to floor line
@@ -263,22 +263,49 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (context, target: Til
       return ('' + b.color).localeCompare(a.color)
     });
   let counter = 0;
-  centerTiles.forEach(x => moveTile(x, 'CenterOfTable', undefined, counter++));
+  centerTiles.forEach(x => moveTile(G, x, 'CenterOfTable', undefined, counter++));
 
   // reset selection
   G.tiles.forEach(x => x.selected = false);
 };
 
-export const moveTile = (tile: AzulTileState, boardType: BoardType, boardId?: string | number, x?: number, y?: number) => {
+export const moveTile = (G: AzulGameState, tile: AzulTileState, boardType: BoardType, boardId?: string | number, x?: number, y?: number) => {
   // console.log('move to ' + boardType + ' from', GetTileLocationId(tile.location));
+  if (!tile) debugger;
+
+  const oldBoardType = tile.location.boardType;
   tile.location = { boardType, boardId: "" + boardId, x, y };
+
+  if (oldBoardType !== boardType && (
+    oldBoardType === 'TileBag' ||
+    oldBoardType === 'TileStorage' ||
+    boardType === 'TileBag' ||
+    boardType === 'TileStorage')) {
+    // remove from source
+    if (oldBoardType === 'TileBag') {
+      G.tileBag.splice(G.tileBag.indexOf(tile), 1);
+    } else if (oldBoardType === 'TileStorage') {
+      G.tileStorage.splice(G.tileStorage.indexOf(tile), 1);
+    } else {
+      G.tiles.splice(G.tiles.indexOf(tile), 1);
+    }
+
+    // add to target
+    if (boardType === 'TileBag') {
+      G.tileBag.push(tile);
+    } else if (boardType === 'TileStorage') {
+      G.tileStorage.push(tile);
+    } else {
+      G.tiles.push(tile);
+    }
+  }
 };
 
-export const canMoveToPatternLine = (G: AzulGameState, tiles: AzulTileState[], boardId: string, y: number): boolean => {
+export const canMoveToPatternLine = (G: AzulGameState, tile: AzulTileState, boardId: string, y: number): boolean => {
   const maxTilesOnLine = y + 1;
 
   // is white?
-  if (tiles[0].color === 'white') return false;
+  if (tile.color === 'white') return false;
 
   // get tiles on PatternLine
   const patternLineTiles = G.tiles.filter(x =>
@@ -291,14 +318,14 @@ export const canMoveToPatternLine = (G: AzulGameState, tiles: AzulTileState[], b
   if (patternLineTiles.length >= maxTilesOnLine) return false;
 
   // wrong color?
-  if (patternLineTiles.length && patternLineTiles[0].color !== tiles[0].color) return false;
+  if (patternLineTiles.length && patternLineTiles[0].color !== tile.color) return false;
 
   // color already on wall?
   const wallTiles = G.tiles.filter(x =>
     x.location.boardType === 'Wall' &&
     x.location.boardId === boardId &&
     x.location.y === y &&
-    x.color === tiles[0].color
+    x.color === tile.color
   );
   if (wallTiles.length) return false;
 
@@ -319,7 +346,7 @@ export const moveToPatternLine = (G: AzulGameState, tiles: AzulTileState[], boar
   let counter = patternLineTiles.length;
   tiles.forEach(x => {
     if (counter < maxTilesOnLine) {
-      moveTile(x, 'PatternLine', boardId, counter++, y);
+      moveTile(G, x, 'PatternLine', boardId, counter++, y);
     } else {
       moveToFloorLine(G, [x], boardId);
     }
@@ -336,15 +363,9 @@ export const moveToFloorLine = (G: AzulGameState, tiles: AzulTileState[], boardI
   let counter = floorLineTiles.length;
   tiles.forEach(x => {
     if (counter <= 6) {
-      moveTile(x, 'FloorLine', boardId, counter++);
+      moveTile(G, x, 'FloorLine', boardId, counter++);
     } else {
-      moveTile(x, 'TileStorage');
+      moveTile(G, x, 'TileStorage');
     }
-  });
-};
-
-export const moveToTileStorage = (tiles: AzulTileState[]): void => {
-  tiles.forEach(x => {
-    moveTile(x, 'TileStorage');
   });
 };
