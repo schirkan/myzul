@@ -73,14 +73,11 @@ export class AzulBot4 extends MCTSBot {
 
     super({ playoutDepth: 50, objectives: myObjectives, ...options });
 
-    var testId = 0;
-
     var oldCreateNode = (this as any).createNode; // monkey hack
     (this as any).createNode = ({ state, parentAction, parent, playerID, }:
       { state: State; parentAction?: BotAction; parent?: Node; playerID?: PlayerID; }): Node => {
       const { G, ctx } = state;
       var id = getGameStateId(G, ctx) + JSON.stringify(parentAction);// + playerID;
-      //var id = '' + (testId++);
       if (!this._nodeCache.has(id)) {
         this._nodeCache.set(id, oldCreateNode.call(this, { state, parentAction, parent, playerID }));
       }
