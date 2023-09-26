@@ -274,7 +274,7 @@ export const moveTile = (G: AzulGameState, tile: AzulTileState, boardType: Board
   if (!tile) debugger;
 
   const oldBoardType = tile.location.boardType;
-  tile.location = { boardType, boardId: "" + boardId, x, y };
+  tile.location = { boardType, boardId: '' + (boardId === undefined ? '' : boardId), x, y };
 
   if (oldBoardType !== boardType && (
     oldBoardType === 'TileBag' ||

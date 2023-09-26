@@ -132,9 +132,9 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         }
 
         // place white tile on table
-        let whiteTile = G.tiles.find(x => x.color === 'white')!;
-        if (!whiteTile) whiteTile = G.tileStorage.find(x => x.color === 'white')!;
-        moveTile(G, whiteTile, 'CenterOfTable', undefined, 0);
+        let whiteTile = G.tiles.find(x => x.color === 'white');
+        if (!whiteTile) whiteTile = G.tileStorage.find(x => x.color === 'white');
+        moveTile(G, whiteTile!, 'CenterOfTable', undefined, 0);
 
         // make tiles selectable
         G.tiles
@@ -150,8 +150,9 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         // console.log('placeTiles.onEnd');
         G.initialized = false;
         // get next starting player
-        const whiteTile = G.tiles.find(x => x.color === 'white')!;
-        G.startPlayerId = whiteTile.location.boardId;
+        let whiteTile = G.tiles.find(x => x.color === 'white');
+        if (!whiteTile) whiteTile = G.tileStorage.find(x => x.color === 'white');
+        G.startPlayerId = whiteTile!.location.boardId;
       },
       endIf: ({ G, ctx }) => {
         // console.log('placeTiles.endIf');

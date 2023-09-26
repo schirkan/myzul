@@ -17,7 +17,7 @@ import { Game } from 'boardgame.io';
 const gameWithSetupData = (game: Game, setupData: any) => ({
   ...game,
   setup: (context: any) => setupData && game.setup && game.setup(context, setupData),
-  seed: window.location.search || undefined // TODO: use params / path
+  seed: window.location.hash !== undefined ? window.location.hash.substring(1) : undefined // TODO: use params / path
 });
 
 var LocalSingleplayer = () => {
@@ -38,6 +38,7 @@ var LocalSingleplayer = () => {
     board: GameBoard,
     numPlayers: gameSetup.numPlayers,
     multiplayer: Local({ bots }),
+    debug: { collapseOnLoad: true }
   });
 
   return <LocalSingleplayerClient playerID='0' />

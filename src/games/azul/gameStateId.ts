@@ -26,6 +26,7 @@ export const getGameStateId = (state: AzulGameState, ctx: Ctx): string => {
   var patternTiles: { [key: string]: tilesPerColor[] } = {};
   var wallTiles: { [key: string]: tilesPerColor[] } = {};
   var floorTiles: { [key: string]: tilesPerColor } = {};
+  var selectedTiles = '';
 
   for (let index = 0; index < state.factories; index++) {
     factoryTiles[index] = new tilesPerColor();
@@ -67,11 +68,15 @@ export const getGameStateId = (state: AzulGameState, ctx: Ctx): string => {
     if (target) {
       target[x.color]++;
     }
+
+    if (x.selected) {
+      selectedTiles = x.location.boardId! + x.color
+    }
   });
 
   var id = '';
   id += factoryTiles.map(x => x.getId()).filter(x => x > 0).sort().join('|') + '|';
-  id += tableTiles.getId();
+  id += tableTiles.getId() + '|' + selectedTiles + '|' + ctx.currentPlayer + '|' + state.round + '|' + ctx.turn;
 
   ctx.playOrder.forEach(playerId => {
     id += '[';

@@ -6,6 +6,12 @@ import { AzulBot2 } from './AzulBot2';
 import { AzulBot3 } from './AzulBot3';
 import { AzulBot4 } from './AzulBot4';
 
+const groupBy = <T>(array: T[], predicate: (value: T, index: number, array: T[]) => string) =>
+  array.reduce((acc, value, index, array) => {
+    (acc[predicate(value, index, array)] ||= []).push(value);
+    return acc;
+  }, {} as { [key: string]: T[] });
+
 export interface Objective {
   checker: (G: any, ctx: Ctx) => boolean;
   weight: number;
@@ -20,6 +26,22 @@ export const getFloorPenalty = (G: AzulGameState, playerID: string): number => {
 
   var floorSetup = floorSetups[G.config.floorSetup];
   return floorSetup.slice(0, floorTiles.length).reduce((a, b) => a + b, 0);
+}
+
+export const getOpenPatternPenalty = (G: AzulGameState, playerID: string): number => {
+  var patternTiles = G.tiles.filter(x =>
+    x.location.boardType === 'PatternLine' &&
+    x.location.boardId === playerID
+  );
+  var tilesByRow = groupBy(patternTiles, x => '' + x.location.y);
+  var penalty = 0;
+  Object.keys(tilesByRow).forEach(key => {
+    var tileCount = tilesByRow[key].length;
+    var tilesPerRow = 1 + (+key);
+    if (tileCount < tilesPerRow) penalty -= tilesPerRow;
+  });
+
+  return penalty;
 }
 
 export const getFullRowBonus = (G: AzulGameState, playerID: string): number => {

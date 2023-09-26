@@ -7,11 +7,17 @@ import { Objectives, getFloorPenalty, getFullRowBonus } from '.';
 
 export class AzulBot1 extends MCTSBot {
   private _botPlayerID?: string = undefined;
+  private _currentRound: number = 0;
 
   _objectives(G: AzulGameState, ctx: Ctx, playerID?: string): Objectives {
     if (!this._botPlayerID || !G.score || !G.score[this._botPlayerID]) return {};
 
-    // TODO: calculate new score
+    if (ctx.gameover) {
+      ctx.gameover = { score: ctx.gameover.winnerPlayerScore, winner: ctx.gameover.winnerPlayerId };
+    } else if (this._currentRound !== G.round) {
+      ctx.gameover = { score: G.score[this._botPlayerID].points };
+    }
+
     return {
       'base-score': {
         checker: () => true,
@@ -40,6 +46,7 @@ export class AzulBot1 extends MCTSBot {
 
   play(state: State<any>, playerID: string): Promise<{ action: BotAction; metadata: Node; }> {
     this._botPlayerID = playerID;
+    this._currentRound = state.G.round;
     return super.play(state, playerID);
   }
 }

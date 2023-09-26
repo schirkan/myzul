@@ -47,5 +47,5 @@ export const defaultGameSetup: GameSetup = {
 };
 
 export const GetTileLocationId = (location: TileLocation) => {
-  return location.boardType + '|' + location.boardId + '|' + location.x + '|' + location.y
+  return location.boardType + '|' + (location.boardId === undefined ? '' : location.boardId) + '|' + location.x + '|' + location.y
 }

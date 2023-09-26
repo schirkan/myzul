@@ -82,9 +82,10 @@ export class AzulBot3 extends MCTSBot {
     super({ playoutDepth: 50, objectives: myObjectives, ...options });
   }
 
-  play(state: State<AzulGameState>, playerID: string): Promise<{ action: BotAction; metadata: Node; }> {
+  async play(state: State<AzulGameState>, playerID: string): Promise<{ action: BotAction; metadata: Node; }> {
     this._botPlayerID = playerID;
     this._currentRound = state.G.round;
+
     return super.play(state, playerID);
   }
 
