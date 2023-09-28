@@ -5,6 +5,7 @@ import { AzulBot1 } from "./AzulBot1";
 import { AzulBot2 } from './AzulBot2';
 import { AzulBot3 } from './AzulBot3';
 import { AzulBot4 } from './AzulBot4';
+import { AzulBot5 } from './AzulBot5';
 
 const groupBy = <T>(array: T[], predicate: (value: T, index: number, array: T[]) => string) =>
   array.reduce((acc, value, index, array) => {
@@ -95,6 +96,10 @@ export function createBot(botId: string) { // '1-easy'
     case '4':
       return function AzulBotWithDifficulty(options: any) {
         return new AzulBot4({ iterations, ...options });
+      }
+    case '5':
+      return function AzulBotWithDifficulty(options: any) {
+        return new AzulBot5({ playoutDepth: iterations / 20, ...options });
       }
   }
 }

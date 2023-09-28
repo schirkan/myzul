@@ -8,7 +8,8 @@ var bots = [
   '1-easy', '1-medium', '1-hard',
   '2-easy', '2-medium', '2-hard',
   '3-easy', '3-medium', '3-hard',
-  '4-easy', '4-medium', '4-hard'
+  '4-easy', '4-medium', '4-hard',
+  '5-easy', '5-medium', '5-hard'
 ];
 var botOptions = bots.map(x => ({ value: x, text: x }));
 

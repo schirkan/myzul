@@ -23,7 +23,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
   setup: ({ ctx, random }, setupData): AzulGameState => {
     if (!setupData) setupData = defaultGameSetup;
 
-    const tilesPerColor = 32;
+    const tilesPerColor = 20;
 
     const initialState: AzulGameState = {
       factories: ctx.numPlayers * 2 + 1,
@@ -73,8 +73,6 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
       let moves = [];
       var selectedTiles = G.tiles.filter(x => x.selected);
 
-      //if (ctx.phase === 'calculateScore') return selectScoreTargetLocation(G, ctx, target);
-
       if (selectedTiles.length) {
         // allready selected
         for (let row = 0; row < 5; row++) {
@@ -83,7 +81,6 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
           }
         }
         moves.push({ move: 'selectTargetLocation', args: [{ location: { boardType: 'FloorLine', boardId: playerID } } as TilePlaceholderState] });
-
       } else {
         // nothing selected yet
         var selectableTiles = G.tiles.filter(x => x.selectable);
@@ -118,6 +115,12 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
           return;
         }
 
+        // place white tile on table
+        let whiteTile = G.tiles.find(x => x.color === 'white');
+        if (!whiteTile) whiteTile = G.tileStorage.find(x => x.color === 'white');
+        if (!whiteTile) whiteTile = G.tileBag.find(x => x.color === 'white');
+        moveTile(G, whiteTile!, 'CenterOfTable', undefined, 0);
+
         // refill bag
         if (G.tileBag.length < G.factories * G.config.tilesPerFactory) {
           G.tileStorage.forEach(x => moveTile(G, x, 'TileBag'));
@@ -127,20 +130,15 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         // place tiles on factories
         for (let fi = 0; fi < G.factories; fi++) {
           for (let ti = 0; ti < G.config.tilesPerFactory; ti++) {
-            moveTile(G, G.tileBag[fi * G.config.tilesPerFactory + ti], 'Factory', fi, ti, 0);
+            if (G.tileBag.length) {
+              moveTile(G, G.tileBag[0], 'Factory', fi, ti, 0);
+            }
           }
         }
 
-        // place white tile on table
-        let whiteTile = G.tiles.find(x => x.color === 'white');
-        if (!whiteTile) whiteTile = G.tileStorage.find(x => x.color === 'white');
-        moveTile(G, whiteTile!, 'CenterOfTable', undefined, 0);
-
         // make tiles selectable
         G.tiles
-          .filter(x =>
-            x.location.boardType === 'Factory' ||
-            x.location.boardType === 'CenterOfTable')
+          .filter(x => (x.location.boardType === 'Factory' || x.location.boardType === 'CenterOfTable') && x.color !== 'white')
           .forEach(x => x.selectable = true);
 
         G.initialized = true;
@@ -190,7 +188,7 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         onMove: ({ G, ctx }) => {
           // set selectable Tiles
           G.tiles.forEach(x =>
-            x.selectable = x.location.boardType === 'Factory' || x.location.boardType === 'CenterOfTable'
+            x.selectable = (x.location.boardType === 'Factory' || x.location.boardType === 'CenterOfTable') && x.color !== 'white'
           );
           /*
           G.tiles.forEach(x => x.selectable = false);
