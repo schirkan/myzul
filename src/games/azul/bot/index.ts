@@ -99,7 +99,7 @@ export function createBot(botId: string) { // '1-easy'
       }
     case '5':
       return function AzulBotWithDifficulty(options: any) {
-        return new AzulBot5({ playoutDepth: iterations / 20, ...options });
+        return new AzulBot5({ /*playoutDepth: iterations / 20,*/  ...options });
       }
   }
 }
