@@ -4,7 +4,7 @@ import { Bot } from 'boardgame.io/ai';
 import { CreateGameReducer } from 'boardgame.io/internal';
 import { AzulGameState } from '../models';
 import { calculateScore } from '../moves';
-import { getFloorPenalty, getFullRowBonus } from '.';
+import { getFloorPenalty, getFullRowBonus, getOpenPatternPenalty } from '.';
 //import { getGameStateId } from '../gameStateId';
 
 export interface Node {
@@ -29,6 +29,7 @@ export interface Node {
   depth: number;
 
   currentPlayerScore: number;
+  opponentMaxScore: number;
   botScore: number;
   winnerScore: number;
   draw?: boolean;
@@ -96,6 +97,7 @@ export class AzulBot5 extends Bot {
       wins: 0,
       depth,
       currentPlayerScore: 0,
+      opponentMaxScore: 0,
       botScore: 0,
       winnerScore: 0
     };
@@ -117,11 +119,6 @@ export class AzulBot5 extends Bot {
     calculateScore(gameCopy, ctx)
     var newGameScore = gameCopy.score;
 
-    node.botScore = newGameScore[this._botPlayerID!].points
-    //var scoreSum = Object.keys(newGameScore).reduce((sum, key) => { return sum + newGameScore[key].points }, 0);
-    //var targetScore = newGameScore[playerID].points;
-    //var targetScore = scoreSum; // ownScore - ((scoreSum - ownScore) / (ctx.numPlayers - 1));
-
     var maxScore = 0;
     var winner: string | undefined = undefined;
     var draw = false;
@@ -133,6 +130,10 @@ export class AzulBot5 extends Bot {
         maxScore = newGameScore[key].points;
         winner = key;
         draw = false;
+      }
+
+      if (key !== this._botPlayerID && newGameScore[key].points > node.opponentMaxScore) {
+        node.opponentMaxScore = newGameScore[key].points;
       }
     });
 
@@ -146,6 +147,7 @@ export class AzulBot5 extends Bot {
       node.winnerScore = maxScore;
     }
 
+    node.botScore = newGameScore[this._botPlayerID!].points
     node.currentPlayerScore = newGameScore[playerID].points;
     node.objectives = {
       'targetScore': newGameScore[playerID].points,
@@ -247,10 +249,28 @@ export class AzulBot5 extends Bot {
     node.children.splice(this._maxPlaceTilesMoves * 2);
   }
 
+  // TODO minimax
+  private getBestChildMaxScoreDiff(node: Node): { node: Node, value: number } {
+    if (node.children.length === 0) {
+      //return { node, value: node.objectivesSum };
+      return { node, value: node.currentPlayerScore - node.opponentMaxScore };
+    }
+
+    let selectedChild: { node: Node, value: number } | null = null;
+    for (const child of node.children) {
+      const childValue = this.getBestChildMaxScoreDiff(child);
+      if (selectedChild == null || childValue.value > selectedChild.value) {
+        selectedChild = { node: child, value: childValue.value };
+      }
+    }
+    return selectedChild!;
+  }
+
   private getBestChild(node: Node): Node {
+    //return this.getBestChildMaxScoreDiff(node).node;
+
     let selectedChild: Node | null = null;
 
-    // TODO: minimax
     for (const child of node.children) {
       // if (selectedChild == null || child.score / child.visits > selectedChild.score / selectedChild.visits) { // TODO:
       // if (selectedChild == null || child.botScore / child.wins > selectedChild.botScore / selectedChild.wins) { // TODO:
@@ -260,6 +280,7 @@ export class AzulBot5 extends Bot {
       }
     }
     return selectedChild!;
+
   }
 
   private _lastBestNode: Node | undefined;

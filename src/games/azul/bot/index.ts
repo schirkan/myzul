@@ -39,7 +39,7 @@ export const getOpenPatternPenalty = (G: AzulGameState, playerID: string): numbe
   Object.keys(tilesByRow).forEach(key => {
     var tileCount = tilesByRow[key].length;
     var tilesPerRow = 1 + (+key);
-    if (tileCount < tilesPerRow) penalty -= tilesPerRow;
+    if (tileCount < tilesPerRow) penalty--;
   });
 
   return penalty;
