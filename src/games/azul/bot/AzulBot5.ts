@@ -4,7 +4,7 @@ import { Bot } from 'boardgame.io/ai';
 import { CreateGameReducer } from 'boardgame.io/internal';
 import { AzulGameState } from '../models';
 import { calculateScore } from '../moves';
-import { getFloorPenalty, getFullRowBonus, getOpenPatternPenalty } from '.';
+import { getFloorPenalty, getFullRowBonus } from '.';
 //import { getGameStateId } from '../gameStateId';
 
 export interface Node {
