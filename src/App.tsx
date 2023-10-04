@@ -1,75 +1,9 @@
 import styles from './App.module.scss';
 import githubIcon from './assets/github.svg';
-import { Client, Lobby } from 'boardgame.io/react';
-import { Local } from 'boardgame.io/multiplayer';
-import { GameBoard } from './components/azul/GameBoard';
-import { AzulGame } from './games/azul/Game';
 import { ThemeSelection } from './components/ThemeSelection';
-import { serverUrl } from './api/config';
-import { Highscore } from './components/Highscore';
 import { GameMode, GameSelection } from './components/GameSelection';
 import { useState } from 'react';
-import { createBot } from './games/azul/bot';
-import { GameSetupSingleplayer, GameSetupSingleplayerData } from './components/GameSetup/GameSetupSingleplayer';
-import { GameSetupLocalMultiplayer } from './components/GameSetup/GameSetupLocalMultiplayer';
-import { Game } from 'boardgame.io';
-
-const gameWithSetupData = (game: Game, setupData: any) => ({
-  ...game,
-  setup: (context: any) => setupData && game.setup && game.setup(context, setupData),
-  seed: window.location.hash !== undefined ? window.location.hash.substring(1) : undefined // TODO: use params / path
-});
-
-var LocalSingleplayer = () => {
-  const [gameSetup, setGameSetup] = useState<GameSetupSingleplayerData>();
-
-  if (!gameSetup) {
-    return <GameSetupSingleplayer onStartClick={setGameSetup} />
-  }
-
-  var bots: any = {};
-  if (gameSetup.player1 !== '') bots[0] = createBot(gameSetup.player1);
-  if (gameSetup.player2 !== '') bots[1] = createBot(gameSetup.player2);
-  if (gameSetup.player3 !== '') bots[Object.keys(bots).length] = createBot(gameSetup.player3);
-  if (gameSetup.player4 !== '') bots[Object.keys(bots).length] = createBot(gameSetup.player4);
-
-  var LocalSingleplayerClient = Client({
-    game: gameWithSetupData(AzulGame, gameSetup.setupData),
-    board: GameBoard,
-    numPlayers: gameSetup.numPlayers,
-    multiplayer: Local({ bots }),
-    debug: { collapseOnLoad: true }
-  });
-
-  return <LocalSingleplayerClient playerID='0' />
-}
-
-var LocalMultiplayer = () => {
-  const [gameSetup, setGameSetup] = useState<any>();
-
-  if (!gameSetup) {
-    return <GameSetupLocalMultiplayer onStartClick={setGameSetup} />
-  }
-
-  var LocalMultiplayerClient = Client({
-    game: gameWithSetupData(AzulGame, gameSetup.setupData),
-    board: GameBoard,
-    numPlayers: gameSetup.numPlayers,
-  });
-  return <LocalMultiplayerClient />;
-}
-
-var OnlineMultiplayer = () => {
-  return <>
-    <Lobby
-      gameServer={serverUrl}
-      lobbyServer={serverUrl}
-      gameComponents={[{ game: AzulGame, board: GameBoard }]}
-      debug={true}
-    />
-    <Highscore />
-  </>
-}
+import { LocalSingleplayer, LocalMultiplayer, OnlineMultiplayer } from './components/utils';
 
 export const App = () => {
   const [gameMode, setGameMode] = useState<GameMode>();

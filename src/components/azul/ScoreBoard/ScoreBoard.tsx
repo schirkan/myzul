@@ -2,9 +2,11 @@ import React from 'react';
 import styles from './ScoreBoard.module.scss';
 import { getPlayerIsConnected, getPlayerName, useGameContext } from '../../../common/GameContext';
 import { AzulGameover, playerColor } from '../../../games/azul/models';
+import { getSeedFromLocation } from '../../utils';
 
 export const ScoreBoard: React.FC = React.memo(() => {
   const gameContext = useGameContext();
+  const seed = getSeedFromLocation();
 
   let activePlayerId = gameContext?.ctx.currentPlayer;
   let currentPlayerId = gameContext?.playerID;
@@ -16,6 +18,7 @@ export const ScoreBoard: React.FC = React.memo(() => {
 
   return <div className={styles.container}>
     <h1>Punkte</h1>
+    {seed ? <h2>Seed #{seed}</h2> : undefined}
     {gameContext?.ctx.playOrder.map(playerId =>
       <div key={playerId}>
         <span className={styles.playerName}

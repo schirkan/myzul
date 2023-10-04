@@ -14,7 +14,6 @@ import { CenterOfTable } from '../CenterOfTable';
 import { NotifyActivePlayer } from '../../NotifyActivePlayer';
 import { serverUrl } from '../../../api/config';
 import { SubmitUserScore } from '../../SubmitUserScore';
-// import { getGameStateId } from '../../../games/azul/gameStateId';
 
 type Props = GameSetup & {
   numPlayers: number,
@@ -28,11 +27,11 @@ const Boards: React.FC<Props> = React.memo((props) => {
   const gameContext = useGameContext();
   return <>
     <header>
-      <section className={styles.factories}>
+      <span className={styles.factories}>
         {[...Array(props.factories)].map((_, index) =>
           <Factory factoryId={index.toString()} tilesPerFactory={props.tilesPerFactory} key={index} />
         )}
-      </section>
+      </span>
       <section className={styles.scoreBoard}>
         <ScoreBoard />
       </section>
@@ -41,7 +40,6 @@ const Boards: React.FC<Props> = React.memo((props) => {
       </section>
       <section className={styles.tileStorage}>
         <TileStorage />
-        {/* <button onClick={() => console.log(getGameStateId(gameContext?.G!, gameContext?.ctx!))}>GetId</button> */}
       </section>
     </header>
     <main>
