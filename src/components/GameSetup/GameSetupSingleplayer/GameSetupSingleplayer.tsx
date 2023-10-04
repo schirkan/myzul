@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, ChangeEventHandler } from 'react';
 import styles from './GameSetupSingleplayer.module.scss';
 import { GameSetup } from '../../../games/azul/models';
 // import { floorSetups, wallSetups } from '../../../games/azul/azulConfig';
 import { defaultGameSetup } from './../../../games/azul/azulConfig';
+import { getSeedFromLocation, updateSeedToLocation } from '../../utils';
 
 var bots = [
   '1-easy', '1-medium', '1-hard',
@@ -39,6 +40,12 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
   const [player2, setPlayer2] = useState<string>('1-easy');
   const [player3, setPlayer3] = useState<string>('');
   const [player4, setPlayer4] = useState<string>('');
+  const [seed, setSeed] = useState<string | undefined>(getSeedFromLocation());
+  const updateSeed: ChangeEventHandler<HTMLInputElement> = useCallback(e => {
+    const newSeed = e.target.value.trim();
+    setSeed(newSeed);
+    updateSeedToLocation(newSeed);
+  }, []);
 
   return <div className={styles.container}>
     <h1>Game Setup</h1>
@@ -70,6 +77,8 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
       <select value={player4} onChange={e => setPlayer4(e.target.value)}>
         {player4Options.map(x => <option value={x.value} key={x.value}>{x.text}</option>)}
       </select>
+      <label>Seed:</label>
+      <input placeholder='random' value={seed} onChange={updateSeed} />
     </div>
     <button onClick={() => props.onStartClick({
       numPlayers: 2 + (player3 !== '' ? 1 : 0) + (player4 !== '' ? 1 : 0),
