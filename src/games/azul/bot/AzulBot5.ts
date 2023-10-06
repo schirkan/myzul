@@ -5,7 +5,7 @@ import { CreateGameReducer } from 'boardgame.io/internal';
 import { AzulGameState } from '../models';
 import { calculateScore } from '../moves';
 import { getFloorPenalty, getFullRowBonus } from '.';
-//import { getGameStateId } from '../gameStateId';
+import { getGameStateId } from '../gameStateId';
 
 export interface Node {
   /** Game state at this node. */
@@ -73,18 +73,18 @@ export class AzulBot5 extends Bot {
 
   private createNode({ state, selectTileState, selectTileAction, placeTileAction, parent, depth }:
     { state?: State, selectTileState?: State, selectTileAction?: BotAction, placeTileAction?: BotAction, parent?: Node, depth: number }): Node {
-    /* // TODO: caching
-        if (state) {
-          var id = getGameStateId(state.G, state.ctx);
-          if (this._nodeCache.has(id)) {
-            var node = this._nodeCache.get(id)!;
-            node.parent = parent;
-            node.selectTileAction = selectTileAction;
-            node.placeTileAction = placeTileAction;
-            return node;
-          }
-        }
-    */
+    // TODO: caching
+    if (state) {
+      var id = getGameStateId(state.G, state.ctx);
+      if (this._nodeCache.has(id)) {
+        var node = this._nodeCache.get(id)!;
+        node.parent = parent;
+        node.selectTileAction = selectTileAction;
+        node.placeTileAction = placeTileAction;
+        return node;
+      }
+    }
+
     return {
       state,
       selectTileState,
@@ -168,12 +168,8 @@ export class AzulBot5 extends Bot {
 
   private backpropagate(
     node: Node,
-    result: { botScore?: number; winnerScore?: number; draw?: boolean; winner?: PlayerID } = {}
+    result: { winnerScore?: number; draw?: boolean; winner?: PlayerID } = {}
   ): void {
-    if (result.botScore !== undefined) {
-      node.botScore += result.botScore;
-    }
-
     if (result.draw === true) {
       node.wins += 0.5;
     }
@@ -200,32 +196,45 @@ export class AzulBot5 extends Bot {
 
     // allready has child nodes
     if (node.children.length > 0) {
-      node.children.forEach(this.expandChildNodes);
+      node.children.forEach(child => this.expandChildNodes(child));
       return;
     }
 
     if (!node.state) return;
 
-    // next select tile moves
-    const selectTileActions = this.enumerate(node.state.G, node.state.ctx, node.state.ctx.currentPlayer);
+    // try get children from cache
+    const cacheId = getGameStateId(node.state.G, node.state.ctx);
+    if (this._nodeCache.has(cacheId)) {
+      const cachedNode = this._nodeCache.get(cacheId)!;
+      node.children.push(...cachedNode.children);
+      node.wins = cachedNode.wins;
+      node.draw = cachedNode.draw;
+      node.winnerScore = cachedNode.winnerScore;
+    } else {
+      // next select tile moves
+      const selectTileActions = this.enumerate(node.state.G, node.state.ctx, node.state.ctx.currentPlayer);
 
-    // has unexplored nodes
-    selectTileActions.forEach(selectTileAction => {
-      // play select move
-      const selectTileState = this._reducer(node.state!, selectTileAction);
-      // create place tile node
-      const placeTileActions = this.enumerate(selectTileState.G, selectTileState.ctx, selectTileState.ctx.currentPlayer);
-      placeTileActions.forEach(placeTileAction => {
-        const newNode = this.createNode({ parent: node, selectTileState, selectTileAction, placeTileAction, depth: node.depth + 1 });
-        node.children.push(newNode);
+      // has unexplored nodes
+      selectTileActions.forEach(selectTileAction => {
+        // play select move
+        const selectTileState = this._reducer(node.state!, selectTileAction);
+        // create place tile node
+        const placeTileActions = this.enumerate(selectTileState.G, selectTileState.ctx, selectTileState.ctx.currentPlayer);
+        placeTileActions.forEach(placeTileAction => {
+          const newNode = this.createNode({ parent: node, selectTileState, selectTileAction, placeTileAction, depth: node.depth + 1 });
+          node.children.push(newNode);
+        });
       });
-    });
 
-    node.children.forEach(child => this.playout(child));
+      node.children.forEach(child => this.playout(child));
 
-    this.removeWeakestPlaceTileMoves(node);
+      this.removeWeakestPlaceTileMoves(node);
 
-    // backpropagate score
+      // store in cache
+      //this._nodeCache.set(cacheId, node);
+    }
+
+    // backpropagate score // TODO: ablösen durch rekursives ermitteln
     node.children.forEach(child => this.backpropagate(child, child));
 
     // explore deeper
@@ -250,16 +259,20 @@ export class AzulBot5 extends Bot {
   }
 
   // TODO minimax
-  private getBestChildMaxScoreDiff(node: Node): { node: Node, value: number } {
+  private getBestChildByScoreDiff(node: Node): { node: Node, value: number } {
     if (node.children.length === 0) {
       //return { node, value: node.objectivesSum };
-      return { node, value: node.currentPlayerScore - node.opponentMaxScore };
+      return { node, value: (node.currentPlayerScore - node.opponentMaxScore) }; //  + node.objectivesSum
     }
 
     let selectedChild: { node: Node, value: number } | null = null;
     for (const child of node.children) {
-      const childValue = this.getBestChildMaxScoreDiff(child);
-      if (selectedChild == null || childValue.value > selectedChild.value) {
+      const childValue = this.getBestChildByScoreDiff(child);
+      if (selectedChild == null ||
+        childValue.value > selectedChild.value ||
+        (childValue.value === selectedChild.value &&
+          childValue.node.objectivesSum > selectedChild.node.objectivesSum)
+      ) {
         selectedChild = { node: child, value: childValue.value };
       }
     }
@@ -267,20 +280,15 @@ export class AzulBot5 extends Bot {
   }
 
   private getBestChild(node: Node): Node {
-    //return this.getBestChildMaxScoreDiff(node).node;
-
     let selectedChild: Node | null = null;
 
     for (const child of node.children) {
-      // if (selectedChild == null || child.score / child.visits > selectedChild.score / selectedChild.visits) { // TODO:
-      // if (selectedChild == null || child.botScore / child.wins > selectedChild.botScore / selectedChild.wins) { // TODO:
-      if (selectedChild == null || child.winnerScore * child.wins > selectedChild.winnerScore * selectedChild.wins) { // TODO:
-        // if (selectedChild == null || child.wins > selectedChild.wins) { // TODO:
+      if (selectedChild == null || child.winnerScore / child.wins > selectedChild.winnerScore / selectedChild.wins) { // TODO:
+        //if (selectedChild == null || child.winnerScore * child.wins > selectedChild.winnerScore * selectedChild.wins) { // TODO:      
         selectedChild = child;
       }
     }
     return selectedChild!;
-
   }
 
   private _lastBestNode: Node | undefined;
@@ -291,6 +299,7 @@ export class AzulBot5 extends Bot {
 
     const getResult = (node: Node) => {
       this._lastBestNode = this.getBestChild(node);
+      //this._lastBestNode = this.getBestChildByScoreDiff(node).node;
       return { action: this._lastBestNode.selectTileAction!, metadata: node };
     };
 

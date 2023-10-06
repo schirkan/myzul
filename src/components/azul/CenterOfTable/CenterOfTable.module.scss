@@ -2,4 +2,5 @@
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
+  margin-right: -5px; // hack for iPhone 13 fit to screen
 }
