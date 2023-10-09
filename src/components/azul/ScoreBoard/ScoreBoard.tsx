@@ -16,8 +16,14 @@ export const ScoreBoard: React.FC = React.memo(() => {
     currentPlayerId = activePlayerId;
   }
 
+  const askReload = React.useCallback(() => {
+    if (window.confirm("Reload?")) {
+      window.location.reload();
+    }
+  }, []);
+
   return <div className={styles.container}>
-    <h1>Punkte</h1>
+    <h1 onClick={askReload}>Punkte</h1>
     {seed ? <h2>Seed #{seed}</h2> : undefined}
     {gameContext?.ctx.playOrder.map(playerId =>
       <div key={playerId}>
