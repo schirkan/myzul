@@ -5,21 +5,19 @@ import { AzulGameState, AzulTileState, BoardType, TilePlaceholderState } from ".
 export const INVALID_MOVE = "INVALID_MOVE";
 
 export const selectSourceTile: MoveFn<AzulGameState> = ({ G, ctx }, tile: AzulTileState) => {
-  if (!tile.selectable) return INVALID_MOVE;
-
-  // reset selection
-  G.tiles.forEach(x => x.selected = false);
+  if (!tile.selectable) {
+    debugger;
+    return INVALID_MOVE;
+  }
 
   // select all tiles of same color on same board
-  const newSelection = G.tiles.filter(x => x.location.boardType === tile.location.boardType &&
-    x.location.boardId === tile.location.boardId &&
-    x.color === tile.color
-  );
-  newSelection.forEach(x => x.selected = true);
-
-  // console.log('Selected Tiles: ', newSelection.length, tile.location.boardType, tile.location.boardId);
-
-  // Placeholder selectable machen?
+  G.tiles.forEach(x => {
+    x.selected = (
+      x.location.boardType === tile.location.boardType &&
+      x.location.boardId === tile.location.boardId &&
+      x.color === tile.color
+    )
+  });
 };
 
 export const selectScoreTargetLocation: MoveFn<AzulGameState> = ({ G, ctx }, target: TilePlaceholderState) => {
@@ -34,7 +32,10 @@ export const selectScoreTargetLocation: MoveFn<AzulGameState> = ({ G, ctx }, tar
     x.color === target.color
   );
 
-  if (tiles.length < maxTilesInRow) return INVALID_MOVE;
+  if (tiles.length < maxTilesInRow) {
+    debugger;
+    return INVALID_MOVE;
+  }
 
   const [first, ...rest] = tiles;
 
@@ -212,13 +213,13 @@ const calculateTileScore = async (G: AzulGameState, ctx: Ctx, target: TilePlaceh
 // move all selected tiles to new board
 export const selectTargetLocation: MoveFn<AzulGameState> = (context, target: TilePlaceholderState) => {
   var { G, ctx, playerID } = context;
-  if (target.location.boardId !== ctx.currentPlayer) return INVALID_MOVE;
-  if (playerID && playerID !== ctx.currentPlayer) return INVALID_MOVE;
+  if (target.location.boardId !== ctx.currentPlayer) { debugger; return INVALID_MOVE; }
+  if (playerID && playerID !== ctx.currentPlayer) { debugger; return INVALID_MOVE; }
 
   if (ctx.phase === 'calculateScore') return selectScoreTargetLocation(context, target);
 
   var selectedTiles = G.tiles.filter(x => x.selected);
-  if (!selectedTiles.length) return INVALID_MOVE;
+  if (!selectedTiles.length) { debugger; return INVALID_MOVE; }
 
   // get source factory
   const sourceBoardType = selectedTiles[0].location.boardType
@@ -229,10 +230,12 @@ export const selectTargetLocation: MoveFn<AzulGameState> = (context, target: Til
   } else if (target.location.boardType === 'PatternLine') {
     if (!canMoveToPatternLine(G, selectedTiles[0], target.location.boardId, target.location.y!)) {
       console.log('invalid target');
+      debugger;
       return INVALID_MOVE;
     }
     moveToPatternLine(G, selectedTiles, target.location.boardId, target.location.y!);
   } else {
+    debugger;
     return INVALID_MOVE;
   }
 

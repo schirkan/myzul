@@ -7,6 +7,8 @@ import { AzulBot3 } from './AzulBot3';
 import { AzulBot4 } from './AzulBot4';
 import { AzulBot5 } from './AzulBot5';
 
+export type difficulty = 'easy' | 'medium' | 'hard';
+
 const groupBy = <T>(array: T[], predicate: (value: T, index: number, array: T[]) => string) =>
   array.reduce((acc, value, index, array) => {
     (acc[predicate(value, index, array)] ||= []).push(value);
@@ -40,6 +42,37 @@ export const getOpenPatternPenalty = (G: AzulGameState, playerID: string): numbe
     var tileCount = tilesByRow[key].length;
     var tilesPerRow = 1 + (+key);
     if (tileCount < tilesPerRow) penalty--;
+  });
+
+  return penalty;
+}
+
+export const getSameColorPenalty = (G: AzulGameState, playerID: string): number => {
+  var patternTiles = G.tiles.filter(x =>
+    x.location.boardType === 'PatternLine' &&
+    x.location.boardId === playerID
+  );
+  var tilesByRow = groupBy(patternTiles, x => '' + x.location.y);
+  var openColors = {
+    red: 0,
+    green: 0,
+    yellow: 0,
+    blue: 0,
+    black: 0,
+    white: 0,
+  };
+  var penalty = 0;
+
+  Object.keys(tilesByRow).forEach(key => {
+    const rowColor = tilesByRow[key][0].color;
+    const tileCount = tilesByRow[key].length;
+    const tilesPerRow = 1 + (+key);
+    if (tileCount < tilesPerRow) {
+      if (openColors[rowColor] > 0) {
+        penalty--;
+      }
+      openColors[rowColor]++;
+    }
   });
 
   return penalty;
@@ -99,7 +132,7 @@ export function createBot(botId: string) { // '1-easy'
       }
     case '5':
       return function AzulBotWithDifficulty(options: any) {
-        return new AzulBot5({ /*playoutDepth: iterations / 20,*/  ...options });
+        return new AzulBot5({ difficulty, ...options });
       }
   }
 }
