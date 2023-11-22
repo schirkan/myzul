@@ -38,6 +38,7 @@ export const GameSetupLocalMultiplayer: React.FC<Props> = React.memo((props) => 
       <label>Seed:</label>
       <input placeholder='random' value={seed} onChange={updateSeed} />
     </div>
+    <button onClick={() => window.location.reload() }>Menu</button>
     <button onClick={() => props.onStartClick({ numPlayers, setupData: { wallSetup, floorSetup, tilesPerFactory: 4 } })}>Start</button>
   </div>;
 });

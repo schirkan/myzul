@@ -76,6 +76,7 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
       <label>Seed:</label>
       <input placeholder='random' value={seed} onChange={updateSeed} />
     </div>
+    <button onClick={() => window.location.reload() }>Menu</button>
     <button onClick={() => props.onStartClick({
       numPlayers: 2 + (player3 !== '' ? 1 : 0) + (player4 !== '' ? 1 : 0),
       setupData: defaultGameSetup, // { wallSetup, floorSetup, tilesPerFactory: 4 }

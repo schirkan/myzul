@@ -6,6 +6,13 @@
     font-weight: bold;
     text-align: center;
     margin-bottom: 10px;
+
+    &::after {
+      content: "[x]";
+      position: absolute;
+      left: 10px;
+      font-weight: normal;
+    }
   }
 
   >h2 {
