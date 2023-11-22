@@ -34,8 +34,8 @@ export var LocalSingleplayer = () => {
   var bots: any = {};
   if (gameSetup.player1 !== '') bots[0] = createBot(gameSetup.player1);
   if (gameSetup.player2 !== '') bots[1] = createBot(gameSetup.player2);
-  if (gameSetup.player3 !== '') bots[Object.keys(bots).length] = createBot(gameSetup.player3);
-  if (gameSetup.player4 !== '') bots[Object.keys(bots).length] = createBot(gameSetup.player4);
+  if (gameSetup.player3 !== '') bots[2] = createBot(gameSetup.player3);
+  if (gameSetup.player4 !== '') bots[(gameSetup.player3 !== '' ? 3 : 2)] = createBot(gameSetup.player4);
 
   var LocalSingleplayerClient = Client({
     game: gameWithSetupData(AzulGame, gameSetup.setupData),
