@@ -1,25 +1,25 @@
 .container {
-  position: absolute;
   margin: auto;
   top: 20px;
   text-align: center;
   font-size: 5em;
+  font-weight: bold;
 
   > span {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
-    .letterA {
+    &.letterA {
       background: url("./../../assets/tile-green.svg");
     }
-    .letterZ {
+    &.letterZ {
       background: url("./../../assets/tile-yellow.svg");
     }
-    .letterU {
+    &.letterU {
       background: url("./../../assets/tile-blue.svg");
     }
-    .letterL {
+    &.letterL {
       background: url("./../../assets/tile-pink.svg");
     }
   }
