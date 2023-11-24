@@ -1,5 +1,6 @@
 import styles from './App.module.scss';
 import githubIcon from './assets/github.svg';
+import { Logo } from './components/Logo';
 import { ThemeSelection } from './components/ThemeSelection';
 import { GameMode, GameSelection } from './components/GameSelection';
 import { useState } from 'react';
@@ -17,6 +18,7 @@ export const App = () => {
     NewGame = OnlineMultiplayer;
   }
   return <div className={styles.container}>
+    <Logo/>
     {gameMode ? <NewGame /> : <GameSelection onSelect={setGameMode} />}
     <ThemeSelection className={styles.themeSelection} />
     <a href="https://github.com/schirkan/myzul-server" target="_blank" rel="noreferrer" className={styles.githubIcon}>
