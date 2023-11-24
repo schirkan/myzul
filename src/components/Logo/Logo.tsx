@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './GameBoard.module.scss';
+import styles from './Logo.module.scss';
 
-export const Logo: React.FC = React.memo((props) => {
+export const Logo: React.FC = React.memo(() => {
   return <div className={styles.container}>
       <span className={styles.letterA}>A</span>
       <span className={styles.letterZ}>Z</span>
