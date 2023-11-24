@@ -1,14 +1,13 @@
 .container {
   margin: auto;
   top: 20px;
-  text-align: center;
-  font-size: 5em;
-  font-weight: bold;
 
   > span {
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    text-align: center;
+    font-size: 5em;
+    font-weight: bold;
+    background-clip: text !important;
+    color: transparent;
 
     &.letterA {
       background: url("./../../assets/tile-green.svg");

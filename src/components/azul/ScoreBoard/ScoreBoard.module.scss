@@ -1,26 +1,27 @@
 .container {
   text-shadow: #000 0px 0px 5px;
 
-  >h1 {
+  > h1 {
     font-size: 1.5em;
     font-weight: bold;
     text-align: center;
     margin-bottom: 10px;
-
+    /*
     &::after {
       content: "[x]";
       position: absolute;
       right: 6px;
       font-weight: normal;
     }
+    */
   }
 
-  >h2 {
+  > h2 {
     text-align: center;
     margin-bottom: 10px;
   }
 
-  >div {
+  > div {
     display: grid;
     grid-template-columns: auto min-content;
   }
