@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { NotifyActivePlayer } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'NotifyActivePlayer',
   component: NotifyActivePlayer,
-} as ComponentMeta<typeof NotifyActivePlayer>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof NotifyActivePlayer> = (args) => <NotifyActivePlayer {...args} />;
+type NotifyActivePlayerProps = ComponentProps<typeof NotifyActivePlayer>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: NotifyActivePlayerProps) => <NotifyActivePlayer {...args} />,
+  args: {},
+};

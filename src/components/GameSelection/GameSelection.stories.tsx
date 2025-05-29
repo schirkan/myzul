@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentProps } from 'react';
 import { GameSelection } from './';
 
-export default {
+const meta = {
   title: 'GameSelection',
   component: GameSelection,
-} as ComponentMeta<typeof GameSelection>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof GameSelection> = (args) => <GameSelection {...args} />;
+type GameSelectionProps = ComponentProps<typeof GameSelection>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: GameSelectionProps) => <GameSelection {...args} />,
+  args: {},
+};

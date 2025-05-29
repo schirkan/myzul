@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentProps } from 'react';
 import { GameSetupLocalMultiplayer } from './';
 
-export default {
+const meta = {
   title: 'GameSetupLocalMultiplayer',
   component: GameSetupLocalMultiplayer,
-} as ComponentMeta<typeof GameSetupLocalMultiplayer>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof GameSetupLocalMultiplayer> = (args) => <GameSetupLocalMultiplayer {...args} />;
+type GameSetupLocalMultiplayerProps = ComponentProps<typeof GameSetupLocalMultiplayer>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: GameSetupLocalMultiplayerProps) => <GameSetupLocalMultiplayer {...args} />,
+  args: {},
+};

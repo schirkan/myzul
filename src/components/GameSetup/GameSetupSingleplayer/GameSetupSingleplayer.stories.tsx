@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { GameSetupSingleplayer } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'GameSetupSingleplayer',
   component: GameSetupSingleplayer,
-} as ComponentMeta<typeof GameSetupSingleplayer>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof GameSetupSingleplayer> = (args) => <GameSetupSingleplayer {...args} />;
+type GameSetupSingleplayerProps = ComponentProps<typeof GameSetupSingleplayer>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: GameSetupSingleplayerProps) => <GameSetupSingleplayer {...args} />,
+  args: {},
+};

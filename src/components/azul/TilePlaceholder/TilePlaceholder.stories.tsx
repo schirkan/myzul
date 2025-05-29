@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentProps } from 'react';
 import { TilePlaceholder } from './';
 
-export default {
+const meta = {
   title: 'Azul/TilePlaceholder',
   component: TilePlaceholder,
-} as ComponentMeta<typeof TilePlaceholder>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof TilePlaceholder> = (args) => <TilePlaceholder {...args} />;
+type TilePlaceholderProps = ComponentProps<typeof TilePlaceholder>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: TilePlaceholderProps) => <TilePlaceholder {...args} />,
+  args: {},
+};

@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Factory } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'Azul/Factory',
   component: Factory,
-} as ComponentMeta<typeof Factory>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof Factory> = (args) => <Factory {...args} />;
+type FactoryProps = ComponentProps<typeof Factory>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: FactoryProps) => <Factory {...args} />,
+  args: {},
+};

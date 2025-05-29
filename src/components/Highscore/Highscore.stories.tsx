@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Highscore } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'Highscore',
   component: Highscore,
-} as ComponentMeta<typeof Highscore>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof Highscore> = (args) => <Highscore {...args} />;
+type HighscoreProps = ComponentProps<typeof Highscore>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: HighscoreProps) => <Highscore {...args} />,
+  args: {},
+};

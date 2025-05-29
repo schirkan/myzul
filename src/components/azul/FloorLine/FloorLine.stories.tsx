@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { FloorLine } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'Azul/FloorLine',
   component: FloorLine,
-} as ComponentMeta<typeof FloorLine>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof FloorLine> = (args) => <FloorLine {...args} />;
+type FloorLineProps = ComponentProps<typeof FloorLine>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: FloorLineProps) => <FloorLine {...args} />,
+  args: {},
+};

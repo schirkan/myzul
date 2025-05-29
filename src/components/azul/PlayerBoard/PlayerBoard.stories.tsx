@@ -1,17 +1,19 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { PlayerBoard } from './';
 import { defaultGameSetup } from './../../../games/azul/azulConfig';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'Azul/PlayerBoard',
   component: PlayerBoard,
-} as ComponentMeta<typeof PlayerBoard>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof PlayerBoard> = (args) => <PlayerBoard {...args} />;
+type PlayerBoardProps = ComponentProps<typeof PlayerBoard>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
-c1.args = {
-  config: defaultGameSetup,
-  playerId: "0"
-}
+export const Default = {
+  render: (args: PlayerBoardProps) => <PlayerBoard {...args} />,
+  args: {
+    config: defaultGameSetup,
+    playerId: "0"
+  },
+};

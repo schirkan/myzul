@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { TileStorage } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'Azul/TileStorage',
   component: TileStorage,
-} as ComponentMeta<typeof TileStorage>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof TileStorage> = (args) => <TileStorage {...args} />;
+type TileStorageProps = ComponentProps<typeof TileStorage>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: TileStorageProps) => <TileStorage {...args} />,
+  args: {},
+};

@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { CenterOfTable } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'CenterOfTable',
   component: CenterOfTable,
-} as ComponentMeta<typeof CenterOfTable>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof CenterOfTable> = (args) => <CenterOfTable {...args} />;
+type CenterOfTableProps = ComponentProps<typeof CenterOfTable>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: CenterOfTableProps) => <CenterOfTable {...args} />,
+  args: {},
+};

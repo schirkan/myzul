@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { PatternLines } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'Azul/PatternLines',
   component: PatternLines,
-} as ComponentMeta<typeof PatternLines>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof PatternLines> = (args) => <PatternLines {...args} />;
+type PatternLinesProps = ComponentProps<typeof PatternLines>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: PatternLinesProps) => <PatternLines {...args} />,
+  args: {},
+};

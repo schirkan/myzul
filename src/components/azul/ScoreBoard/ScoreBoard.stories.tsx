@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ScoreBoard } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'ScoreBoard',
   component: ScoreBoard,
-} as ComponentMeta<typeof ScoreBoard>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof ScoreBoard> = (args) => <ScoreBoard {...args} />;
+type ScoreBoardProps = ComponentProps<typeof ScoreBoard>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: ScoreBoardProps) => <ScoreBoard {...args} />,
+  args: {},
+};

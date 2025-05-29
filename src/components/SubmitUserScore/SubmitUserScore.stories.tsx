@@ -1,12 +1,15 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { SubmitUserScore } from './';
+import { ComponentProps } from 'react';
 
-export default {
+const meta = {
   title: 'SubmitUserScore',
   component: SubmitUserScore,
-} as ComponentMeta<typeof SubmitUserScore>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof SubmitUserScore> = (args) => <SubmitUserScore {...args} />;
+type SubmitUserScoreProps = ComponentProps<typeof SubmitUserScore>;
 
-export const c1 = Template.bind({});
-c1.storyName = "default"
+export const Default = {
+  render: (args: SubmitUserScoreProps) => <SubmitUserScore {...args} />,
+  args: {},
+};
