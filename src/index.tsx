@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import 'the-new-css-reset/css/reset.css'
 import { ThemeProvider } from './common/ThemeContext';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
@@ -14,5 +13,3 @@ root.render(
     </ThemeProvider>
   </React.StrictMode>
 );
-
-serviceWorkerRegistration.register();

@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "myzul",
   "version": "0.2.0",
   "private": true,
@@ -7,27 +8,18 @@
   "license": "MIT",
   "dependencies": {
     "@react-hook/window-size": "^3.1.1",
-    "@storybook/addon-actions": "^9.0.0",
-    "@storybook/preset-create-react-app": "^9.0.0",
-    "@storybook/react": "^9.0.0",
-    "@types/node": "^22.15.24",
-    "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.5",
     "boardgame.io": "^0.50.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
-    "react-scripts": "^5.0.1",
     "sass": "^1.89.0",
     "the-new-css-reset": "^1.11.3",
-    "typescript": "^5.8.3",
     "use-sound": "^5.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "new:component": "hygen new component",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -50,5 +42,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^9.0.0",
+    "@storybook/react": "^9.0.0",
+    "@storybook/react-vite": "^9.0.0",
+    "@types/node": "^22.15.24",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react": "^4.5.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-pwa": "^1.0.0"
   }
 }

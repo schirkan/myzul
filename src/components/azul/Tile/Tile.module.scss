@@ -1,4 +1,15 @@
 .container {
+  display: inline-block;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 0.5s,
+    z-index 0.5s;
+  z-index: 1;
+
   @keyframes pulse {
     0% {
       opacity: 0.3;
@@ -12,17 +23,6 @@
       opacity: 0.3;
     }
   }
-
-  display: inline-block;
-  width: 40px;
-  min-width: 40px;
-  height: 40px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: transform 0.5s,
-  z-index 0.5s;
-  z-index: 1;
 
   &::after {
     content: " ";
