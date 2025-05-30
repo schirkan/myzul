@@ -8,6 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:noopen": "vite --no-open",
     "build": "vite build",
     "preview": "vite preview",
     "new:component": "hygen new component",

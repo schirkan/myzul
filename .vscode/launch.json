@@ -2,30 +2,65 @@
   "configurations": [
     {
       "command": "npm run dev",
-      "name": "Run npm run dev",
+      "name": "Start debug",
       "request": "launch",
-      "type": "node-terminal",
+      "type": "node-terminal"
     },
     {
-      "name": "Launch Microsoft Edge and open the Edge DevTools",
+      "command": "npm run dev:noopen",
+      "name": "Start debug headless",
       "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "type": "pwa-msedge",
+      "name": "Launch Microsoft Edge",
+      "request": "launch",
+      "runtimeArgs": [
+        "--remote-debugging-port=9222"
+      ],
+      "url": "http://localhost:5173/",
+      "presentation": {
+        "hidden": true
+      }
+    },
+    {
+      "type": "pwa-msedge",
+      "name": "Launch Microsoft Edge in headless mode",
+      "request": "launch",
+      "runtimeArgs": [
+        "--headless",
+        "--remote-debugging-port=9222"
+      ],
+      "url": "http://localhost:5173/",
+      "presentation": {
+        "hidden": true
+      }
+    },
+    {
       "type": "vscode-edge-devtools.debug",
-      "url": "http://localhost:3000",
-    },
-    {
-      "type": "msedge",
-      "request": "launch",
-      "name": "Launch Edge against localhost",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}",
-    },
+      "name": "Open Edge DevTools",
+      "request": "attach",
+      "url": "http://localhost:5173/",
+      "presentation": {
+        "hidden": true
+      }
+    }
   ],
   "compounds": [
     {
-      "name": "Start and Debug",
+      "name": "Launch Edge Headless and attach DevTools",
       "configurations": [
-        "Run npm run dev",
-        "Launch Edge against localhost"
+        "Start debug headless",
+        "Launch Microsoft Edge in headless mode",
+        "Open Edge DevTools"
+      ]
+    },
+    {
+      "name": "Launch Edge and attach DevTools",
+      "configurations": [
+        "Launch Microsoft Edge",
+        "Open Edge DevTools"
       ]
     }
   ]
