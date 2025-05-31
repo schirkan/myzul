@@ -30,6 +30,14 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
       tiles: [],
       tileStorage: [],
       tileBag: [],
+      tileBagByColor: {
+        red: 0,
+        green: 0,
+        black: 0,
+        blue: 0,
+        yellow: 0,
+        white: 0
+      },
       config: setupData,
       score: {},
       initialized: false,
@@ -116,16 +124,16 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         }
 
         // place white tile on table
-        let whiteTile = G.tiles.find(x => x.color === 'white');
-        if (!whiteTile) whiteTile = G.tileStorage.find(x => x.color === 'white');
+        let whiteTile = G.tileStorage.find(x => x.color === 'white');
+        if (!whiteTile) whiteTile = G.tiles.find(x => x.color === 'white');
         if (!whiteTile) whiteTile = G.tileBag.find(x => x.color === 'white');
         moveTile(G, whiteTile!, 'CenterOfTable', undefined, 0);
 
         // refill bag
         if (G.tileBag.length < G.factories * G.config.tilesPerFactory) {
           G.tileStorage.forEach(x => moveTile(G, x, 'TileBag'));
+          G.tileBag = random.Shuffle(G.tileBag);
         }
-        G.tileBag = random.Shuffle(G.tileBag);
 
         // place tiles on factories
         for (let fi = 0; fi < G.factories; fi++) {
@@ -140,6 +148,17 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         G.tiles
           .filter(x => (x.location.boardType === 'Factory' || x.location.boardType === 'CenterOfTable') && x.color !== 'white')
           .forEach(x => x.selectable = true);
+
+        // count tiles by color
+        G.tileBagByColor = {
+          red: 0,
+          green: 0,
+          black: 0,
+          blue: 0,
+          yellow: 0,
+          white: 0
+        };
+        G.tileBag.forEach(x => G.tileBagByColor[x.color]++);
 
         G.initialized = true;
         G.round++;
@@ -156,9 +175,8 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
         // console.log('placeTiles.endIf');
         // don't end before started
         if (!G.initialized) return false;
-        // end if no tiles left
-        const selectableTiles = G.tiles.filter(x => x.selectable);
-        return selectableTiles.length === 0;
+        // end if no selectable tiles left
+        return !G.tiles.some(x => x.selectable);
       },
       next: 'calculateScore',
       moves: {
@@ -190,13 +208,6 @@ export const AzulGame: Game<AzulGameState, {}, GameSetup> = {
           G.tiles.forEach(x =>
             x.selectable = (x.location.boardType === 'Factory' || x.location.boardType === 'CenterOfTable') && x.color !== 'white'
           );
-          /*
-          G.tiles.forEach(x => x.selectable = false);
-          G.tiles.filter(x =>
-            x.location.boardType === 'Factory' ||
-            x.location.boardType === 'CenterOfTable'
-          ).forEach(x => x.selectable = true);
-          */
         },
       },
     },

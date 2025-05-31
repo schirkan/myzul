@@ -13,7 +13,6 @@ export const ThemeSelection: React.FC<Props> = (props) => {
   return <div className={styles.container + ' ' + props.className}>
     <input type="checkbox" id="theme-selection-shower" className={styles['theme-selection-shower']} />
     <div className={styles.panel}>
-      <label htmlFor="theme-selection-shower">Theme</label>
       <section>
         <div>
           <label>Background:</label>
@@ -48,7 +47,7 @@ export const ThemeSelection: React.FC<Props> = (props) => {
           </select>
         </div>
       </section>
-
+      <label htmlFor="theme-selection-shower">Theme</label>
     </div>
   </div>;
 };

@@ -7,9 +7,9 @@ type Props = {};
 
 export const TileStorage: React.FC<Props> = React.memo((props) => {
   const gameContext = useGameContext();
-  const selectableTiles = gameContext?.G.tileBag || [];
-  const tilesPerColor = { white: 0, black: 0, blue: 0, green: 0, yellow: 0, red: 0 };
-  selectableTiles.forEach(x => tilesPerColor[x.color]++);
+  // const selectableTiles = gameContext?.G.tileBag || [];
+  const tilesPerColor = gameContext?.G.tileBagByColor || { white: 0, black: 0, blue: 0, green: 0, yellow: 0, red: 0 };
+  // selectableTiles.forEach(x => tilesPerColor[x.color]++);
 
   return <div className={styles.container}>
     {/* <p>Beutel</p><TilePlaceholder location={{ boardType: 'TileBag' }} />    

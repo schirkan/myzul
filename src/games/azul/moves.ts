@@ -85,26 +85,26 @@ const calculateFloorLines = async (G: AzulGameState, ctx: Ctx) => {
   }
 }
 
-const calculatePatternRow = async (G: AzulGameState, ctx: Ctx, y: number) => {
-  const maxTilesInRow = y + 1;
+const calculatePatternRow = async (G: AzulGameState, ctx: Ctx, row: number) => {
+  const maxTilesInRow = row + 1;
   // loop players
   for (const playerId of ctx.playOrder) {
     // get tiles 
     const tiles = G.tiles.filter(x =>
       x.location.boardType === "PatternLine" &&
       x.location.boardId === playerId &&
-      x.location.y === y
+      x.location.y === row
     );
 
     if (tiles.length >= maxTilesInRow) {
       // find target
-      const rowSetup = wallSetups[G.config.wallSetup][y];
+      const rowSetup = wallSetups[G.config.wallSetup][row];
       const x = rowSetup.findIndex(x => x.color === tiles[0].color);
       const placeholderConfig = rowSetup.find(x => x.color === tiles[0].color);
 
       // calculare score
       calculateTileScore(G, ctx, {
-        location: { boardType: 'Wall', boardId: playerId, x, y },
+        location: { boardType: 'Wall', boardId: playerId, x, y: row },
         color: placeholderConfig?.color,
         multiplier: placeholderConfig?.multiplier
       });
@@ -112,7 +112,7 @@ const calculatePatternRow = async (G: AzulGameState, ctx: Ctx, y: number) => {
       const [first, ...rest] = tiles;
 
       // move tiles
-      moveTile(G, first, "Wall", playerId, x, y);
+      moveTile(G, first, "Wall", playerId, x, row);
 
       // move rest to store
       rest.forEach(x => moveTile(G, x, 'TileStorage'));

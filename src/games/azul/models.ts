@@ -44,6 +44,7 @@ export interface AzulGameState {
   tiles: AzulTileState[];
   tileStorage: AzulTileState[];
   tileBag: AzulTileState[];
+  tileBagByColor: { [K in TileColor]: number };
   score: { [key: string]: AzulPlayerScore };
   startPlayerId?: string;
   turnStartTimestamp: number;

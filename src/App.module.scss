@@ -83,6 +83,10 @@
 }
 
 :global {
+  body {
+    overscroll-behavior-y: none;
+  }
+
   .hidden {
     display: none;
   }

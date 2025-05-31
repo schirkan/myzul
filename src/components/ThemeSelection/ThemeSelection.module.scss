@@ -1,6 +1,6 @@
 .container {
-  position: fixed;
-  bottom: 0;
+  position: absolute;
+  top: 0;
   left: 0;
   overflow: hidden;
   z-index: 999;
@@ -8,9 +8,10 @@
 }
 
 .panel {
-  margin: 10px 10px 0 10px;
+  display: flex;
+  margin: 10px 10px 10px 0;
   transition: transform 0.5s ease-in-out;
-  transform: translateY(calc(100% - 30px));
+  transform: translateX(calc(-100% + 45px));
 
   label {
     text-shadow: #000 0px 0px 5px;
@@ -23,19 +24,24 @@
 
   &>label {
     display: inline-block;
-    padding: 0 10px;
-    height: 33px;
-    line-height: 28px;
-    margin-left: 40px;
-    margin-bottom: -3px;
+    padding: 10px;
+    height: 80px;
+    line-height: 25px;
+    // margin-left: 40px;
+    margin-left: -3px;
+    margin-top: 10px;
     background: rgb(112, 30, 194);
     border: 2px solid rgba(0, 0, 0, 0.3);
-    border-bottom: none;
+    border-right: none;
+    border-bottom-left-radius: 6px;
     border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
 
     pointer-events: all;
     cursor: pointer;
+
+    // Text um 90 Grad nach rechts drehen
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
 
     &:hover {
       background: rgb(123, 32, 214);
@@ -45,14 +51,14 @@
 
   &>section {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 10px;
 
     padding: 10px;
     background: rgb(123, 32, 214);
     border: 2px solid rgba(0, 0, 0, 0.3);
-    border-bottom: none;
-    border-top-left-radius: 6px;
+    border-left: none;
+    border-bottom-right-radius: 6px;
     border-top-right-radius: 6px;
 
     pointer-events: all;
@@ -68,7 +74,7 @@
 
   &:checked {
     &~.panel {
-      transform: translateY(0);
+      transform: translateX(0);
     }
   }
 }
