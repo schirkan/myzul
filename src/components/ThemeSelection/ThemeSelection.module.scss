@@ -21,11 +21,13 @@
     width: 150px;
   }
 
-  & > label {
+  &>label {
     display: inline-block;
     padding: 0 10px;
-    height: 30px;
+    height: 33px;
     line-height: 28px;
+    margin-left: 40px;
+    margin-bottom: -3px;
     background: rgb(112, 30, 194);
     border: 2px solid rgba(0, 0, 0, 0.3);
     border-bottom: none;
@@ -40,7 +42,8 @@
       box-shadow: rgba(123, 32, 214, 0.7) 0 0 4px 1px;
     }
   }
-  & > section {
+
+  &>section {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -49,11 +52,12 @@
     background: rgb(123, 32, 214);
     border: 2px solid rgba(0, 0, 0, 0.3);
     border-bottom: none;
+    border-top-left-radius: 6px;
     border-top-right-radius: 6px;
 
     pointer-events: all;
 
-    & > div {
+    &>div {
       display: grid;
     }
   }
@@ -61,8 +65,9 @@
 
 .theme-selection-shower {
   display: none;
+
   &:checked {
-    & ~ .panel {
+    &~.panel {
       transform: translateY(0);
     }
   }

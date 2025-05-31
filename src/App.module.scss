@@ -19,6 +19,8 @@
   background-size: cover;
   color: #fff;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
 
   input,
   select {
@@ -72,12 +74,12 @@
 .githubIcon {
   background: #fff;
   border-radius: 50%;
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
+  position: absolute;
+  top: 30px;
+  right: 20px;
   cursor: pointer;
   display: flex;
-  width: 40px;
+  width: 60px;
 }
 
 :global {

@@ -18,11 +18,11 @@ export const App = () => {
     NewGame = OnlineMultiplayer;
   }
   return <div className={styles.container}>
-    <Logo/>
-    {gameMode ? <NewGame /> : <GameSelection onSelect={setGameMode} />}
-    <ThemeSelection className={styles.themeSelection} />
     <a href="https://github.com/schirkan/myzul-server" target="_blank" rel="noreferrer" className={styles.githubIcon}>
       <img alt="github" title="View on GitHub" src={githubIcon} />
     </a>
+    <Logo />
+    {gameMode ? <NewGame /> : <GameSelection onSelect={setGameMode} />}
+    <ThemeSelection className={styles.themeSelection} />
   </div>
 }

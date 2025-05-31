@@ -1,7 +1,7 @@
 .container {
   text-align: center;
 
-  > span {
+  >span {
     font-size: 5em;
     font-weight: bold;
     background-clip: text !important;
@@ -10,12 +10,15 @@
     &.letterA {
       background: url("./../../assets/tile-green.svg");
     }
+
     &.letterZ {
       background: url("./../../assets/tile-yellow.svg");
     }
+
     &.letterU {
       background: url("./../../assets/tile-blue.svg");
     }
+
     &.letterL {
       background: url("./../../assets/tile-pink.svg");
     }
