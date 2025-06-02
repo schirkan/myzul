@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, memo, PropsWithChildren } from 'react';
 import styles from './TilePlaceholder.module.scss';
 import { TileContext } from '../TileContext';
 import { TilePlaceholderState } from '../../../games/azul/models';
 
-export const TilePlaceholder: React.FC<TilePlaceholderState> = React.memo((props) => {
+export const TilePlaceholder: React.FC<PropsWithChildren<TilePlaceholderState>> = memo((props) => {
   const context = useContext(TileContext);
   const el = useRef<HTMLDivElement>(null);
 
@@ -25,5 +25,6 @@ export const TilePlaceholder: React.FC<TilePlaceholderState> = React.memo((props
     onClick={onClick}
     ref={el}>
     {props.multiplier && props.multiplier > 1 ? props.multiplier + 'x' : ''}
+    {props.children}
   </div>;
 });

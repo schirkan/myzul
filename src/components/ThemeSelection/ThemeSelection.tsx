@@ -7,6 +7,34 @@ type Props = {
   className?: string
 };
 
+type RadioGroupProps<T extends string> = {
+  name: string;
+  label: string;
+  options: T[] | readonly T[];
+  value: T;
+  onChange: (value: T) => void;
+};
+
+function ThemeRadioGroup<T extends string>({ name, label, options, value, onChange }: RadioGroupProps<T>) {
+  return (
+    <div>
+      <span>{label}:</span>
+      {options.map(x =>
+        <label key={x} style={{ marginRight: 8 }}>
+          <input
+            type="radio"
+            name={name}
+            value={x}
+            checked={value === x}
+            onChange={() => onChange(x)}
+          />
+          {x}
+        </label>
+      )}
+    </div>
+  );
+}
+
 export const ThemeSelection: React.FC<Props> = (props) => {
   const [theme, setTheme] = useTheme();
 
@@ -14,38 +42,34 @@ export const ThemeSelection: React.FC<Props> = (props) => {
     <input type="checkbox" id="theme-selection-shower" className={styles['theme-selection-shower']} />
     <div className={styles.panel}>
       <section>
-        <div>
-          <label>Background:</label>
-          <select
-            value={theme.background}
-            onChange={e => setTheme({ ...theme, background: e.target.value as BackgroundThemesType })}>
-            {backgroundThemes.map(x => <option value={x} key={x}>{x}</option>)}
-          </select>
-        </div>
-        <div>
-          <label>Factories:</label>
-          <select
-            value={theme.factory}
-            onChange={e => setTheme({ ...theme, factory: e.target.value as FactoryThemesType })}>
-            {factoryThemes.map(x => <option value={x} key={x}>{x}</option>)}
-          </select>
-        </div>
-        <div>
-          <label>Boards:</label>
-          <select
-            value={theme.board}
-            onChange={e => setTheme({ ...theme, board: e.target.value as BoardThemesType })}>
-            {boardThemes.map(x => <option value={x} key={x}>{x}</option>)}
-          </select>
-        </div>
-        <div>
-          <label>Tiles:</label>
-          <select
-            value={theme.tile}
-            onChange={e => setTheme({ ...theme, tile: e.target.value as TileThemesType })}>
-            {tileThemes.map(x => <option value={x} key={x}>{x}</option>)}
-          </select>
-        </div>
+        <ThemeRadioGroup
+          name="background-theme"
+          label="Background"
+          options={backgroundThemes}
+          value={theme.background}
+          onChange={x => setTheme({ ...theme, background: x as BackgroundThemesType })}
+        />
+        <ThemeRadioGroup
+          name="factory-theme"
+          label="Factories"
+          options={factoryThemes}
+          value={theme.factory}
+          onChange={x => setTheme({ ...theme, factory: x as FactoryThemesType })}
+        />
+        <ThemeRadioGroup
+          name="board-theme"
+          label="Boards"
+          options={boardThemes}
+          value={theme.board}
+          onChange={x => setTheme({ ...theme, board: x as BoardThemesType })}
+        />
+        <ThemeRadioGroup
+          name="tile-theme"
+          label="Tiles"
+          options={tileThemes}
+          value={theme.tile}
+          onChange={x => setTheme({ ...theme, tile: x as TileThemesType })}
+        />
       </section>
       <label htmlFor="theme-selection-shower">Theme</label>
     </div>

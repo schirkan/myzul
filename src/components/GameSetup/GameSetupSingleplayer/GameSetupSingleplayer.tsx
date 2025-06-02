@@ -4,6 +4,7 @@ import { GameSetup } from '../../../games/azul/models';
 // import { floorSetups, wallSetups } from '../../../games/azul/azulConfig';
 import { defaultGameSetup } from './../../../games/azul/azulConfig';
 import { getSeedFromLocation, updateSeedToLocation } from '../../utils';
+import { FaDice, FaPlay, FaArrowLeft, FaClock } from 'react-icons/fa';
 
 var bots = [
   '1-easy', '1-medium', '1-hard',
@@ -40,8 +41,21 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
   const [player3, setPlayer3] = useState<string>('');
   const [player4, setPlayer4] = useState<string>('');
   const [seed, setSeed] = useState<string | undefined>(getSeedFromLocation());
+
   const updateSeed: ChangeEventHandler<HTMLInputElement> = useCallback(e => {
     const newSeed = e.target.value.trim();
+    setSeed(newSeed);
+    updateSeedToLocation(newSeed);
+  }, []);
+
+  const randomizeSeed = useCallback(() => {
+    const newSeed = Math.random().toString(36).slice(2, 10);
+    setSeed(newSeed);
+    updateSeedToLocation(newSeed);
+  }, []);
+
+  const timestampSeed = useCallback(() => {
+    const newSeed = (Math.floor(Date.now() / 1000)).toString(36);
     setSeed(newSeed);
     updateSeedToLocation(newSeed);
   }, []);
@@ -73,10 +87,13 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
       <select value={player4} onChange={e => setPlayer4(e.target.value)}>
         {player4Options.map(x => <option value={x.value} key={x.value}>{x.text}</option>)}
       </select>
-      <label>Seed:</label>
-      <input placeholder='random' value={seed} onChange={updateSeed} />
+      <div>Seed:
+        <button type="button" className={styles.random} onClick={randomizeSeed} title="Zufälligen Seed generieren"><FaDice /></button>
+        <button type="button" className={styles.random} onClick={timestampSeed} title="Uhrzeit als Seed"><FaClock /></button>
+      </div>
+      <input type='text' placeholder='random' value={seed} onChange={updateSeed} />
     </div>
-    <button onClick={() => window.location.reload() }>Menu</button>
+    <button onClick={() => window.location.reload()}><FaArrowLeft />&nbsp;Menu</button>
     <button onClick={() => props.onStartClick({
       numPlayers: 2 + (player3 !== '' ? 1 : 0) + (player4 !== '' ? 1 : 0),
       setupData: defaultGameSetup, // { wallSetup, floorSetup, tilesPerFactory: 4 }
@@ -84,6 +101,6 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
       player2,
       player3,
       player4,
-    })}>Start</button>
+    })}>Start&nbsp;<FaPlay /></button>
   </div>;
 });

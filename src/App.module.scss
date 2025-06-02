@@ -21,8 +21,9 @@
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 
-  input,
+  input[type="text"],
   select {
     border: 1px solid #333;
     border-radius: 4px;
@@ -30,6 +31,10 @@
     color: black;
     padding: 3px;
     min-width: 100px;
+    appearance: auto;
+  }
+
+  input[type="radio"] {
     appearance: auto;
   }
 

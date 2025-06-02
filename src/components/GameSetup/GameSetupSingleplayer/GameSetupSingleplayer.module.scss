@@ -21,6 +21,10 @@
 
   >button {
     width: 45%;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -30,4 +34,10 @@
   gap: 2px;
   margin: 10px 0;
   text-align: left;
+  align-items: center;
+}
+
+button.random {
+  margin: 0;
+  margin-left: 5px;
 }
