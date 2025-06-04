@@ -14,11 +14,16 @@ var bots = [
   '5-easy', '5-medium', '5-hard'
 ];
 var botOptions = bots.map(x => ({ value: x, text: x }));
+botOptions = [
+  { value: '5-easy', text: 'easy' },
+  { value: '5-medium', text: 'medium' },
+  { value: '5-hard', text: 'hard' }
+];
 
-var player1Options = [{ value: '', text: 'human' }, ...botOptions];
-var player2Options = [...botOptions];
-var player3Options = [{ value: '', text: '---' }, ...botOptions];
-var player4Options = [{ value: '', text: '---' }, ...botOptions];
+var player1Options = [{ value: '', text: 'human' }, ...botOptions]; // empty value for human player
+var player2Options = [...botOptions]; // player 2 is always a bot, so no empty option
+var player3Options = [{ value: '', text: '---' }, ...botOptions]; // player 3 can be empty
+var player4Options = [{ value: '', text: '---' }, ...botOptions]; // player 4 can be empty
 
 export type GameSetupSingleplayerData = {
   numPlayers: number,
@@ -37,7 +42,7 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
   // const [wallSetup, setWallSetup] = useState('Default');
   // const [floorSetup, setFloorSetup] = useState('Default');
   const [player1, setPlayer1] = useState<string>('');
-  const [player2, setPlayer2] = useState<string>('1-easy');
+  const [player2, setPlayer2] = useState<string>('5-hard');
   const [player3, setPlayer3] = useState<string>('');
   const [player4, setPlayer4] = useState<string>('');
   const [seed, setSeed] = useState<string | undefined>(getSeedFromLocation());
@@ -59,6 +64,17 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
     setSeed(newSeed);
     updateSeedToLocation(newSeed);
   }, []);
+
+  const handleStartClick = useCallback(() => {
+    props.onStartClick({
+      numPlayers: 2 + (player3 !== '' ? 1 : 0) + (player4 !== '' ? 1 : 0),
+      setupData: defaultGameSetup, // { wallSetup, floorSetup, tilesPerFactory: 4 }
+      player1,
+      player2,
+      player3,
+      player4,
+    });
+  }, [props, player1, player2, player3, player4]);
 
   return <div className={styles.container}>
     <h1>Game Setup</h1>
@@ -94,13 +110,6 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
       <input type='text' placeholder='random' value={seed} onChange={updateSeed} />
     </div>
     <button onClick={() => window.location.reload()}><FaArrowLeft />&nbsp;Menu</button>
-    <button onClick={() => props.onStartClick({
-      numPlayers: 2 + (player3 !== '' ? 1 : 0) + (player4 !== '' ? 1 : 0),
-      setupData: defaultGameSetup, // { wallSetup, floorSetup, tilesPerFactory: 4 }
-      player1,
-      player2,
-      player3,
-      player4,
-    })}>Start&nbsp;<FaPlay /></button>
+    <button onClick={handleStartClick}>Start&nbsp;<FaPlay /></button>
   </div>;
 });

@@ -12,13 +12,6 @@ export const FloorLine: React.FC<Props> = React.memo((props) => {
   const setup = floorSetups[props.config];
 
   return <div className={styles.container}>
-    {/* <span>{setup[0]}</span>
-    <span>{setup[1]}</span>
-    <span>{setup[2]}</span>
-    <span>{setup[3]}</span>
-    <span>{setup[4]}</span>
-    <span>{setup[5]}</span>
-    <span>{setup[6]}</span> */}
     <TilePlaceholder location={{ boardType: 'FloorLine', boardId: props.playerId, x: 0 }}>{setup[0]}</TilePlaceholder>
     <TilePlaceholder location={{ boardType: 'FloorLine', boardId: props.playerId, x: 1 }}>{setup[1]}</TilePlaceholder>
     <TilePlaceholder location={{ boardType: 'FloorLine', boardId: props.playerId, x: 2 }}>{setup[2]}</TilePlaceholder>
