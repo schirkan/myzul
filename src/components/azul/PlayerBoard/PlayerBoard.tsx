@@ -1,10 +1,10 @@
 import React from 'react';
-import { GameSetup } from '../../../games/azul/models';
-import { FloorLine } from '../FloorLine';
-import { PlayerName } from '../../../common/GameContext';
-import { PatternLines } from '../PatternLines';
-import { Wall } from '../Wall';
-import { Timer } from '../Timer';
+import { GameSetup } from 'games/azul/models';
+import { FloorLine } from 'components/azul/FloorLine';
+import { PlayerName } from 'common/GameContext';
+import { PatternLines } from 'components/azul/PatternLines';
+import { Wall } from 'components/azul/Wall';
+import { Timer } from 'components/azul/Timer';
 import styles from './PlayerBoard.module.scss';
 
 type Props = {

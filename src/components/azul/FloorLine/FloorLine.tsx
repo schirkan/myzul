@@ -1,6 +1,6 @@
 import React from 'react';
-import { floorSetups } from '../../../games/azul/azulConfig';
-import { TilePlaceholder } from '../TilePlaceholder';
+import { floorSetups } from 'games/azul/azulConfig';
+import { TilePlaceholder } from 'components/azul/TilePlaceholder';
 import styles from './FloorLine.module.scss';
 
 type Props = {

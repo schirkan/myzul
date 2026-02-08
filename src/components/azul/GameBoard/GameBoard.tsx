@@ -14,6 +14,7 @@ import { CenterOfTable } from '../CenterOfTable';
 import { NotifyActivePlayer } from '../../NotifyActivePlayer';
 import { serverUrl } from '../../../api/config';
 import { SubmitUserScore } from '../../SubmitUserScore';
+import { useNavigate } from 'react-router-dom';
 
 type Props = GameSetup & {
   numPlayers: number,
@@ -56,6 +57,8 @@ const Boards: React.FC<Props> = React.memo((props) => {
 });
 
 const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) => {
+  const navigate = useNavigate();
+
   const onClick = async () => {
     try {
       if (props.credentials) {
@@ -66,7 +69,7 @@ const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) 
         });
       }
     } finally {
-      window.location.reload();
+      navigate('/');
     }
   }
   return <button onClick={onClick}>Zurück zum Hauptmenü</button>

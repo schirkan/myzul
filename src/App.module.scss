@@ -12,6 +12,10 @@
 }
 
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
   min-width: 100%;
   width: fit-content;
   min-height: 100vh;
@@ -68,23 +72,6 @@
   hr {
     border: 1px solid black;
   }
-}
-
-.themeSelection {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-}
-
-.githubIcon {
-  background: #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: 30px;
-  right: 20px;
-  cursor: pointer;
-  display: flex;
-  width: 60px;
 }
 
 :global {

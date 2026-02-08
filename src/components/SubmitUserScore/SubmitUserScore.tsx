@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import styles from './SubmitUserScore.module.scss';
-import { useGameContext } from './../../common/GameContext';
-import { submitUserScore } from '../../api/client';
-import { AzulGameover } from '../../games/azul/models';
+import { useGameContext } from 'common/GameContext';
+import { submitUserScore } from 'api/client';
+import { AzulGameover } from 'games/azul/models';
 
 export const SubmitUserScore: React.FC = React.memo(() => {
   const gameContext = useGameContext();

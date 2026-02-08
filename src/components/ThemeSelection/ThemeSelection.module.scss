@@ -9,13 +9,18 @@
 
 .panel {
   display: flex;
+  flex-direction: column;
+
+  pointer-events: all;
+
   margin: 10px 10px 10px 0;
   transition: transform 0.5s ease-in-out;
-  transform: translateX(calc(-100% + 40px));
+  transform: translateX(calc(-100%));
 
   label {
     text-shadow: #000 0px 0px 5px;
     user-select: none;
+    cursor: pointer;
   }
 
   select {
@@ -23,25 +28,16 @@
   }
 
   &>label {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     padding: 10px;
-    height: 80px;
-    line-height: 25px;
-    // margin-left: 40px;
-    margin-left: -3px;
-    margin-top: 10px;
-    background: rgb(112, 30, 194);
-    border: 2px solid rgba(0, 0, 0, 0.3);
-    border-right: none;
-    border-bottom-left-radius: 6px;
-    border-top-left-radius: 6px;
+    border-top: 2px solid rgba(0, 0, 0, 0.3);
 
-    pointer-events: all;
-    cursor: pointer;
+    border-bottom-right-radius: 6px;
 
-    // Text um 90 Grad nach rechts drehen
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
+    background: rgb(58, 15, 101);
 
     &:hover {
       background: rgb(123, 32, 214);
@@ -58,10 +54,9 @@
     background: rgb(112, 30, 194);
     border: 2px solid rgba(0, 0, 0, 0.3);
     border-left: none;
-    border-bottom-right-radius: 6px;
     border-top-right-radius: 6px;
 
-    pointer-events: all;
+    border-bottom: none;
 
     &>div {
       display: grid;

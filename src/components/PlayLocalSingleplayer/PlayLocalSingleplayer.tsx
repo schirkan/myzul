@@ -1,27 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Client } from "boardgame.io/react";
 import { Local } from "boardgame.io/multiplayer";
-import { GameSetupSingleplayer, GameSetupSingleplayerData } from "components/GameSetup/GameSetupSingleplayer";
+import { GameSetupSingleplayerData } from "components/GameSetupSingleplayer";
 import { GameBoard } from "components/azul/GameBoard";
 import { AzulGame } from "games/azul/Game";
 import { createBot } from "games/azul/bot";
+import { Navigate, useSearchParams } from "react-router-dom";
+import { decodeFromUrl } from "utils/urlEncoding";
 
-const getSeedFromLocation = () => {
-	var hash = window.location.hash?.trim().substring(1) || '';
-	return hash.length > 0 ? hash : undefined;
-};
-
-const gameWithSetupData = (game: any, setupData: any) => ({
+const gameWithSetupData = (game: any, setupData: any, seed: string | undefined) => ({
 	...game,
 	setup: (context: any) => setupData && game.setup && game.setup(context, setupData),
-	seed: getSeedFromLocation()
+	seed: seed
 });
 
-export const LocalSingleplayer = () => {
+export const PlayLocalSingleplayer = () => {
+	const [searchParams] = useSearchParams();
 	const [gameSetup, setGameSetup] = useState<GameSetupSingleplayerData>();
 
+	useEffect(() => {
+		const setupParam = searchParams.get('setup');
+		if (setupParam) {
+			const decodedSetup = decodeFromUrl<GameSetupSingleplayerData>(setupParam);
+			if (decodedSetup) {
+				console.log(decodedSetup);
+				setGameSetup(decodedSetup);
+			}
+		}
+	}, [searchParams]);
+
 	if (!gameSetup) {
-		return <GameSetupSingleplayer onStartClick={setGameSetup} />;
+		return null;
 	}
 
 	var bots: any = {};
@@ -31,7 +40,7 @@ export const LocalSingleplayer = () => {
 	if (gameSetup.player4 !== '') bots[(gameSetup.player3 !== '' ? 3 : 2)] = createBot(gameSetup.player4);
 
 	var LocalSingleplayerClient = Client({
-		game: gameWithSetupData(AzulGame, gameSetup.setupData),
+		game: gameWithSetupData(AzulGame, gameSetup.setupData, gameSetup.seed),
 		board: GameBoard,
 		numPlayers: gameSetup.numPlayers,
 		multiplayer: Local({ bots }),

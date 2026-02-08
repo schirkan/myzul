@@ -1,5 +1,5 @@
 import React from 'react';
-import { TilePlaceholder } from '../TilePlaceholder';
+import { TilePlaceholder } from 'components/azul/TilePlaceholder';
 import styles from './PatternLines.module.scss';
 
 type Props = {

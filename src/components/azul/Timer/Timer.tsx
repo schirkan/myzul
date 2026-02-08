@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useGameContext } from '../../../common/GameContext';
+import { useGameContext } from 'common/GameContext';
 import styles from './Timer.module.scss';
 
 type Props = {

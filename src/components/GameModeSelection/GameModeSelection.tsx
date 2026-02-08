@@ -1,16 +1,16 @@
 import React from 'react';
-import styles from './GameSelection.module.scss';
+import styles from './GameModeSelection.module.scss';
 import { BiBot, BiUser, BiGlobe, BiLaptop } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
 
-export const GameSelection: React.FC = React.memo(() => {
+export const GameModeSelection: React.FC = React.memo(() => {
   const navigate = useNavigate();
   const iconSize = 30;
 
   return (
     <div className={styles.container}>
       <h1>Game Mode</h1>
-      <button onClick={() => navigate('/local-singleplayer')}>
+      <button onClick={() => navigate('/local-singleplayer/setup')}>
         <BiUser size={iconSize} />
         <BiLaptop size={iconSize} />
         <BiBot size={iconSize} />
@@ -18,7 +18,7 @@ export const GameSelection: React.FC = React.memo(() => {
         <span>Singleplayer</span>
       </button>
 
-      <button onClick={() => navigate('/local-multiplayer')}>
+      <button onClick={() => navigate('/local-multiplayer/setup')}>
         <BiUser size={iconSize} />
         <BiLaptop size={iconSize} />
         <BiUser size={iconSize} />

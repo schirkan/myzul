@@ -1,6 +1,6 @@
 import { BoardProps } from 'boardgame.io/react';
 import React, { useContext } from 'react';
-import { AzulGameState } from "../games/azul/models";
+import { AzulGameState } from "games/azul/models";
 
 export type GameContextType = BoardProps<AzulGameState> | undefined;
 

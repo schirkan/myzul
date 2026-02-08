@@ -1,6 +1,6 @@
 import React from 'react';
-import { wallSetups } from '../../../games/azul/azulConfig';
-import { TilePlaceholder } from '../TilePlaceholder';
+import { wallSetups } from 'games/azul/azulConfig';
+import { TilePlaceholder } from 'components/azul/TilePlaceholder';
 import styles from './Wall.module.scss';
 
 type Props = {

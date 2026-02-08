@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { GetTileLocationId } from '../../../games/azul/azulConfig';
-import { AzulTileState } from "../../../games/azul/models";
-import { useTileContext } from '../TileContext';
+import { GetTileLocationId } from 'games/azul/azulConfig';
+import { AzulTileState } from "games/azul/models";
+import { useTileContext } from 'components/azul/TileContext';
 import styles from './Tile.module.scss';
 import { useWindowWidth } from '@react-hook/window-size/throttled'
-import { useGameContext } from '../../../common/GameContext';
+import { useGameContext } from 'common/GameContext';
 
 export const Tile: React.FC<AzulTileState> = React.memo((props) => {
   const tileContext = useTileContext();

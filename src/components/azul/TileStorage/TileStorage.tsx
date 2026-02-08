@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './TileStorage.module.scss';
-import { useGameContext } from '../../../common/GameContext';
-import { TileCounter } from '../TileCounter/TileCounter';
+import { useGameContext } from 'common/GameContext';
+import { TileCounter } from 'components/azul/TileCounter/TileCounter';
 
 type Props = {};
 

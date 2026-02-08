@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, memo, PropsWithChildren } from 'react';
 import styles from './TilePlaceholder.module.scss';
-import { TileContext } from '../TileContext';
-import { TilePlaceholderState } from '../../../games/azul/models';
+import { TileContext } from 'components/azul/TileContext';
+import { TilePlaceholderState } from 'games/azul/models';
 
 export const TilePlaceholder: React.FC<PropsWithChildren<TilePlaceholderState>> = memo((props) => {
   const context = useContext(TileContext);

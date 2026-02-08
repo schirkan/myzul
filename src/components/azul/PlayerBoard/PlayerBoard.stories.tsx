@@ -1,5 +1,5 @@
 import { PlayerBoard } from './';
-import { defaultGameSetup } from './../../../games/azul/azulConfig';
+import { defaultGameSetup } from 'games/azul/azulConfig';
 import { ComponentProps } from 'react';
 
 const meta = {

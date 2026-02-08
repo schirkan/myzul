@@ -1,10 +1,12 @@
-import React, { useState, useCallback, ChangeEventHandler } from 'react';
+import React, { useState, useCallback, ChangeEventHandler, useEffect } from 'react';
 import styles from './GameSetupSingleplayer.module.scss';
-import { GameSetup } from '../../../games/azul/models';
-// import { floorSetups, wallSetups } from '../../../games/azul/azulConfig';
-import { defaultGameSetup } from './../../../games/azul/azulConfig';
-import { getSeedFromLocation, updateSeedToLocation } from '../../utils';
+import { GameSetup } from 'games/azul/models';
+// import { floorSetups, wallSetups } from 'games/azul/azulConfig';
+import { defaultGameSetup } from 'games/azul/azulConfig';
 import { FaDice, FaPlay, FaArrowLeft, FaClock } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { encodeToUrl } from 'utils/urlEncoding';
+import { getSeedFromLocation } from 'components/utils';
 
 var bots = [
   '1-easy', '1-medium', '1-hard',
@@ -32,49 +34,52 @@ export type GameSetupSingleplayerData = {
   player2: string,
   player3: string,
   player4: string,
+  seed: string | undefined,
 };
 
-type Props = {
-  onStartClick: (data: GameSetupSingleplayerData) => void
-};
+export const GameSetupSingleplayer: React.FC = React.memo((props) => {
+  const navigate = useNavigate();
 
-export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
   // const [wallSetup, setWallSetup] = useState('Default');
   // const [floorSetup, setFloorSetup] = useState('Default');
   const [player1, setPlayer1] = useState<string>('');
   const [player2, setPlayer2] = useState<string>('5-hard');
   const [player3, setPlayer3] = useState<string>('');
   const [player4, setPlayer4] = useState<string>('');
-  const [seed, setSeed] = useState<string | undefined>(getSeedFromLocation());
+  const [seed, setSeed] = useState<string | undefined>('');
+
+  useEffect(() => {
+    setSeed(getSeedFromLocation());
+  }, []);
 
   const updateSeed: ChangeEventHandler<HTMLInputElement> = useCallback(e => {
     const newSeed = e.target.value.trim();
     setSeed(newSeed);
-    updateSeedToLocation(newSeed);
   }, []);
 
   const randomizeSeed = useCallback(() => {
     const newSeed = Math.random().toString(36).slice(2, 10);
     setSeed(newSeed);
-    updateSeedToLocation(newSeed);
   }, []);
 
   const timestampSeed = useCallback(() => {
     const newSeed = (Math.floor(Date.now() / 1000)).toString(36);
     setSeed(newSeed);
-    updateSeedToLocation(newSeed);
   }, []);
 
   const handleStartClick = useCallback(() => {
-    props.onStartClick({
+    const setupData: GameSetupSingleplayerData = {
       numPlayers: 2 + (player3 !== '' ? 1 : 0) + (player4 !== '' ? 1 : 0),
       setupData: defaultGameSetup, // { wallSetup, floorSetup, tilesPerFactory: 4 }
       player1,
       player2,
       player3,
       player4,
-    });
-  }, [props, player1, player2, player3, player4]);
+      seed,
+    };
+    const encoded = encodeToUrl(setupData);
+    navigate(`/local-singleplayer/play?setup=${encoded}`);
+  }, [navigate, player1, player2, player3, player4]);
 
   return <div className={styles.container}>
     <h1>Game Setup</h1>
@@ -109,7 +114,7 @@ export const GameSetupSingleplayer: React.FC<Props> = React.memo((props) => {
       </div>
       <input type='text' placeholder='random' value={seed} onChange={updateSeed} />
     </div>
-    <button onClick={() => window.location.reload()}><FaArrowLeft />&nbsp;Menu</button>
-    <button onClick={handleStartClick}>Start&nbsp;<FaPlay /></button>
+    <button onClick={() => navigate('/')}><FaArrowLeft />&nbsp;Menu</button>
+    <button onClick={handleStartClick}><FaPlay />&nbsp;Start</button>
   </div>;
 });

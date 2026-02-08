@@ -1,7 +1,8 @@
 import React from 'react';
-import { backgroundThemes, BackgroundThemesType, BoardThemesType, factoryThemes, FactoryThemesType, tileThemes, TileThemesType, useTheme } from '../../common/ThemeContext';
+import { backgroundThemes, BackgroundThemesType, BoardThemesType, factoryThemes, FactoryThemesType, tileThemes, TileThemesType, useTheme } from 'common/ThemeContext';
 import styles from './ThemeSelection.module.scss';
-import { boardThemes } from './../../common/ThemeContext';
+import { boardThemes } from 'common/ThemeContext';
+import { IoClose } from "react-icons/io5";
 
 type Props = {
   className?: string
@@ -71,7 +72,7 @@ export const ThemeSelection: React.FC<Props> = (props) => {
           onChange={x => setTheme({ ...theme, tile: x as TileThemesType })}
         />
       </section>
-      <label htmlFor="theme-selection-shower">Theme</label>
+      <label htmlFor="theme-selection-shower"><IoClose /> Close</label>
     </div>
   </div>;
 };

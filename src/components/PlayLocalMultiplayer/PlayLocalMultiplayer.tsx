@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Client } from "boardgame.io/react";
-import { GameSetupLocalMultiplayer } from "components/GameSetup/GameSetupLocalMultiplayer";
+import { GameSetupLocalMultiplayer } from "components/GameSetupLocalMultiplayer";
 import { GameBoard } from "components/azul/GameBoard";
 import { AzulGame } from "games/azul/Game";
 
@@ -15,7 +15,7 @@ const gameWithSetupData = (game: any, setupData: any) => ({
 	seed: getSeedFromLocation()
 });
 
-export const LocalMultiplayer = () => {
+export const PlayLocalMultiplayer = () => {
 	const [gameSetup, setGameSetup] = useState<any>();
 
 	if (!gameSetup) {

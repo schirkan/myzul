@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getHighscores } from '../../api/client';
-import { HighscoreItem } from '../../api/models';
+import { getHighscores } from 'api/client';
+import { HighscoreItem } from 'api/models';
 import styles from './Highscore.module.scss';
 
 type Props = {};
