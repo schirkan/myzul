@@ -2,11 +2,9 @@ import React, { useState, useCallback, ChangeEventHandler, useEffect } from 'rea
 import styles from './GameSetupSingleplayer.module.scss';
 import { GameSetup } from 'games/azul/models';
 // import { floorSetups, wallSetups } from 'games/azul/azulConfig';
-import { defaultGameSetup } from 'games/azul/azulConfig';
 import { FaDice, FaPlay, FaArrowLeft, FaClock } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import { encodeToUrl } from 'utils/urlEncoding';
-import { getSeedFromLocation } from 'components/utils';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { decodeFromQueryParams, encodeToQueryParams } from 'utils/urlEncoding';
 
 var bots = [
   '1-easy', '1-medium', '1-hard',
@@ -28,17 +26,17 @@ var player3Options = [{ value: '', text: '---' }, ...botOptions]; // player 3 ca
 var player4Options = [{ value: '', text: '---' }, ...botOptions]; // player 4 can be empty
 
 export type GameSetupSingleplayerData = {
-  numPlayers: number,
-  setupData: GameSetup,
-  player1: string,
-  player2: string,
-  player3: string,
-  player4: string,
-  seed: string | undefined,
+  setupData?: GameSetup,
+  player1?: string,
+  player2?: string,
+  player3?: string,
+  player4?: string,
+  seed?: string,
 };
 
-export const GameSetupSingleplayer: React.FC = React.memo((props) => {
+export const GameSetupSingleplayer: React.FC = React.memo(() => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // const [wallSetup, setWallSetup] = useState('Default');
   // const [floorSetup, setFloorSetup] = useState('Default');
@@ -46,40 +44,48 @@ export const GameSetupSingleplayer: React.FC = React.memo((props) => {
   const [player2, setPlayer2] = useState<string>('5-hard');
   const [player3, setPlayer3] = useState<string>('');
   const [player4, setPlayer4] = useState<string>('');
-  const [seed, setSeed] = useState<string | undefined>('');
+  const [seed, setSeed] = useState<string>('');
 
   useEffect(() => {
-    setSeed(getSeedFromLocation());
-  }, []);
+    const decodedSetup = decodeFromQueryParams<GameSetupSingleplayerData>(searchParams);
+    console.log(decodedSetup);
+    if (decodedSetup.player1) setPlayer1(decodedSetup.player1);
+    if (decodedSetup.player2) setPlayer2(decodedSetup.player2);
+    if (decodedSetup.player3) setPlayer3(decodedSetup.player3);
+    if (decodedSetup.player4) setPlayer4(decodedSetup.player4);
+    if (decodedSetup.seed) setSeed(decodedSetup.seed);
+    else randomizeSeed();
+  }, [searchParams]);
 
   const updateSeed: ChangeEventHandler<HTMLInputElement> = useCallback(e => {
     const newSeed = e.target.value.trim();
     setSeed(newSeed);
-  }, []);
+  }, [setSeed]);
 
   const randomizeSeed = useCallback(() => {
     const newSeed = Math.random().toString(36).slice(2, 10);
     setSeed(newSeed);
-  }, []);
+  }, [setSeed]);
 
   const timestampSeed = useCallback(() => {
     const newSeed = (Math.floor(Date.now() / 1000)).toString(36);
     setSeed(newSeed);
-  }, []);
+  }, [setSeed]);
 
   const handleStartClick = useCallback(() => {
     const setupData: GameSetupSingleplayerData = {
-      numPlayers: 2 + (player3 !== '' ? 1 : 0) + (player4 !== '' ? 1 : 0),
-      setupData: defaultGameSetup, // { wallSetup, floorSetup, tilesPerFactory: 4 }
+      // setupData: defaultGameSetup, // { wallSetup, floorSetup, tilesPerFactory: 4 }
       player1,
       player2,
       player3,
       player4,
       seed,
     };
-    const encoded = encodeToUrl(setupData);
-    navigate(`/local-singleplayer/play?setup=${encoded}`);
-  }, [navigate, player1, player2, player3, player4]);
+    console.log(setupData);
+    const encoded = encodeToQueryParams(setupData);
+    console.log(encoded);
+    navigate(`/local-singleplayer/play?${encoded}`);
+  }, [navigate, player1, player2, player3, player4, seed]);
 
   return <div className={styles.container}>
     <h1>Game Setup</h1>
@@ -109,10 +115,10 @@ export const GameSetupSingleplayer: React.FC = React.memo((props) => {
         {player4Options.map(x => <option value={x.value} key={x.value}>{x.text}</option>)}
       </select>
       <div>Seed:
-        <button type="button" className={styles.random} onClick={randomizeSeed} title="Zufälligen Seed generieren"><FaDice /></button>
-        <button type="button" className={styles.random} onClick={timestampSeed} title="Uhrzeit als Seed"><FaClock /></button>
+        <button type="button" className={styles.random} onClick={randomizeSeed} title="Generate random seed"><FaDice /></button>
+        {/* <button type="button" className={styles.random} onClick={timestampSeed} title="Uhrzeit als Seed"><FaClock /></button> */}
       </div>
-      <input type='text' placeholder='random' value={seed} onChange={updateSeed} />
+      <input type='text' className={styles.seed} placeholder='random' value={seed} onChange={updateSeed} />
     </div>
     <button onClick={() => navigate('/')}><FaArrowLeft />&nbsp;Menu</button>
     <button onClick={handleStartClick}><FaPlay />&nbsp;Start</button>

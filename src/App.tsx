@@ -25,12 +25,16 @@ export const App = () => {
 function MainRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<GameModeSelection />} />
-      <Route path="/local-singleplayer/setup" element={<GameSetupSingleplayer />} />
-      <Route path="/local-singleplayer/play" element={<PlayLocalSingleplayer />} />
-      <Route path="/local-multiplayer/setup" element={<GameSetupLocalMultiplayer />} />
-      <Route path="/local-multiplayer/play" element={<PlayLocalMultiplayer />} />
-      <Route path="/online-multiplayer" element={<OnlineMultiplayer />} />
+      <Route index element={<GameModeSelection />} />
+      <Route path="local-singleplayer">
+        <Route path="setup" element={<GameSetupSingleplayer />} />
+        <Route path="play" element={<PlayLocalSingleplayer />} />
+      </Route>
+      <Route path="local-multiplayer">
+        <Route path="setup" element={<GameSetupLocalMultiplayer />} />
+        <Route path="play" element={<PlayLocalMultiplayer />} />
+      </Route>
+      <Route path="online-multiplayer" element={<OnlineMultiplayer />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

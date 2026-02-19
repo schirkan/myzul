@@ -2,11 +2,12 @@ import React from 'react';
 import styles from './ScoreBoard.module.scss';
 import { getPlayerIsConnected, getPlayerName, useGameContext } from 'common/GameContext';
 import { AzulGameover, playerColor } from 'games/azul/models';
-import { getSeedFromLocation } from 'components/utils';
+import { useSearchParams } from 'react-router-dom';
 
 export const ScoreBoard: React.FC = React.memo(() => {
+  const [searchParams] = useSearchParams();
   const gameContext = useGameContext();
-  const seed = getSeedFromLocation();
+  const seed = searchParams.get('seed');
 
   let activePlayerId = gameContext?.ctx.currentPlayer;
   let currentPlayerId = gameContext?.playerID;

@@ -121,11 +121,14 @@
     border-color: rgba(51, 51, 51, 0.6);
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.6);
+    min-width: 300px;
   }
 
   button {
     display: block;
     margin: auto;
     margin-top: 20px;
+    height: 50px;
+    width: 100%;
   }
 }

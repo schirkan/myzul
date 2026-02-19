@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import type { BoardProps } from 'boardgame.io/react';
 import { Factory } from '../Factory';
 import { PlayerBoard } from '../PlayerBoard';
 import { Tile } from '../Tile';
 import { TileStorage } from '../TileStorage';
-import { AzulGameState, GameSetup } from "../../../games/azul/models";
+import { AzulGameover, AzulGameState, GameSetup } from "../../../games/azul/models";
 import { TileContext, TileContextType, createTileContext } from '../TileContext';
 import styles from './GameBoard.module.scss';
 import { ScoreBoard } from './../ScoreBoard';
@@ -15,6 +15,8 @@ import { NotifyActivePlayer } from '../../NotifyActivePlayer';
 import { serverUrl } from '../../../api/config';
 import { SubmitUserScore } from '../../SubmitUserScore';
 import { useNavigate } from 'react-router-dom';
+import { FaArrowLeft, FaRedo } from 'react-icons/fa';
+import confetti from 'canvas-confetti';
 
 type Props = GameSetup & {
   numPlayers: number,
@@ -59,7 +61,20 @@ const Boards: React.FC<Props> = React.memo((props) => {
 const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) => {
   const navigate = useNavigate();
 
-  const onClick = async () => {
+  useEffect(() => {
+    var winnerPlayerId = (props.ctx?.gameover as AzulGameover)?.winnerPlayerId;
+    if (winnerPlayerId === props.playerID) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: {
+          y: 0.6
+        }
+      });
+    }
+  }, []);
+
+  const exitLobby = async () => {
     try {
       if (props.credentials) {
         const lobbyClient = new LobbyClient({ server: serverUrl });
@@ -68,11 +83,24 @@ const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) 
           credentials: props.credentials!,
         });
       }
-    } finally {
-      navigate('/');
+    } catch (e) {
+      // ignore
     }
+  };
+
+  const playAgain = async () => {
+    await exitLobby();
+    navigate(0); // Seite neu laden, Spiel mit gleichen Einstellungen neu starten
+  };
+
+  const backToMenu = async () => {
+    await exitLobby();
+    navigate('/');
   }
-  return <button onClick={onClick}>Zurück zum Hauptmenü</button>
+  return <div>
+    <button onClick={playAgain}><FaRedo />&nbsp;Nochmal spielen</button>
+    <button onClick={backToMenu}><FaArrowLeft />&nbsp;Zum Hauptmenü</button>
+  </div>
 });
 
 export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props) => {

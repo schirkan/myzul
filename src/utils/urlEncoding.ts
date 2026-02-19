@@ -1,25 +1,31 @@
 /**
- * Encodes an object to a URL-safe Base64 string
+ * Encodes an object properties as query parameters
+ * @example encodeToQueryParams({ name: 'test', value: 123 }) => 'name=test&value=123'
  */
-export const encodeToUrl = (data: any): string => {
+export const encodeToQueryParams = (data: Record<string, any>): string => {
   try {
-    const json = JSON.stringify(data);
-    return btoa(json);
+    console.log('encodeToQueryParams', data);
+    const params = new URLSearchParams();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        params.append(key, String(value));
+      }
+    });
+    return params.toString();
   } catch (error) {
-    console.error('Failed to encode data:', error);
+    console.error('Failed to encode data to query params:', error);
     return '';
   }
 };
 
 /**
- * Decodes a Base64 string back to an object
+ * Decodes query parameters back to an object
+ * @example decodeFromQueryParams('name=test&value=123') => { name: 'test', value: '123' }
  */
-export const decodeFromUrl = <T = any>(encoded: string): T | null => {
-  try {
-    const json = atob(encoded);
-    return JSON.parse(json) as T;
-  } catch (error) {
-    console.error('Failed to decode data:', error);
-    return null;
-  }
+export const decodeFromQueryParams = <T = Record<string, string>>(params: URLSearchParams): Partial<T> => {
+  const result: Record<string, string> = {};
+  params.forEach((value, key) => {
+    result[key] = value;
+  });
+  return result as T;
 };

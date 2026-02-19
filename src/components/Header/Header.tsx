@@ -10,7 +10,11 @@ export const Header = () => {
       <label htmlFor="theme-selection-shower" className={styles.themeIcon} title='Theme'>
         <TbColorFilter size={40} color='#000' />
       </label>
-      <Link to="/">
+      <Link to="/" onClick={(e) => {
+        if (!window.confirm('Möchten Sie wirklich zur Startseite zurückkehren? Alle nicht gespeicherten Daten gehen verloren.')) {
+          e.preventDefault();
+        }
+      }}>
         <Logo />
       </Link>
       <a href="https://github.com/schirkan/myzul-server" target="_blank" rel="noreferrer" className={styles.githubIcon}>
