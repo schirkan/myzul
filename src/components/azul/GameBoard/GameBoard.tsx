@@ -58,7 +58,7 @@ const Boards: React.FC<Props> = React.memo((props) => {
   </>
 });
 
-const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) => {
+const GameOver: React.FC<BoardProps<AzulGameState>> = React.memo((props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -73,6 +73,8 @@ const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) 
       });
     }
   }, []);
+
+  if (!props.ctx.gameover) return null;
 
   const exitLobby = async () => {
     try {
@@ -97,9 +99,12 @@ const PlayAgainButton: React.FC<BoardProps<AzulGameState>> = React.memo((props) 
     await exitLobby();
     navigate('/');
   }
-  return <div>
-    <button onClick={playAgain}><FaRedo />&nbsp;Nochmal spielen</button>
-    <button onClick={backToMenu}><FaArrowLeft />&nbsp;Zum Hauptmenü</button>
+  return <div className={styles.gameover}>
+    <section>
+      <ScoreBoard />
+      <button onClick={playAgain}><FaRedo />&nbsp;Nochmal spielen</button>
+      <button onClick={backToMenu}><FaArrowLeft />&nbsp;Zum Hauptmenü</button>
+    </section>
   </div>
 });
 
@@ -123,12 +128,7 @@ export const GameBoard: React.FC<BoardProps<AzulGameState>> = React.memo((props)
         {props.G.tiles.map((tile, index) => <Tile key={tile.id} {...tile} />)}
       </TileContext.Provider>
       <NotifyActivePlayer />
-      {props.ctx.gameover && <div className={styles.gameover}>
-        <section>
-          <ScoreBoard />
-          <PlayAgainButton {...props} />
-        </section>
-      </div>}
+      <GameOver {...props} />
       <SubmitUserScore />
     </GameContext.Provider>
   </div>;
