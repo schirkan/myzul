@@ -20,13 +20,12 @@ botOptions = [
   { value: '5-hard', text: 'hard' }
 ];
 
-var player1Options = [{ value: '', text: 'human' }, ...botOptions]; // empty value for human player
+var player1Options = [{ value: 'human', text: 'human' }, ...botOptions]; // empty value for human player
 var player2Options = [...botOptions]; // player 2 is always a bot, so no empty option
 var player3Options = [{ value: '', text: '---' }, ...botOptions]; // player 3 can be empty
 var player4Options = [{ value: '', text: '---' }, ...botOptions]; // player 4 can be empty
 
-export type GameSetupSingleplayerData = {
-  setupData?: GameSetup,
+export type GameSetupSingleplayerData = Partial<GameSetup> & {
   player1?: string,
   player2?: string,
   player3?: string,
@@ -40,7 +39,7 @@ export const GameSetupSingleplayer: React.FC = React.memo(() => {
 
   // const [wallSetup, setWallSetup] = useState('Default');
   // const [floorSetup, setFloorSetup] = useState('Default');
-  const [player1, setPlayer1] = useState<string>('');
+  const [player1, setPlayer1] = useState<string>('human');
   const [player2, setPlayer2] = useState<string>('5-hard');
   const [player3, setPlayer3] = useState<string>('');
   const [player4, setPlayer4] = useState<string>('');

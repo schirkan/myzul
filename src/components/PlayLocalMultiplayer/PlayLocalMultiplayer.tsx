@@ -1,29 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Client } from "boardgame.io/react";
-import { GameSetupLocalMultiplayer } from "components/GameSetupLocalMultiplayer";
+import { GameSetupLocalMultiplayer, GameSetupLocalMultiplayerData } from "components/GameSetupLocalMultiplayer";
 import { GameBoard } from "components/azul/GameBoard";
 import { AzulGame } from "games/azul/Game";
+import { useSearchParams } from "react-router-dom";
+import { decodeFromQueryParams } from "utils/urlEncoding";
+import { defaultGameSetup } from "games/azul/azulConfig";
+import { GameSetup } from "games/azul/models";
 
-const getSeedFromLocation = () => {
-	var hash = window.location.hash?.trim().substring(1) || '';
-	return hash.length > 0 ? hash : undefined;
-};
 
-const gameWithSetupData = (game: any, setupData: any) => ({
+const gameWithSetupData = (game: any, setupData: any, seed: string | undefined) => ({
 	...game,
 	setup: (context: any) => setupData && game.setup && game.setup(context, setupData),
-	seed: getSeedFromLocation()
+	seed
 });
 
 export const PlayLocalMultiplayer = () => {
-	const [gameSetup, setGameSetup] = useState<any>();
+	const [searchParams] = useSearchParams();
+	const [gameSetup, setGameSetup] = useState<GameSetupLocalMultiplayerData>();
 
-	if (!gameSetup) {
-		return <GameSetupLocalMultiplayer onStartClick={setGameSetup} />;
+	useEffect(() => {
+		const decodedSetup = decodeFromQueryParams<GameSetupLocalMultiplayerData>(searchParams);
+		console.log(decodedSetup);
+		setGameSetup(decodedSetup);
+	}, [searchParams]);
+
+	if (!gameSetup?.numPlayers) {
+		return null;
 	}
 
+	const setupData: GameSetup = {
+		floorSetup: gameSetup.floorSetup ?? defaultGameSetup.floorSetup,
+		tilesPerFactory: gameSetup.tilesPerFactory ?? defaultGameSetup.tilesPerFactory,
+		wallSetup: gameSetup.wallSetup ?? defaultGameSetup.wallSetup,
+	};
+
 	var LocalMultiplayerClient = Client({
-		game: gameWithSetupData(AzulGame, gameSetup.setupData),
+		game: gameWithSetupData(AzulGame, setupData, gameSetup.seed),
 		board: GameBoard,
 		numPlayers: gameSetup.numPlayers,
 	});
