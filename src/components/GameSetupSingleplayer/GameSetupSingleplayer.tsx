@@ -17,7 +17,8 @@ var botOptions = bots.map(x => ({ value: x, text: x }));
 botOptions = [
   { value: '5-easy', text: 'easy' },
   { value: '5-medium', text: 'medium' },
-  { value: '5-hard', text: 'hard' }
+  { value: '5-hard', text: 'hard' },
+  { value: '6-hard', text: 'fast & hard' }
 ];
 
 var player1Options = [{ value: 'human', text: 'human' }, ...botOptions]; // empty value for human player
